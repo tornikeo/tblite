@@ -357,7 +357,7 @@ subroutine get_hamiltonian_gradient(mol, trans, list, bas, h0, selfenergy, dsedc
    real(wp), allocatable :: ddtmpj(:, :, :), dqtmpj(:, :, :)
 
    nspin = size(pmat, 3)
-
+   write(*,*) "We do a little trolling"
    allocate(stmp(msao(bas%maxl)**2), dstmp(3, msao(bas%maxl)**2), &
       & dtmp(3, msao(bas%maxl)**2), ddtmpi(3, 3, msao(bas%maxl)**2), &
       & qtmp(6, msao(bas%maxl)**2), dqtmpi(3, 6, msao(bas%maxl)**2), &
