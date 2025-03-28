@@ -139,3 +139,11 @@ tomlf_dep = dependency(
   default_options: ['default_library=static'],
 )
 lib_deps += tomlf_dep
+
+# Add tblite-gpu as subproject
+tblite_gpu_dep = dependency(
+  'tblite-gpu',
+  fallback: ['tblite-gpu','tblitegpu_dep'],
+  default_options: ['default_library=static'],
+)
+lib_deps += tblite_gpu_dep

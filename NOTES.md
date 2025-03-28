@@ -1,3 +1,12 @@
+Required env vars
+```bash
+export CC=/usr/bin/gcc-11
+export CXX=/usr/bin/g++-11
+export NVCC_PREPEND_FLAGS='-ccbin /usr/bin/g++-11'
+export FC=/usr/bin/gfortran-13
+```
+
+
 ```py
 # Inputs
 

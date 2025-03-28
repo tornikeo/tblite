@@ -16,6 +16,8 @@
 
 !> Implementation of the effective core Hamiltonian used in the extended tight binding.
 module tblite_xtb_h0
+   use, intrinsic :: iso_fortran_env
+   use iso_c_binding
    use mctc_env, only : wp
    use mctc_io, only : structure_type
    use tblite_adjlist, only : adjacency_list
@@ -185,6 +187,8 @@ subroutine get_hamiltonian(mol, trans, list, bas, h0, selfenergy, overlap, dpint
    hamiltonian(:, :) = 0.0_wp
 
    allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
+
+   call call_hello_kernel()
 
    !$omp parallel do schedule(runtime) default(none) &
    !$omp shared(mol, bas, trans, list, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -357,7 +361,7 @@ subroutine get_hamiltonian_gradient(mol, trans, list, bas, h0, selfenergy, dsedc
    real(wp), allocatable :: ddtmpj(:, :, :), dqtmpj(:, :, :)
 
    nspin = size(pmat, 3)
-   write(*,*) "We do a little trolling"
+   
    allocate(stmp(msao(bas%maxl)**2), dstmp(3, msao(bas%maxl)**2), &
       & dtmp(3, msao(bas%maxl)**2), ddtmpi(3, 3, msao(bas%maxl)**2), &
       & qtmp(6, msao(bas%maxl)**2), dqtmpi(3, 6, msao(bas%maxl)**2), &
