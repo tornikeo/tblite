@@ -26,8 +26,19 @@ module tblite_xtb_h0
    use tblite_scf_potential, only : potential_type
    use tblite_xtb_spec, only : tb_h0spec
    implicit none
-   private
 
+   interface
+      subroutine get_vec_(xyz_iat, xyz_jat, trans, vec) bind(C, name="get_vec_")
+         use mctc_env, only : wp
+         implicit none
+         real(wp), intent(in) :: xyz_iat(3)  ! (3, n_atoms)
+         real(wp), intent(in) :: xyz_jat(3)  ! (3, n_atoms)
+         real(wp), intent(in) :: trans(3) ! (3, n_trans)
+         real(wp), intent(out) :: vec(3)
+      end subroutine get_vec_
+   end interface
+
+   private
    public :: tb_hamiltonian, new_hamiltonian
    public :: get_selfenergy, get_hamiltonian, get_occupation, get_hamiltonian_gradient
 
@@ -188,7 +199,7 @@ subroutine get_hamiltonian(mol, trans, list, bas, h0, selfenergy, overlap, dpint
 
    allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
 
-   call call_hello_kernel()
+   ! call call_hello_kernel()
 
    !$omp parallel do schedule(runtime) default(none) &
    !$omp shared(mol, bas, trans, list, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -203,7 +214,15 @@ subroutine get_hamiltonian(mol, trans, list, bas, h0, selfenergy, overlap, dpint
          itr = list%nltr(img+inl)
          jzp = mol%id(jat)
          js = bas%ish_at(jat)
+         write (*,*), "FORTRAN: XYZ(iat)", mol%xyz(:, iat)
+         write (*,*), "FORTRAN: XYZ(jat)", mol%xyz(:, jat)
+         write (*,*), "FORTRAN: trans(itr)", trans(:, itr)
+
+         call get_vec_(mol%xyz(:, iat), mol%xyz(:, jat), trans(:, itr), vec)
+         write (*,*) "FORTRAN: vec from C:", vec
          vec(:) = mol%xyz(:, iat) - mol%xyz(:, jat) - trans(:, itr)
+         write (*,*) "FORTRAN: our own vec", vec
+
          r2 = vec(1)**2 + vec(2)**2 + vec(3)**2
          rr = sqrt(sqrt(r2) / (h0%rad(jzp) + h0%rad(izp)))
          do ish = 1, bas%nsh_id(izp)
@@ -218,7 +237,7 @@ subroutine get_hamiltonian(mol, trans, list, bas, h0, selfenergy, overlap, dpint
 
                hij = 0.5_wp * (selfenergy(is+ish) + selfenergy(js+jsh)) &
                   * h0%hscale(jsh, ish, jzp, izp) * shpoly
-
+               
                nao = msao(bas%cgto(jsh, jzp)%ang)
                do iao = 1, msao(bas%cgto(ish, izp)%ang)
                   do jao = 1, nao
