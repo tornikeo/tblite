@@ -222,7 +222,6 @@ pure subroutine multipole_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d)
       vj(:) = 0.0_wp
       vi(li(k)) = 1.0_wp
       vj(lj(k)) = 1.0_wp
-
       call horizontal_shift(rpi(k), li(k), vi)
       call horizontal_shift(rpj(k), lj(k), vj)
       call form_product(vi, vj, li(k), lj(k), vv)

@@ -1,0 +1,57 @@
+{
+    // {
+    //     "tasks": [
+    //         {
+    //             "label": "setup",
+    //             "type": "shell",
+    //             "command": "meson setup build",
+    //         },
+    //         {
+    //             "label": "build",
+    //             "type": "shell",
+    //             "command": "meson compile -C build --buildtype=debugoptimized",
+    //         }
+    //     ],
+    //     "version": "2.0.0"
+    // }
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "activate",
+            "type": "shell",
+            "options": {
+                "shell": {
+                "args": ["-i"]
+                }
+            },
+            "command": "micromamba",
+            "args": [
+                "activate", "pb"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "setup",
+            "type": "shell",
+            "options": {
+              "shell": {
+                "args": ["-i"]
+              },
+              "cwd": "${workspaceFolder}"
+            },
+            "command": "meson setup build && meson compile -C build",
+            "args": [],
+            "problemMatcher": [
+                "$meson-gcc"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": "build",
+            "dependsOn": ["activate"]
+        }
+    ]
+}

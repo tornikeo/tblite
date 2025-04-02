@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Debug with Meson",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/test/unit/tester",
+            "environment": [
+                {"name": "OMP_NUM_THREADS", "value": "1"}
+            ],
+            "args": ["hamiltonian"],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "setup"
+        }
+    ]
+}
+
