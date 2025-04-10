@@ -42,7 +42,6 @@ module tblite_xtb_h0
    public :: tb_hamiltonian, new_hamiltonian
    public :: get_selfenergy, get_hamiltonian, get_occupation, get_hamiltonian_gradient
 
-
    type :: tb_hamiltonian
       !> Atomic level information
       real(wp), allocatable :: selfenergy(:, :)
@@ -187,6 +186,7 @@ contains
       !> Effective Hamiltonian
       real(wp), intent(out) :: hamiltonian(:, :)
 
+      integer :: i,j,l;
       integer :: iat, jat, izp, jzp, itr, k, img, inl
       integer :: ish, jsh, is, js, ii, jj, iao, jao, nao, ij
       real(wp) :: rr, r2, vec(3), cutoff2, hij, shpoly, dtmpj(3), qtmpj(6)
@@ -198,8 +198,6 @@ contains
       hamiltonian(:, :) = 0.0_wp
 
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
-
-      ! call call_hello_kernel()
 
       ! $omp parallel do schedule(runtime) default(none) &
       ! $omp shared(mol, bas, trans, alist, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -340,15 +338,79 @@ contains
 
    end subroutine get_hamiltonian
 
+  subroutine print_4d_array_literal(arr)
+    implicit none
+    integer, parameter :: wd = kind(1.0d0)
+    real(wd), intent(in) :: arr(:,:,:,:)
+    integer :: i, j, k, l
+    integer :: d1, d2, d3, d4
+    character(len=1000) :: line
+    character(len=32) :: num_str
+  
+    d1 = size(arr, 1)
+    d2 = size(arr, 2)
+    d3 = size(arr, 3)
+    d4 = size(arr, 4)
+  
+    print *, "["
+    do i = 1, d1
+      print *, "  ["
+      do j = 1, d2
+        print *, "    ["
+        do k = 1, d3
+          line = "      ["
+          do l = 1, d4
+            write(num_str, '(F0.6)') arr(i,j,k,l)
+            line = trim(line) // trim(adjustl(num_str))
+            if (l < d4) line = trim(line) // ", "
+          end do
+          line = trim(line) // "]"
+          if (k < d3) then
+            print *, trim(line) // ","
+          else
+            print *, trim(line)
+          end if
+        end do
+        if (j < d2) then
+          print *, "    ],"
+        else
+          print *, "    ]"
+        end if
+      end do
+      if (i < d1) then
+        print *, "  ],"
+      else
+        print *, "  ]"
+      end if
+    end do
+    print *, "]"
+  end subroutine print_4d_array_literal
 
-   subroutine get_hamiltonian_gradient(mol, trans, list, bas, h0, selfenergy, dsedcn, &
+  subroutine print_int_matrix(mat)
+    implicit none
+    integer, intent(in) :: mat(:,:)
+    integer :: i, j
+    character(len=100) :: line
+    character(len=16) :: int_str
+  
+    do i = 1, size(mat, 1)
+      line = ""
+      do j = 1, size(mat, 2)
+        write(int_str, '(I0)') mat(i, j)
+        line = trim(line) // " " // trim(adjustl(int_str))
+      end do
+      print *, trim(line)
+    end do
+  end subroutine print_int_matrix
+
+  subroutine get_hamiltonian_gradient(mol, trans, list_, bas, h0, selfenergy, dsedcn, &
    & pot, pmat, xmat, dEdcn, gradient, sigma)
       !> Molecular structure data
       type(structure_type), intent(in) :: mol
       !> Lattice points within a given realspace cutoff
       real(wp), intent(in) :: trans(:, :)
       !> Neighbour list
-      type(adjacency_list), intent(in) :: list
+      type(adjacency_list), intent(in) :: list_
       !> Basis set information
       type(basis_type), intent(in) :: bas
       !> Hamiltonian interaction data
@@ -372,7 +434,7 @@ contains
       real(wp), intent(inout) :: sigma(:, :)
 
       integer :: iat, jat, izp, jzp, itr, img, inl, spin, nspin
-      integer :: ish, jsh, is, js, ii, jj, iao, jao, nao, ij
+      integer :: ish, jsh, is_, js, ii, jj, iao, jao, nao, ij
       real(wp) :: rr, r2, vec(3), cutoff2, hij, shpoly, dshpoly, dG(3), hscale
       real(wp) :: sval, dcni, dcnj, dhdcni, dhdcnj, hpij, pij
       real(wp), allocatable :: stmp(:), dtmp(:, :), qtmp(:, :)
@@ -393,11 +455,11 @@ contains
       ! $omp& dshpoly, dG, dcni, dcnj, dhdcni, dhdcnj, hpij, rr, sval, hscale, pij, inl, img)
       do iat = 1, mol%nat
          izp = mol%id(iat)
-         is = bas%ish_at(iat)
-         inl = list%inl(iat)
-         do img = 1, list%nnl(iat)
-            jat = list%nlat(img+inl)
-            itr = list%nltr(img+inl)
+         is_ = bas%ish_at(iat)
+         inl = list_%inl(iat)
+         do img = 1, list_%nnl(iat)
+            jat = list_%nlat(img+inl)
+            itr = list_%nltr(img+inl)
             jzp = mol%id(jat)
             js = bas%ish_at(jat)
             if (iat == jat) cycle
@@ -405,7 +467,7 @@ contains
             r2 = vec(1)**2 + vec(2)**2 + vec(3)**2
             rr = sqrt(sqrt(r2) / (h0%rad(jzp) + h0%rad(izp)))
             do ish = 1, bas%nsh_id(izp)
-               ii = bas%iao_sh(is+ish)
+               ii = bas%iao_sh(is_+ish)
                do jsh = 1, bas%nsh_id(jzp)
                   jj = bas%iao_sh(js+jsh)
                   call multipole_grad_cgto(bas%cgto(jsh, jzp), bas%cgto(ish, izp), &
@@ -419,8 +481,8 @@ contains
                   & * 0.5_wp / r2
 
                   hscale = h0%hscale(jsh, ish, jzp, izp)
-                  hij = 0.5_wp * (selfenergy(is+ish) + selfenergy(js+jsh)) * hscale
-                  dhdcni = dsedcn(is+ish) * shpoly * hscale
+                  hij = 0.5_wp * (selfenergy(is_+ish) + selfenergy(js+jsh)) * hscale
+                  dhdcni = dsedcn(is_+ish) * shpoly * hscale
                   dhdcnj = dsedcn(js+jsh) * shpoly * hscale
 
                   dG(:) = 0.0_wp
@@ -466,10 +528,10 @@ contains
       ! $omp private(iat, izp, jzp, is, ish, ii, iao, dcni, dhdcni, spin)
       do iat = 1, mol%nat
          izp = mol%id(iat)
-         is = bas%ish_at(iat)
+         is_ = bas%ish_at(iat)
          do ish = 1, bas%nsh_id(izp)
-            ii = bas%iao_sh(is+ish)
-            dhdcni = dsedcn(is+ish)
+            ii = bas%iao_sh(is_+ish)
+            dhdcni = dsedcn(is_+ish)
             dcni = 0.0_wp
             do iao = 1, msao(bas%cgto(ish, izp)%ang)
                do spin = 1, nspin
