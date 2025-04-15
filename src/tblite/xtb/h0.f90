@@ -403,6 +403,100 @@ contains
     end do
   end subroutine print_int_matrix
 
+  subroutine print_3d_array(arr)
+    implicit none
+    integer, parameter :: wd = kind(1.0d0)
+    real(wd), intent(in) :: arr(:,:,:)
+    integer :: i, j, k
+    integer :: d1, d2, d3
+    character(len=100) :: line
+    character(len=32) :: num_str
+
+    d1 = size(arr, 1)
+    d2 = size(arr, 2)
+    d3 = size(arr, 3)
+
+    print *, "["
+    do i = 1, d1
+      print *, "  ["
+      do j = 1, d2
+        line = "    ["
+        do k = 1, d3
+          write(num_str, '(F0.6)') arr(i,j,k)
+          line = trim(line) // trim(adjustl(num_str))
+          if (k < d3) line = trim(line) // ", "
+        end do
+        line = trim(line) // "]"
+        if (j < d2) then
+          print *, trim(line) // ","
+        else
+          print *, trim(line)
+        end if
+      end do
+      if (i < d1) then
+        print *, "  ],"
+      else
+        print *, "  ]"
+      end if
+    end do
+    print *, "]"
+  end subroutine print_3d_array
+
+  subroutine print_cgto_alpha(bas)
+    integer :: i,j,k
+    type(basis_type), intent(in) :: bas
+
+    write(*,'(A)',advance='no') '['
+    do i = 1,3
+      write(*,'(A)',advance='no') '['
+      do j = 1,4
+        write(*,'(A)',advance='no') '['
+        do k = 1,12
+          write(*,'(F10.6,",")',advance='no') bas%cgto(i,j)%alpha(k)
+        end do
+        write(*,'(A)', advance='yes') '],'
+      end do
+      write(*,'(A)', advance='yes') '],'
+    end do
+    write(*,'(A)', advance='yes') ']'
+  end subroutine print_cgto_alpha
+
+  subroutine print_cgto_coeff(bas)
+    integer :: i,j,k
+    type(basis_type), intent(in) :: bas
+
+    write(*,'(A)',advance='no') '['
+    do i = 1,3
+      write(*,'(A)',advance='no') '['
+      do j = 1,4
+        write(*,'(A)',advance='no') '['
+        do k = 1,12
+          write(*,'(F10.6,",")',advance='no') bas%cgto(i,j)%coeff(k)
+        end do
+        write(*,'(A)', advance='yes') '],'
+      end do
+      write(*,'(A)', advance='yes') '],'
+    end do
+    write(*,'(A)', advance='yes') ']'
+  end subroutine print_cgto_coeff
+
+
+  subroutine print_cgto_nprim(bas)
+    integer :: i,j
+    type(basis_type), intent(in) :: bas
+
+    write(*,'(A)',advance='no') '['
+    do i = 1,3
+      write(*,'(A)',advance='no') '['
+      do j = 1,4
+        write(*,'(I4,",")',advance='no') bas%cgto(i,j)%nprim
+      end do
+      write(*,'(A)', advance='yes') '],'
+    end do
+    write(*,'(A)', advance='yes') ']'
+  end subroutine print_cgto_nprim
+
+
   subroutine get_hamiltonian_gradient(mol, trans, list_, bas, h0, selfenergy, dsedcn, &
    & pot, pmat, xmat, dEdcn, gradient, sigma)
       !> Molecular structure data
@@ -437,17 +531,28 @@ contains
       integer :: ish, jsh, is_, js, ii, jj, iao, jao, nao, ij
       real(wp) :: rr, r2, vec(3), cutoff2, hij, shpoly, dshpoly, dG(3), hscale
       real(wp) :: sval, dcni, dcnj, dhdcni, dhdcnj, hpij, pij
-      real(wp), allocatable :: stmp(:), dtmp(:, :), qtmp(:, :)
+      real(wp), allocatable :: stmp(:), dtmp(:, :), qtmp(:, :), tmp(:)
       real(wp), allocatable :: dstmp(:, :), ddtmpi(:, :, :), dqtmpi(:, :, :)
       real(wp), allocatable :: ddtmpj(:, :, :), dqtmpj(:, :, :)
-
+      integer :: i,j,k
+      real(wp) :: row(12)
+      
       nspin = size(pmat, 3)
 
       allocate(stmp(msao(bas%maxl)**2), dstmp(3, msao(bas%maxl)**2), &
       & dtmp(3, msao(bas%maxl)**2), ddtmpi(3, 3, msao(bas%maxl)**2), &
       & qtmp(6, msao(bas%maxl)**2), dqtmpi(3, 6, msao(bas%maxl)**2), &
       & ddtmpj(3, 3, msao(bas%maxl)**2), dqtmpj(3, 6, msao(bas%maxl)**2))
+      allocate(tmp(3))
 
+      ! call print_cgto_alpha(bas)
+      ! write(*,*) '===='
+      ! call print_cgto_coeff(bas)
+      ! write(*,*) '===='
+      ! call print_cgto_nprim(bas)
+      ! write(*,*) '===='
+      
+      ! tmp(:) = 0.0_wp;
       ! $omp parallel do schedule(runtime) default(none) reduction(+:dEdcn, gradient, sigma) &
       ! $omp shared(mol, bas, trans, h0, selfenergy, dsedcn, pot, pmat, xmat, list, nspin) &
       ! $omp private(iat, jat, izp, jzp, itr, is, js, ish, jsh, ii, jj, iao, jao, nao, ij, spin, &
@@ -488,6 +593,7 @@ contains
                   dG(:) = 0.0_wp
                   dcni = 0.0_wp
                   dcnj = 0.0_wp
+                  ! print*, jsh, jzp, ish, izp
                   nao = msao(bas%cgto(jsh, jzp)%ang)
                   do iao = 1, msao(bas%cgto(ish, izp)%ang)
                      do jao = 1, nao
@@ -498,6 +604,7 @@ contains
                            sval = 2*hpij - 2*xmat(jj+jao, ii+iao, spin) &
                               - pij * (pot%vao(jj+jao, spin) + pot%vao(ii+iao, spin))
 
+                           tmp = matmul(ddtmpi(:, :, ij), pot%vdp(:, iat, spin))
                            dG(:) = dG + sval * dstmp(:, ij) &
                               + 2*hpij*stmp(ij) * dshpoly / shpoly * vec &
                               - pij * matmul(ddtmpi(:, :, ij), pot%vdp(:, iat, spin)) &
