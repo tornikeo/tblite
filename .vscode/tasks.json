@@ -42,7 +42,7 @@
               },
               "cwd": "${workspaceFolder}"
             },
-            "command": "meson setup build && meson compile -C build",
+            "command": "meson setup build -Ddebug=true -Dbuildtype=debug && meson compile -C build",
             "args": [],
             "problemMatcher": [
                 "$meson-gcc"

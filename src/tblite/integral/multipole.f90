@@ -109,8 +109,8 @@ pure subroutine horizontal_shift(ae, l, cfs)
 end subroutine horizontal_shift
 
 pure subroutine form_product(a, b, la, lb, d)
-   integer, intent(in) :: la, lb
    real(wp), intent(in) :: a(*), b(*)
+   integer, intent(in) :: la, lb
    real(wp), intent(inout) :: d(*)
    if(la.ge.4.or.lb.ge.4) goto 40
    if(la.ge.3.or.lb.ge.3) goto 30
@@ -457,7 +457,7 @@ pure subroutine multipole_grad_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpin
    real(wp) :: dq3di(3, 6, mlao(cgtoj%ang), mlao(cgtoi%ang))
    real(wp) :: dd3dj(3, 3, mlao(cgtoj%ang), mlao(cgtoi%ang))
    real(wp) :: dq3dj(3, 6, mlao(cgtoj%ang), mlao(cgtoi%ang))
-
+   
    s3d(:, :) = 0.0_wp
    d3dj(:, :, :) = 0.0_wp
    q3dj(:, :, :) = 0.0_wp
@@ -565,6 +565,11 @@ pure subroutine shift_operator(vec, s, di, qi, ds, ddi, dqi, ddj, dqj)
    real(wp),intent(in) :: dqi(:, :)
    real(wp),intent(out) :: ddj(:, :)
    real(wp),intent(out) :: dqj(:, :)
+
+   ! print*, "ddi", size(ddi, 1), size(ddi, 2)
+   ! print*, "dqi", size(dqi, 1), size(dqi, 2)
+   ! print*, "ddj", size(ddj, 1), size(ddj, 2)
+   ! print*, "dqj", size(dqj, 1), size(dqj, 2)
 
    ddj(:, 1) = ddi(:, 1) - vec(1)*ds
    ddj(:, 2) = ddi(:, 2) - vec(2)*ds

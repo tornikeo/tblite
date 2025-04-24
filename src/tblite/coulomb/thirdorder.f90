@@ -148,7 +148,7 @@ subroutine get_potential(self, mol, cache, wfn, pot)
    type(potential_type), intent(inout) :: pot
 
    integer :: iat, izp, ii, ish
-
+  !  print*, size(self%nsh_at, 1), size(self%ish_at, 1), size(self%hubbard_derivs, 1), size(self%hubbard_derivs, 2)
    if (self%shell_resolved) then
       do iat = 1, mol%nat
          izp = mol%id(iat)

@@ -153,9 +153,9 @@ subroutine get_repulsion_energy(mol, trans, cutoff, alpha, zeff, kexp, rexp, &
 
    cutoff2 = cutoff**2
 
-   !$omp parallel do default(none) schedule(runtime) reduction(+:energies) &
-   !$omp shared(mol, trans, cutoff2, kexp, rexp, alpha, zeff) &
-   !$omp private(iat, jat, izp, jzp, itr, r1, r2, rij, r1k, r1r, exa, dE)
+   ! $omp parallel do default(none) schedule(runtime) reduction(+:energies) &
+   ! $omp shared(mol, trans, cutoff2, kexp, rexp, alpha, zeff) &
+   ! $omp private(iat, jat, izp, jzp, itr, r1, r2, rij, r1k, r1r, exa, dE)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       do jat = 1, iat
@@ -209,9 +209,9 @@ subroutine get_repulsion_derivs(mol, trans, cutoff, alpha, zeff, kexp, rexp, &
 
    cutoff2 = cutoff**2
 
-   !$omp parallel do default(none) schedule(runtime) reduction(+:energies, gradient, sigma) &
-   !$omp shared(mol, trans, cutoff2, kexp, rexp, alpha, zeff) &
-   !$omp private(iat, jat, izp, jzp, itr, r1, r2, rij, r1k, r1r, exa, dE, dG, dS)
+   ! $omp parallel do default(none) schedule(runtime) reduction(+:energies, gradient, sigma) &
+   ! $omp shared(mol, trans, cutoff2, kexp, rexp, alpha, zeff) &
+   ! $omp private(iat, jat, izp, jzp, itr, r1, r2, rij, r1k, r1r, exa, dE, dG, dS)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       do jat = 1, iat

@@ -8,9 +8,23 @@
             "environment": [
                 {"name": "OMP_NUM_THREADS", "value": "1"}
             ],
-            "args": ["hamiltonian"],
+            "args": ["gfn2-xtb"],
             "cwd": "${workspaceRoot}",
-            "preLaunchTask": "setup"
+            "preLaunchTask": "setup",
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "setupCommands": [
+                    { "text": "-enable-pretty-printing", "description": "enable pretty printing", "ignoreFailures": true },
+                    { "text": "handle SIGPIPE nostop noprint pass", "description": "ignore SIGPIPE", "ignoreFailures": true },
+                    {
+                        "description": "Enable gdbinit",
+                        "text": "source .gdbinit",
+                        "ignoreFailures": true
+                      }
+              
+                ]
+            },
         }
     ]
 }

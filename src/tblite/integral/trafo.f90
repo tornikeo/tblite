@@ -105,6 +105,8 @@ pure subroutine transform0(lj, li, cart, sphr)
          sphr = cart
       case(2)
          ! sphr = matmul(dtrafo, cart)
+         ! sphr(1,1) = cart(3, 1) - .5 * (cart(1,1) + cart(2,:))
+         ! sphr(1*col + 1) = cart(3 * col + 1) - .5 * (cart(1,1) + cart(2,:))
          sphr(1, :) = cart(3, :) - 0.5_wp * (cart(1, :) + cart(2, :))
          sphr(2, :) = s3 * cart(5, :)
          sphr(3, :) = s3 * cart(6, :)

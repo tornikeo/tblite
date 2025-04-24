@@ -441,9 +441,9 @@ subroutine get_multipole_matrix_0d(mol, rad, kdmp3, kdmp5, amat_sd, amat_dd, ama
    integer :: iat, jat
    real(wp) :: r1, vec(3), g1, g3, g5, fdmp3, fdmp5, tc(6), rr
 
-   !$omp parallel do default(none) schedule(runtime) collapse(2) &
-   !$omp shared(amat_sd, amat_dd, amat_sq, mol, rad, kdmp3, kdmp5) &
-   !$omp private(r1, vec, g1, g3, g5, fdmp3, fdmp5, tc, rr)
+   ! $omp parallel do default(none) schedule(runtime) collapse(2) &
+   ! $omp shared(amat_sd, amat_dd, amat_sq, mol, rad, kdmp3, kdmp5) &
+   ! $omp private(r1, vec, g1, g3, g5, fdmp3, fdmp5, tc, rr)
    do iat = 1, mol%nat
       do jat = 1, mol%nat
          if (iat == jat) cycle
@@ -502,10 +502,10 @@ subroutine get_multipole_matrix_3d(mol, rad, kdmp3, kdmp5, wsc, alpha, &
    call get_dir_trans(mol%lattice, alpha, conv, dtrans)
    call get_rec_trans(mol%lattice, alpha, vol, conv, rtrans)
 
-   !$omp parallel do default(none) schedule(runtime) collapse(2) &
-   !$omp shared(amat_sd, amat_dd, amat_sq) &
-   !$omp shared(mol, wsc, rad, vol, alpha, rtrans, dtrans, kdmp3, kdmp5) &
-   !$omp private(iat, jat, img, vec, rr, wsw, d_sd, d_dd, d_sq, r_sd, r_dd, r_sq)
+   ! $omp parallel do default(none) schedule(runtime) collapse(2) &
+   ! $omp shared(amat_sd, amat_dd, amat_sq) &
+   ! $omp shared(mol, wsc, rad, vol, alpha, rtrans, dtrans, kdmp3, kdmp5) &
+   ! $omp private(iat, jat, img, vec, rr, wsw, d_sd, d_dd, d_sq, r_sd, r_dd, r_sq)
    do iat = 1, mol%nat
       do jat = 1, mol%nat
          wsw = 1.0_wp / real(wsc%nimg(jat, iat), wp)
@@ -523,8 +523,8 @@ subroutine get_multipole_matrix_3d(mol, rad, kdmp3, kdmp5, wsc, alpha, &
       end do
    end do
 
-   !$omp parallel do default(none) schedule(runtime) &
-   !$omp shared(amat_sd, amat_dd, amat_sq, mol, vol, alpha) private(iat, rr, k)
+   ! $omp parallel do default(none) schedule(runtime) &
+   ! $omp shared(amat_sd, amat_dd, amat_sq, mol, vol, alpha) private(iat, rr, k)
    do iat = 1, mol%nat
       ! dipole-dipole selfenergy: -2/3·α³/sqrt(π) Σ(i) μ²(i)
       rr = -2.0_wp/3.0_wp * alpha**3 / sqrtpi
@@ -692,10 +692,10 @@ subroutine get_multipole_gradient_0d(mol, rad, kdmp3, kdmp5, qat, dpat, qpat, &
    real(wp) :: r1, r2, vec(3), rr, fdmp3, fdmp5, g1, g3, g5, g7, dG(3), dS(3, 3)
    real(wp) :: ddmp3, ddmp5, fddr, eq, edd, dpidpj, dpiv, dpjv, dpiqj, qidpj
 
-   !$omp parallel do default(none) schedule(runtime) reduction(+:dEdr, gradient, sigma) &
-   !$omp shared(mol, kdmp3, kdmp5, rad, qat, dpat, qpat) &
-   !$omp private(iat, jat, r1, r2, vec, rr, fdmp3, fdmp5, g1, g3, g5, g7, dG, dS, &
-   !$omp& ddmp3, ddmp5, fddr, eq, edd, dpidpj, dpiv, dpjv, dpiqj, qidpj)
+   ! $omp parallel do default(none) schedule(runtime) reduction(+:dEdr, gradient, sigma) &
+   ! $omp shared(mol, kdmp3, kdmp5, rad, qat, dpat, qpat) &
+   ! $omp private(iat, jat, r1, r2, vec, rr, fdmp3, fdmp5, g1, g3, g5, g7, dG, dS, &
+   ! $omp& ddmp3, ddmp5, fddr, eq, edd, dpidpj, dpiv, dpjv, dpiqj, qidpj)
    do iat = 1, mol%nat
       do jat = 1, iat - 1
          rr = 0.5_wp*(rad(iat)+rad(jat))
