@@ -171,9 +171,9 @@ subroutine compute_surface(nat, xyz, list, vdwsa, &
 
    surface(:) = 0.0_wp
 
-   !$omp parallel do default(none) shared(surface, ah0, ah1, ah3) &
-   !$omp shared(nat, vdwsa, list, xyz, wrp, ang_grid, ang_weight, trj2) &
-   !$omp private(iat, rsas, nno, sasai, xyza, wr, ip, xyzp, wsa, sasap, ino)
+   ! $omp parallel do default(none) shared(surface, ah0, ah1, ah3) &
+   ! $omp shared(nat, vdwsa, list, xyz, wrp, ang_grid, ang_weight, trj2) &
+   ! $omp private(iat, rsas, nno, sasai, xyza, wr, ip, xyzp, wsa, sasap, ino)
    do iat = 1, nat
 
       rsas = vdwsa(iat)
@@ -246,10 +246,10 @@ subroutine compute_numsa(nat, xyz, list, vdwsa, &
    allocate (grds(3, maxval(list%nnl)))
    allocate (grdi(maxval(list%nnl)))
 
-   !$omp parallel do default(none) shared(surface, dsdrt, ah0, ah1, ah3) &
-   !$omp shared(nat, vdwsa, list, xyz, wrp, ang_grid, ang_weight, trj2) &
-   !$omp private(iat, jat, rsas, nno, grads, sasai, xyza, wr, ip, xyzp, wsa, &
-   !$omp& sasap, jj, nni, grdi, grds, drjj, ino)
+   ! $omp parallel do default(none) shared(surface, dsdrt, ah0, ah1, ah3) &
+   ! $omp shared(nat, vdwsa, list, xyz, wrp, ang_grid, ang_weight, trj2) &
+   ! $omp private(iat, jat, rsas, nno, grads, sasai, xyza, wr, ip, xyzp, wsa, &
+   ! $omp& sasap, jj, nni, grdi, grds, drjj, ino)
    do iat = 1, nat
 
       rsas = vdwsa(iat)

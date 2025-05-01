@@ -75,6 +75,7 @@ subroutine next_scf(iscf, mol, bas, wfn, solver, mixer, info, coulomb, dispersio
 
    !> Self-consistent energy
    real(wp), intent(inout) :: energies(:)
+   real(wp) :: tmp
 
    !> Error handling
    type(error_type), allocatable, intent(out) :: error
@@ -123,10 +124,14 @@ subroutine next_scf(iscf, mol, bas, wfn, solver, mixer, info, coulomb, dispersio
    call reduce(energies, eao, bas%ao2at)
    if (present(coulomb)) then
       call coulomb%get_energy(mol, cache, wfn, energies)
+      
    end if
+   tmp = sum(energies)
    if (present(dispersion)) then
       call dispersion%get_energy(mol, dcache, wfn, energies)
    end if
+  !  print*, "Diff", sum(energies) - tmp
+
    if (present(interactions)) then
       call interactions%get_energy(mol, icache, wfn, energies)
    end if
@@ -140,8 +145,8 @@ subroutine get_electronic_energy(h0, density, energies)
 
    integer :: iao, jao, spin
 
-   !$omp parallel do collapse(3) schedule(runtime) default(none) &
-   !$omp reduction(+:energies) shared(h0, density) private(spin, iao, jao)
+   ! $omp parallel do collapse(3) schedule(runtime) default(none) &
+   ! $omp reduction(+:energies) shared(h0, density) private(spin, iao, jao)
    do spin = 1, size(density, 3)
       do iao = 1, size(density, 2)
          do jao = 1, size(density, 1)
@@ -173,8 +178,8 @@ subroutine get_qat_from_qsh(bas, qsh, qat)
    integer :: ish, ispin
 
    qat(:, :) = 0.0_wp
-   !$omp parallel do schedule(runtime) collapse(2) default(none) &
-   !$omp reduction(+:qat) shared(bas, qsh) private(ish)
+   ! $omp parallel do schedule(runtime) collapse(2) default(none) &
+   ! $omp reduction(+:qat) shared(bas, qsh) private(ish)
    do ispin = 1, size(qsh, 2)
       do ish = 1, size(qsh, 1)
          qat(bas%sh2at(ish), ispin) = qat(bas%sh2at(ish), ispin) + qsh(ish, ispin)

@@ -381,8 +381,8 @@ subroutine get_coulomb_matrix(xyz, ccav, jmat)
    real(wp) :: vec(3), d2, d
 
    jmat(:, :) = 0.0_wp
-   !$omp parallel do default(none) schedule(runtime) collapse(2) &
-   !$omp shared(ccav, xyz, jmat) private(ic, j, vec, d2, d)
+   ! $omp parallel do default(none) schedule(runtime) collapse(2) &
+   ! $omp shared(ccav, xyz, jmat) private(ic, j, vec, d2, d)
    do ic = 1, size(ccav, 2)
       do j = 1, size(xyz, 2)
          vec(:) = ccav(:, ic) - xyz(:, j)
@@ -439,9 +439,9 @@ subroutine efld(nsrc, src, csrc, ntrg, ctrg, ef)
    real(wp), parameter :: zero=0.0_wp
 
    ef(:, :) = 0.0_wp
-   !$omp parallel do default(none) schedule(runtime) collapse(2) &
-   !$omp reduction(+:ef) shared(ntrg, nsrc, ctrg, csrc, src) &
-   !$omp private(j, i, f, vec, r2, rr, r3)
+   ! $omp parallel do default(none) schedule(runtime) collapse(2) &
+   ! $omp reduction(+:ef) shared(ntrg, nsrc, ctrg, csrc, src) &
+   ! $omp private(j, i, f, vec, r2, rr, r3)
    do j = 1, ntrg
       do i = 1, nsrc
          vec(:) = ctrg(:, j) - csrc(:, i)

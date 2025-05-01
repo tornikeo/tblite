@@ -179,9 +179,9 @@ subroutine get_amat_0d(mol, nshell, offset, hubbard, amat)
    integer :: iat, jat, izp, jzp, ii, jj, ish, jsh
    real(wp) :: vec(3), r1, r1g, gam, tmp
 
-   !$omp parallel do default(none) schedule(runtime) &
-   !$omp shared(amat, mol, nshell, offset, hubbard) &
-   !$omp private(iat, izp, ii, ish, jat, jzp, jj, jsh, gam, vec, r1, r1g, tmp)
+   ! $omp parallel do default(none) schedule(runtime) &
+   ! $omp shared(amat, mol, nshell, offset, hubbard) &
+   ! $omp private(iat, izp, ii, ish, jat, jzp, jj, jsh, gam, vec, r1, r1g, tmp)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       ii = offset(iat)
@@ -194,9 +194,9 @@ subroutine get_amat_0d(mol, nshell, offset, hubbard, amat)
          do ish = 1, nshell(iat)
             do jsh = 1, nshell(jat)
                gam = tmp - exp_gamma(r1, hubbard(ish, izp), hubbard(jsh, jzp))
-               !$omp atomic
+               ! $omp atomic
                amat(jj+jsh, ii+ish) = amat(jj+jsh, ii+ish) + gam
-               !$omp atomic
+               ! $omp atomic
                amat(ii+ish, jj+jsh) = amat(ii+ish, jj+jsh) + gam
             end do
          end do
@@ -204,13 +204,13 @@ subroutine get_amat_0d(mol, nshell, offset, hubbard, amat)
       do ish = 1, nshell(iat)
          do jsh = 1, ish-1
             gam = -exp_gamma(0.0_wp, hubbard(ish, izp), hubbard(jsh, izp))
-            !$omp atomic
+            ! $omp atomic
             amat(ii+jsh, ii+ish) = amat(ii+jsh, ii+ish) + gam
-            !$omp atomic
+            ! $omp atomic
             amat(ii+ish, ii+jsh) = amat(ii+ish, ii+jsh) + gam
          end do
          gam = -exp_gamma(0.0_wp, hubbard(ish, izp), hubbard(ish, izp))
-         !$omp atomic
+         ! $omp atomic
          amat(ii+ish, ii+ish) = amat(ii+ish, ii+ish) + gam
       end do
    end do
@@ -244,9 +244,9 @@ subroutine get_amat_3d(mol, nshell, offset, hubbard, rcut, wsc, alpha, amat)
    call get_dir_trans(mol%lattice, alpha, conv, dtrans)
    call get_rec_trans(mol%lattice, alpha, vol, conv, rtrans)
 
-   !$omp parallel do default(none) schedule(runtime) shared(amat) &
-   !$omp shared(mol, nshell, offset, hubbard, wsc, dtrans, rtrans, alpha, vol, rcut) &
-   !$omp private(iat, izp, jat, jzp, ii, jj, ish, jsh, ui, uj, wsw, vec, dtmp, rtmp, aval)
+   ! $omp parallel do default(none) schedule(runtime) shared(amat) &
+   ! $omp shared(mol, nshell, offset, hubbard, wsc, dtrans, rtrans, alpha, vol, rcut) &
+   ! $omp private(iat, izp, jat, jzp, ii, jj, ish, jsh, ui, uj, wsw, vec, dtmp, rtmp, aval)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       ii = offset(iat)
@@ -263,9 +263,9 @@ subroutine get_amat_3d(mol, nshell, offset, hubbard, rcut, wsc, alpha, amat)
                   uj = hubbard(jsh, jzp)
                   call get_amat_dir_3d(vec, ui, uj, alpha, dtrans, dtmp)
                   aval = (dtmp + rtmp) * wsw
-                  !$omp atomic
+                  ! $omp atomic
                   amat(jj+jsh, ii+ish) = amat(jj+jsh, ii+ish) + aval
-                  !$omp atomic
+                  ! $omp atomic
                   amat(ii+ish, jj+jsh) = amat(ii+ish, jj+jsh) + aval
                end do
             end do
@@ -283,15 +283,15 @@ subroutine get_amat_3d(mol, nshell, offset, hubbard, rcut, wsc, alpha, amat)
                uj = hubbard(jsh, izp)
                call get_amat_dir_3d(vec, ui, uj, alpha, dtrans, dtmp)
                aval = (dtmp + rtmp - exp_gamma(0.0_wp, ui, uj)) * wsw
-               !$omp atomic
+               ! $omp atomic
                amat(ii+jsh, ii+ish) = amat(ii+jsh, ii+ish) + aval
-               !$omp atomic
+               ! $omp atomic
                amat(ii+ish, ii+jsh) = amat(ii+ish, ii+jsh) + aval
             end do
             ui = hubbard(ish, izp)
             call get_amat_dir_3d(vec, ui, ui, alpha, dtrans, dtmp)
             aval = (dtmp + rtmp - exp_gamma(0.0_wp, ui, ui)) * wsw
-            !$omp atomic
+            ! $omp atomic
             amat(ii+ish, ii+ish) = amat(ii+ish, ii+ish) + aval
          end do
       end do
@@ -455,14 +455,14 @@ subroutine get_damat_0d(mol, nshell, offset, hubbard, qvec, dadr, dadL, atrace)
    dadr(:, :, :) = 0.0_wp
    dadL(:, :, :) = 0.0_wp
 
-   !$omp parallel default(none) &
-   !$omp shared(atrace, dadr, dadL, mol, qvec, hubbard, nshell, offset) &
-   !$omp private(iat, izp, ii, ish, jat, jzp, jj, jsh, gam, r1, vec, dG, dS, dtmp, arg) &
-   !$omp private(itrace, didr, didL)
+   ! $omp parallel default(none) &
+   ! $omp shared(atrace, dadr, dadL, mol, qvec, hubbard, nshell, offset) &
+   ! $omp private(iat, izp, ii, ish, jat, jzp, jj, jsh, gam, r1, vec, dG, dS, dtmp, arg) &
+   ! $omp private(itrace, didr, didL)
    itrace = atrace
    didr = dadr
    didL = dadL
-   !$omp do schedule(runtime)
+   ! $omp do schedule(runtime)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       ii = offset(iat)
@@ -487,12 +487,12 @@ subroutine get_damat_0d(mol, nshell, offset, hubbard, qvec, dadr, dadL, atrace)
          end do
       end do
    end do
-   !$omp critical (get_damat_0d_)
+   ! $omp critical (get_damat_0d_)
    atrace(:, :) = atrace + itrace
    dadr(:, :, :) = dadr + didr
    dadL(:, :, :) = dadL + didL
-   !$omp end critical (get_damat_0d_)
-   !$omp end parallel
+   ! $omp end critical (get_damat_0d_)
+   ! $omp end parallel
 
 end subroutine get_damat_0d
 
@@ -536,14 +536,14 @@ subroutine get_damat_3d(mol, nshell, offset, hubbard, rcut, wsc, alpha, qvec, &
    call get_dir_trans(mol%lattice, alpha, conv, dtrans)
    call get_rec_trans(mol%lattice, alpha, vol, conv, rtrans)
 
-   !$omp parallel default(none) shared(atrace, dadr, dadL) &
-   !$omp shared(mol, wsc, alpha, vol, dtrans, rtrans, qvec, hubbard, nshell, offset, rcut) &
-   !$omp private(iat, izp, jat, jzp, img, ii, jj, ish, jsh, ui, uj, wsw, vec, dG, dS, &
-   !$omp& dGr, dSr, dGd, dSd, itrace, didr, didL)
+   ! $omp parallel default(none) shared(atrace, dadr, dadL) &
+   ! $omp shared(mol, wsc, alpha, vol, dtrans, rtrans, qvec, hubbard, nshell, offset, rcut) &
+   ! $omp private(iat, izp, jat, jzp, img, ii, jj, ish, jsh, ui, uj, wsw, vec, dG, dS, &
+   ! $omp& dGr, dSr, dGd, dSd, itrace, didr, didL)
    itrace = atrace
    didr = dadr
    didL = dadL
-   !$omp do schedule(runtime)
+   ! $omp do schedule(runtime)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       ii = offset(iat)
@@ -592,12 +592,12 @@ subroutine get_damat_3d(mol, nshell, offset, hubbard, rcut, wsc, alpha, qvec, &
          end do
       end do
    end do
-   !$omp critical (get_damat_3d_)
+   ! $omp critical (get_damat_3d_)
    atrace(:, :) = atrace + itrace
    dadr(:, :, :) = dadr + didr
    dadL(:, :, :) = dadL + didL
-   !$omp end critical (get_damat_3d_)
-   !$omp end parallel
+   ! $omp end critical (get_damat_3d_)
+   ! $omp end parallel
 
 end subroutine get_damat_3d
 

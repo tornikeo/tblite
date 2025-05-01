@@ -39,8 +39,8 @@ subroutine get_mulliken_shell_charges(bas, smat, pmat, n0sh, qsh)
    real(wp) :: pao
 
    qsh(:, :) = 0.0_wp
-   !$omp parallel do default(none) collapse(2) schedule(runtime) reduction(+:qsh) &
-   !$omp shared(bas, pmat, smat) private(spin, iao, jao, pao)
+   ! $omp parallel do default(none) collapse(2) schedule(runtime) reduction(+:qsh) &
+   ! $omp shared(bas, pmat, smat) private(spin, iao, jao, pao)
    do spin = 1, size(pmat, 3)
       do iao = 1, bas%nao
          pao = 0.0_wp
@@ -67,8 +67,8 @@ subroutine get_mulliken_atomic_multipoles(bas, mpmat, pmat, mpat)
    real(wp) :: pao(size(mpmat, 1))
 
    mpat(:, :, :) = 0.0_wp
-   !$omp parallel do default(none) schedule(runtime) reduction(+:mpat) &
-   !$omp shared(bas, pmat, mpmat) private(spin, iao, jao, pao)
+   ! $omp parallel do default(none) schedule(runtime) reduction(+:mpat) &
+   ! $omp shared(bas, pmat, mpmat) private(spin, iao, jao, pao)
    do spin = 1, size(pmat, 3)
       do iao = 1, bas%nao
          pao(:) = 0.0_wp

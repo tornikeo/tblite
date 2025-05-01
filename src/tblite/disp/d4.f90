@@ -254,10 +254,10 @@ subroutine get_dispersion_matrix(mol, disp, param, trans, cutoff, r4r2, dispmat)
    dispmat(:, :, :, :) = 0.0_wp
    cutoff2 = cutoff**2
 
-   !$omp parallel do schedule(runtime) default(none) &
-   !$omp shared(mol, param, disp, trans, cutoff2, r4r2, dispmat) &
-   !$omp private(iat, jat, izp, jzp, jtr, vec, r2, r0ij, rrij, &
-   !$omp& t6, t8, edisp, dE)
+   ! $omp parallel do schedule(runtime) default(none) &
+   ! $omp shared(mol, param, disp, trans, cutoff2, r4r2, dispmat) &
+   ! $omp private(iat, jat, izp, jzp, jtr, vec, r2, r0ij, rrij, &
+   ! $omp& t6, t8, edisp, dE)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       do jat = 1, iat

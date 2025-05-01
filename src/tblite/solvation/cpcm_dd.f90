@@ -218,8 +218,8 @@ subroutine new_domain_decomposition(self, input, rvdw, wang, grid)
 
    ! build a basis of spherical harmonics at the griwpoints:
    allocate(vplm(self%nylm), vcos(self%lmax+1), vsin(self%lmax+1))
-   !$omp parallel do default(none) schedule(runtime) &
-   !$omp shared(self) private(i, vplm, vcos, vsin)
+   ! $omp parallel do default(none) schedule(runtime) &
+   ! $omp shared(self) private(i, vplm, vcos, vsin)
    do i = 1, self%ngrid
       call ylmbas(self, self%grid(:, i), self%basis(:, i), vplm, vcos, vsin)
    end do
@@ -342,8 +342,8 @@ subroutine mkfiui(self)
    self%ui = 0.0_wp
    if (self%grad) self%zi = 0.0_wp
 
-   !$omp parallel do default(none) schedule(runtime) collapse(2) &
-   !$omp shared(self) private(iat, i, ii, jat, v, vv, t, xt, swthr, fac)
+   ! $omp parallel do default(none) schedule(runtime) collapse(2) &
+   ! $omp shared(self) private(iat, i, ii, jat, v, vv, t, xt, swthr, fac)
    ! loop over spheres
    do iat = 1, self%nat
 
@@ -818,7 +818,7 @@ pure subroutine dbasis(self, x, basloc, dbsloc, vplm, vcos, vsin)
       else
          dbsloc(:, ind) = 0.0_wp
       end if
-      !$omp simd
+      ! $omp simd
       do m = 1, l
          fln = self%facs(ind+m)
          plm = fln*vplm(ind+m)
@@ -1858,8 +1858,8 @@ subroutine lx(self, n, x, y)
    ! initialize
    y(:, :) = 0.0_wp
 
-   !$omp parallel do default(none) schedule(runtime) shared(self, y, x) &
-   !$omp private(iat, pot, basloc, vplm, vcos, vsin)
+   ! $omp parallel do default(none) schedule(runtime) shared(self, y, x) &
+   ! $omp private(iat, pot, basloc, vplm, vcos, vsin)
    ! loop over spheres
    do iat = 1, self%nat
 
@@ -1900,8 +1900,8 @@ subroutine lstarx(self, n, x, y)
    y(:, :) = 0.0_wp
 
    ! expand x over spherical harmonics
-   !$omp parallel do default(none) schedule(runtime) collapse(2) &
-   !$omp shared(self, xi, x) private(iat, ig)
+   ! $omp parallel do default(none) schedule(runtime) collapse(2) &
+   ! $omp shared(self, xi, x) private(iat, ig)
    ! loop over spheres
    do iat = 1, self%nat
       ! loop over griwpoints
@@ -1911,8 +1911,8 @@ subroutine lstarx(self, n, x, y)
    end do
 
    ! compute action
-   !$omp parallel do default(none) schedule(runtime) &
-   !$omp shared(self, xi, y) private(iat, basloc, vplm, vcos, vsin)
+   ! $omp parallel do default(none) schedule(runtime) &
+   ! $omp shared(self, xi, y) private(iat, basloc, vplm, vcos, vsin)
    ! loop over spheres
    do iat = 1, self%nat
 
@@ -2159,8 +2159,8 @@ subroutine get_deriv(self, keps, phi, sigma, s, gradient)
       & vcos(self%lmax+1), vsin(self%lmax+1))
 
    ! compute xi:
-   !$omp parallel do default(none) collapse(2) schedule(runtime) &
-   !$omp shared(self, s, xi) private(iat, ig)
+   ! $omp parallel do default(none) collapse(2) schedule(runtime) &
+   ! $omp shared(self, s, xi) private(iat, ig)
    do iat = 1, self%nat
       do ig = 1, self%ngrid
          xi(ig, iat) = dot_product(s(:, iat), self%basis(:, ig))

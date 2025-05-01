@@ -338,9 +338,9 @@ subroutine get_amat_3d(mol, nshell, offset, hubbard, gexp, rcut, wsc, alpha, ama
                   gam = hubbard(jsh, ish, jzp, izp)
                   call get_amat_dir_3d(vec, gam, gexp, rcut, alpha, dtrans, dtmp)
                   aval = (dtmp + rtmp) * wsw
-                  !$omp atomic
+                  ! $omp atomic
                   amat(jj+jsh, ii+ish) = amat(jj+jsh, ii+ish) + aval
-                  !$omp atomic
+                  ! $omp atomic
                   amat(ii+ish, jj+jsh) = amat(ii+ish, jj+jsh) + aval
                end do
             end do
@@ -357,15 +357,15 @@ subroutine get_amat_3d(mol, nshell, offset, hubbard, gexp, rcut, wsc, alpha, ama
                gam = hubbard(jsh, ish, izp, izp)
                call get_amat_dir_3d(vec, gam, gexp, rcut, alpha, dtrans, dtmp)
                aval = (dtmp + rtmp + gam) * wsw
-               !$omp atomic
+               ! $omp atomic
                amat(ii+jsh, ii+ish) = amat(ii+jsh, ii+ish) + aval
-               !$omp atomic
+               ! $omp atomic
                amat(ii+ish, ii+jsh) = amat(ii+ish, ii+jsh) + aval
             end do
             gam = hubbard(ish, ish, izp, izp)
             call get_amat_dir_3d(vec, gam, gexp, rcut, alpha, dtrans, dtmp)
             aval = (dtmp + rtmp + gam) * wsw
-            !$omp atomic
+            ! $omp atomic
             amat(ii+ish, ii+ish) = amat(ii+ish, ii+ish) + aval
          end do
       end do
@@ -571,12 +571,12 @@ subroutine get_damat_0d(mol, nshell, offset, hubbard, gexp, qvec, dadr, dadL, at
          end do
       end do
    end do
-   !$omp critical (get_damat_0d_)
+   ! $omp critical (get_damat_0d_)
    atrace(:, :) = atrace + itrace
    dadr(:, :, :) = dadr + didr
    dadL(:, :, :) = dadL + didL
-   !$omp end critical (get_damat_0d_)
-   !$omp end parallel
+   ! $omp end critical (get_damat_0d_)
+   ! $omp end parallel
 
 end subroutine get_damat_0d
 

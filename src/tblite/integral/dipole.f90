@@ -458,9 +458,9 @@ subroutine get_dipole_integrals_lat(mol, trans, cutoff, bas, overlap, dpint)
    allocate(stmp(msao(bas%maxl)**2), dtmp(3, msao(bas%maxl)**2))
    cutoff2 = cutoff**2
 
-   !$omp parallel do schedule(runtime) default(none) &
-   !$omp shared(mol, bas, trans, cutoff2, overlap, dpint) private(r2, vec, stmp, dtmp) &
-   !$omp private(iat, jat, izp, jzp, itr, is, js, ish, jsh, ii, jj, iao, jao, nao)
+   ! $omp parallel do schedule(runtime) default(none) &
+   ! $omp shared(mol, bas, trans, cutoff2, overlap, dpint) private(r2, vec, stmp, dtmp) &
+   ! $omp private(iat, jat, izp, jzp, itr, is, js, ish, jsh, ii, jj, iao, jao, nao)
    do iat = 1, mol%nat
       izp = mol%id(iat)
       is = bas%ish_at(iat)
@@ -479,7 +479,7 @@ subroutine get_dipole_integrals_lat(mol, trans, cutoff, bas, overlap, dpint)
                      & r2, vec, bas%intcut, stmp, dtmp)
 
                   nao = msao(bas%cgto(jsh, jzp)%ang)
-                  !$omp simd collapse(2)
+                  ! $omp simd collapse(2)
                   do iao = 1, msao(bas%cgto(ish, izp)%ang)
                      do jao = 1, nao
                         overlap(jj+jao, ii+iao) = overlap(jj+jao, ii+iao) &

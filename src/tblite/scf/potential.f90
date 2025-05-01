@@ -115,8 +115,8 @@ subroutine add_vat_to_vsh(bas, vat, vsh)
 
    integer :: iat, ish, ii, spin
 
-   !$omp parallel do schedule(runtime) collapse(2) default(none) &
-   !$omp reduction(+:vsh) shared(bas, vat) private(spin, ii, ish, iat)
+   ! $omp parallel do schedule(runtime) collapse(2) default(none) &
+   ! $omp reduction(+:vsh) shared(bas, vat) private(spin, ii, ish, iat)
    do spin = 1, size(vat, 2)
       do iat = 1, size(vat, 1)
          ii = bas%ish_at(iat)
@@ -138,8 +138,8 @@ subroutine add_vsh_to_vao(bas, vsh, vao)
 
    integer :: ish, iao, ii, spin
 
-   !$omp parallel do schedule(runtime) collapse(2) default(none) &
-   !$omp reduction(+:vao) shared(bas, vsh) private(ii, iao, ish)
+   ! $omp parallel do schedule(runtime) collapse(2) default(none) &
+   ! $omp reduction(+:vao) shared(bas, vsh) private(ii, iao, ish)
    do spin = 1, size(vsh, 2)
       do ish = 1, size(vsh, 1)
          ii = bas%iao_sh(ish)
@@ -164,8 +164,8 @@ subroutine add_vao_to_h1(bas, sint, vao, h1)
 
    integer :: iao, jao, spin
 
-   !$omp parallel do collapse(3) schedule(runtime) default(none) &
-   !$omp shared(h1, bas, sint, vao) private(spin, iao, jao)
+   ! $omp parallel do collapse(3) schedule(runtime) default(none) &
+   ! $omp shared(h1, bas, sint, vao) private(spin, iao, jao)
    do spin = 1, size(h1, 3)
       do iao = 1, bas%nao
          do jao = 1, bas%nao
@@ -191,8 +191,8 @@ subroutine add_vmp_to_h1(bas, mpint, vmp, h1)
 
    nmp = min(size(mpint, 1), size(vmp, 1))
 
-   !$omp parallel do collapse(3) schedule(runtime) default(none) &
-   !$omp shared(h1, bas, mpint, vmp, nmp) private(spin, iao, jao, iat, jat)
+   ! $omp parallel do collapse(3) schedule(runtime) default(none) &
+   ! $omp shared(h1, bas, mpint, vmp, nmp) private(spin, iao, jao, iat, jat)
    do spin = 1, size(h1, 3)
       do iao = 1, bas%nao
          do jao = 1, bas%nao
