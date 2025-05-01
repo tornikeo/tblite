@@ -47,6 +47,7 @@ srcs += files(
   'context.f90',
   'cutoff.f90',
   'disp.f90',
+  'debug.f90',
   'lapack.f90',
   'ncoord.f90',
   'os.F90',

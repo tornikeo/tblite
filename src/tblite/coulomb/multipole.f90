@@ -17,6 +17,7 @@
 !> Anisotropic second-order electrostatics using a damped multipole expansion
 module tblite_coulomb_multipole
    use mctc_env, only : wp
+   use tblite_debug
    use mctc_io, only : structure_type
    use mctc_io_math, only : matdet_3x3, matinv_3x3
    use mctc_io_constants, only : pi
@@ -200,8 +201,12 @@ subroutine get_energy(self, mol, cache, wfn, energies)
    call view(cache, ptr)
 
    allocate(vs(mol%nat), vd(3, mol%nat), vq(6, mol%nat))
-
+   call print_cpp_array_3d("const float amat_sd", ptr%amat_sd)
+   call print_cpp_array_1d("const float qat", wfn%qat(:, 1))
    call gemv(ptr%amat_sd, wfn%qat(:, 1), vd)
+   call print_cpp_array_2d("const float vd", vd)
+
+
    call gemv(ptr%amat_dd, wfn%dpat(:, :, 1), vd, beta=1.0_wp, alpha=0.5_wp)
    call gemv(ptr%amat_sq, wfn%qat(:, 1), vq)
 
@@ -810,9 +815,9 @@ subroutine get_multipole_gradient_3d(mol, rad, kdmp3, kdmp5, qat, dpat, qpat, ws
    call get_dir_trans(mol%lattice, alpha, conv, dtrans)
    call get_rec_trans(mol%lattice, alpha, vol, conv, rtrans)
 
-   !$omp parallel do default(none) schedule(runtime) reduction(+:dEdr, gradient, sigma) &
-   !$omp shared(mol, wsc, kdmp3, kdmp5, vol, alpha, rtrans, dtrans, rad, qat, dpat, qpat) &
-   !$omp private(iat, jat, dE, dG, dS, wsw, img, vec, rr, dEd, dGd, dGr, dSd, dSr)
+   ! $omp parallel do default(none) schedule(runtime) reduction(+:dEdr, gradient, sigma) &
+   ! $omp shared(mol, wsc, kdmp3, kdmp5, vol, alpha, rtrans, dtrans, rad, qat, dpat, qpat) &
+   ! $omp private(iat, jat, dE, dG, dS, wsw, img, vec, rr, dEd, dGd, dGr, dSd, dSr)
    do iat = 1, mol%nat
       do jat = 1, iat - 1
          dE = 0.0_wp
@@ -839,9 +844,9 @@ subroutine get_multipole_gradient_3d(mol, rad, kdmp3, kdmp5, qat, dpat, qpat, ws
       end do
    end do
 
-   !$omp parallel do default(none) schedule(runtime) reduction(+:dEdr, sigma) &
-   !$omp shared(mol, wsc, kdmp3, kdmp5, vol, alpha, rtrans, dtrans, rad, qat, dpat, qpat) &
-   !$omp private(iat, jat, dE, dG, dS, wsw, img, vec, rr, dEd, dGd, dGr, dSd, dSr)
+   ! $omp parallel do default(none) schedule(runtime) reduction(+:dEdr, sigma) &
+   ! $omp shared(mol, wsc, kdmp3, kdmp5, vol, alpha, rtrans, dtrans, rad, qat, dpat, qpat) &
+   ! $omp private(iat, jat, dE, dG, dS, wsw, img, vec, rr, dEd, dGd, dGr, dSd, dSr)
    do iat = 1, mol%nat
       dE = 0.0_wp
       dS(:, :) = 0.0_wp
