@@ -17,6 +17,7 @@
 !> High-level interface to level 2 basic linear algebra subprogram operations
 module tblite_blas_level2
    use mctc_env, only : sp, dp
+   use tblite_debug
    implicit none
    private
 
@@ -207,19 +208,45 @@ subroutine wrap_dgemv422(amat, xvec, yvec, alpha, beta, trans)
    real(dp), intent(in), optional :: beta
    character(len=1), intent(in), optional :: trans
    real(dp), pointer :: aptr(:, :), yptr(:), xptr(:)
+   real(dp) :: tmp(1,3,1,3)
+   integer :: i
    character(len=1) :: tra
    if (present(trans)) then
       tra = trans
    else
       tra = 'n'
    end if
+  !  print*, "amat", size(amat,1), size(amat,2), size(amat,3), size(amat,4), &
+  !   "xvec", size(xvec,1), size(xvec,2), &
+  !   "yvec", size(yvec,1), size(yvec,2)
+     !  print*, ""
+  !  print*, ""
+  !  print*, ""
+  !  print*, ""
+   ! debug
+   ! create tmp = arange(9)
+   ! reshape tmp to (1,3,1,3)
+   ! print tmp
+  !  tmp = reshape([(real(i, dp), i=0,8)], shape=[1,3,1,3], order=[4,3,2,1])
+    ! amat = tmp
+  !  print*, tmp
+  !  call print_cpp_array_4d("float tmp", tmp)
+  !  call print_cpp_array_4d("float amat", amat)
+  !  call print_cpp_array_2d("float xvec", xvec)
+  !  call print_cpp_array_2d("float yvec", yvec)
+  !  print*, "const float alpha = ", alpha ," ;"
+  !  print*, "const float beta  = ", beta  ," ;"
    aptr(1:size(amat, 1)*size(amat, 2), 1:size(amat, 3)*size(amat, 4)) => amat
    xptr(1:size(xvec, 1)*size(xvec, 2)) => xvec
    yptr(1:size(yvec, 1)*size(yvec, 2)) => yvec
    call wrap_gemv(aptr, xptr, yptr, alpha, beta, tra)
+  !  call print_cpp_array_2d("float expected_yvec", yvec)
+  !  print*, ""
+  !  print*, ""
+  !  print*, ""
 end subroutine wrap_dgemv422
 
-
+ 
 subroutine wrap_dgemv312(amat, xvec, yvec, alpha, beta, trans)
    real(dp), intent(in), contiguous, target :: amat(:, :, :)
    real(dp), intent(in) :: xvec(:)
@@ -229,6 +256,7 @@ subroutine wrap_dgemv312(amat, xvec, yvec, alpha, beta, trans)
    character(len=1), intent(in), optional :: trans
    real(dp), pointer :: aptr(:, :), yptr(:)
    character(len=1) :: tra
+
    if (present(trans)) then
       tra = trans
    else
@@ -266,7 +294,17 @@ subroutine wrap_dgemv321(amat, xvec, yvec, alpha, beta, trans)
       aptr(1:size(amat, 1)*size(amat, 2), 1:size(amat, 3)) => amat
       xptr(1:size(xvec, 1) * size(xvec, 2)) => xvec
    end if
+  !  print*, ""
+  !  print*, ""
+  !  call print_cpp_array_3d("const float amat", amat)
+  !  call print_cpp_array_2d("const float xvec", xvec)
+  !  call print_cpp_array_1d("const float yvec", yvec)
+  !  print*, "const float alpha = ", alpha ," ;"
+  !  print*, "const float beta  = ", beta  ," ;"
    call wrap_gemv(aptr, xptr, yvec, alpha, beta, tra)
+  !  call print_cpp_array_1d("const float expected_yvec", yvec)
+  !  print*, ""
+  !  print*, ""
 end subroutine wrap_dgemv321
 
 

@@ -201,12 +201,12 @@ subroutine get_energy(self, mol, cache, wfn, energies)
    call view(cache, ptr)
 
    allocate(vs(mol%nat), vd(3, mol%nat), vq(6, mol%nat))
-   call print_cpp_array_3d("const float amat_sd", ptr%amat_sd)
-   call print_cpp_array_1d("const float qat", wfn%qat(:, 1))
+  !  call print_cpp_array_3d("const float amat_sd", ptr%amat_sd)
+  !  call print_cpp_array_1d("const float qat", wfn%qat(:, 1))
+   !  call print_cpp_array_2d("const float vd", vd)
+   
+   
    call gemv(ptr%amat_sd, wfn%qat(:, 1), vd)
-   call print_cpp_array_2d("const float vd", vd)
-
-
    call gemv(ptr%amat_dd, wfn%dpat(:, :, 1), vd, beta=1.0_wp, alpha=0.5_wp)
    call gemv(ptr%amat_sq, wfn%qat(:, 1), vq)
 

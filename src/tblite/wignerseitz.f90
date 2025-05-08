@@ -58,8 +58,8 @@ subroutine new_wignerseitz_cell(self, mol)
    allocate(self%nimg(mol%nat, mol%nat), self%tridx(ntr, mol%nat, mol%nat), &
       & tridx(ntr))
 
-   !$omp parallel do default(none) schedule(runtime) collapse(2) &
-   !$omp shared(mol, trans, self) private(iat, jat, vec, nimg, tridx)
+   ! $omp parallel do default(none) schedule(runtime) collapse(2) &
+   ! $omp shared(mol, trans, self) private(iat, jat, vec, nimg, tridx)
    do iat = 1, mol%nat
       do jat = 1, mol%nat
          vec(:) = mol%xyz(:, iat) - mol%xyz(:, jat)
