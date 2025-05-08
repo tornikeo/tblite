@@ -48,6 +48,130 @@ module tblite_xtb_singlepoint
 
 contains
 
+!    !> Structure representation
+! type :: structure_type
+
+! !> Number of atoms
+! integer :: nat = 0
+
+! !> Number of unique species
+! integer :: nid = 0
+
+! !> Number of bonds
+! integer :: nbd = 0
+
+! !> Species identifier
+! integer, allocatable :: id(:)
+
+! !> Atomic number for each species
+! integer, allocatable :: num(:)
+
+! !> Element symbol for each species
+! character(len=symbol_length), allocatable :: sym(:)
+
+! !> Cartesian coordinates, in Bohr
+! real(wp), allocatable :: xyz(:, :)
+
+! !> Number of unpaired electrons
+! integer :: uhf = 0
+
+! !> Total charge
+! real(wp) :: charge = 0.0_wp
+
+! !> Lattice parameters
+! real(wp), allocatable :: lattice(:, :)
+
+! !> Periodic directions
+! logical, allocatable :: periodic(:)
+
+! !> Bond indices
+! integer, allocatable :: bond(:, :)
+
+! end type structure_type
+
+subroutine print_structure_type(mol)
+  implicit none
+  
+  type(structure_type), intent(in) :: mol
+  ! print structure type as a set of C++-style variables
+  ! TODO: Print all variables of mol
+  integer :: i, j
+  
+  write(*,*) "int nat = ", mol%nat, ";"
+  write(*,*) "int nid = ", mol%nid, ";"
+  write(*,*) "int nbd = ", mol%nbd, ";"
+
+  write(*,*) "int id[] = {"
+  do i = 1, size(mol%id)
+    if (i < size(mol%id)) then
+      write(*,'(I0, a)', advance="no") mol%id(i), ", ";
+    else
+      write(*,'(I0)', advance="no") mol%id(i);
+    end if
+  end do
+  write(*,*) "};"
+
+  write(*,*) "int num[] = {"
+  do i = 1, size(mol%num)
+    if (i < size(mol%num)) then
+      write(*,'(I0, a)', advance="no") mol%num(i), ", ";
+    else
+      write(*,'(I0)', advance="no") mol%num(i);
+    end if
+  end do
+  write(*,*) "};"
+
+  write(*,*) "const char* sym[] = {"
+  do i = 1, size(mol%sym)
+    if (i < size(mol%sym)) then
+      write(*,'(A)', advance="no") '"' // trim(mol%sym(i)) // '",'
+    else
+      write(*,'(A)', advance="no") '"' // trim(mol%sym(i)) // '"'
+    end if
+  end do
+  write(*,*) "};"
+
+  write(*,*) "double xyz[][] = {"
+  do i = 1, mol%nat
+    write(*,'(A)', advance="no") "  {"
+    do j = 1, 3
+      if (j < 3) then
+        write(*,'(g0.8, A)', advance="no") mol%xyz(j,i), ", ";
+      else
+        write(*,'(g0.8)', advance="no") mol%xyz(j,i);
+      end if
+    end do
+    write(*,*) "},"
+  end do
+  write(*,*) "};"
+
+  write(*,*) "int uhf = ", mol%uhf, ";"
+  write(*,*) "double charge = ", mol%charge, ";"
+
+  ! write(*,*) "double lattice[][] = {"
+  ! do i = 1, size(mol%lattice,1)
+  !   write(*,*) "  {", (mol%lattice(i, j), j = 1, size(mol%lattice, 2)), "},"
+  ! end do
+  ! write(*,*) "};"
+
+  ! write(*,*) "bool periodic[] = {"
+  ! do i = 1, size(mol%periodic)
+  !   if (i < size(mol%periodic)) then
+  !     write(*,'(L1, a)', advance="no") mol%periodic(i), ", ";
+  !   else
+  !     write(*,'(L1)', advance="no") mol%periodic(i);
+  !   end if
+  ! end do
+  ! write(*,*) "};"
+  if (allocated(mol%bond)) then
+    write(*,*) "int bond[][] = {"
+    do i = 1, size(mol%bond, 1)
+      write(*,*) "  {", (mol%bond(i, j), j = 1, size(mol%bond, 2)), "},"
+    end do
+    write(*,*) "};"
+  endif
+end subroutine print_structure_type
+
 
 subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigma, &
       & verbosity, results)
@@ -80,9 +204,8 @@ subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigm
    type(sygvd_solver) :: sygvd
    type(adjacency_list) :: list
    integer :: iscf, spin
-
    call timer%push("total")
-
+    ! call print_structure_type(mol)
    if (present(verbosity)) then
       prlevel = verbosity
    else
