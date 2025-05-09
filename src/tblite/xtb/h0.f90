@@ -18,6 +18,7 @@
 module tblite_xtb_h0
    use, intrinsic :: iso_fortran_env
    use iso_c_binding
+   use iso_c_binding, only : c_int, c_double
    use mctc_env, only : wp
    use mctc_io, only : structure_type
    use tblite_adjlist, only : adjacency_list
@@ -39,9 +40,15 @@ module tblite_xtb_h0
    end interface
 
    interface 
-      subroutine cuda_get_hamiltonian_kernel() bind(C, name="cuda_get_hamiltonian_kernel_")
-         implicit none
-          
+      subroutine cuda_get_hamiltonian_kernel( nao, selfenergy, overlap, dpint, qpint, hamiltonian) bind(C, name="cuda_get_hamiltonian_kernel_")
+        use iso_c_binding
+        implicit none
+        integer(c_int), value :: nao
+        real(c_double), intent(in) :: selfenergy(*) !(:)
+        real(c_double), intent(out) :: overlap(*) !(:, :)
+        real(c_double), intent(out) :: dpint(*) !(:, :, :)
+        real(c_double), intent(out) :: qpint(*) !(:, :, :)
+        real(c_double), intent(out) :: hamiltonian(*) !(:,:)
       end subroutine
    end interface
 
@@ -171,6 +178,8 @@ contains
 
    subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
     & hamiltonian)
+       use iso_c_binding
+       implicit none
        !> Molecular structure data
        type(structure_type), intent(in) :: mol
        !> Lattice points within a given realspace cutoff
@@ -191,7 +200,12 @@ contains
        real(wp), intent(out) :: qpint(:, :, :)
        !> Effective Hamiltonian
        real(wp), intent(out) :: hamiltonian(:, :)
-       call cuda_get_hamiltonian_kernel()
+
+       integer(kind=c_int) :: nao
+       nao = size(hamiltonian, 1);
+       hamiltonian = real(100, c_double)
+       call cuda_get_hamiltonian_kernel( nao, selfenergy, overlap, dpint, qpint, hamiltonian)
+       print*,"";
    end subroutine cuda_get_hamiltonian
 
    subroutine get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &

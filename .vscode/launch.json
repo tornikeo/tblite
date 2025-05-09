@@ -8,7 +8,7 @@
             "environment": [
                 {"name": "OMP_NUM_THREADS", "value": "1"}
             ],
-            "args": ["gfn2-xtb"],
+            "args": ["hamiltonian"],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "setup",
             "externalConsole": false,
