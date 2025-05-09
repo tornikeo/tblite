@@ -119,8 +119,14 @@ subroutine test_hamiltonian_mol(error, mol, ref)
    type(adjacency_list) :: list
    real(wp), parameter :: cn_cutoff = 30.0_wp
    real(wp), allocatable :: lattr(:, :), cn(:), rcov(:)
+
    real(wp), allocatable :: overlap(:, :), hamiltonian(:, :), selfenergy(:)
    real(wp), allocatable :: dpint(:, :, :), qpint(:, :, :)
+
+
+   real(wp), allocatable :: overlap_cu(:, :), hamiltonian_cu(:, :)
+   real(wp), allocatable :: dpint_cu(:, :, :), qpint_cu(:, :, :)
+
    real(wp) :: cutoff
    integer :: ii, jj
 
@@ -145,12 +151,17 @@ subroutine test_hamiltonian_mol(error, mol, ref)
 
    allocate(overlap(bas%nao, bas%nao), dpint(3, bas%nao, bas%nao), &
       & qpint(6, bas%nao, bas%nao), hamiltonian(bas%nao, bas%nao))
+  allocate(overlap_cu(bas%nao, bas%nao), dpint_cu(3, bas%nao, bas%nao), &
+      & qpint_cu(6, bas%nao, bas%nao), hamiltonian_cu(bas%nao, bas%nao))
+
    call get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap, dpint, qpint, &
       & hamiltonian)
-
+   call cuda_get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap_cu, dpint_cu, qpint_cu, &
+    & hamiltonian_cu)
    !where(abs(hamiltonian) < thr) hamiltonian = 0.0_wp
    !print '(*(6x,"&", 3(es20.14e1, "_wp":, ","), "&", /))', hamiltonian
 
+   ! compare current hamiltonian with reference
    do ii = 1, size(hamiltonian, 2)
       do jj = 1, size(hamiltonian, 1)
          call check(error, hamiltonian(jj, ii), ref(jj, ii), thr=thr2)
@@ -162,6 +173,18 @@ subroutine test_hamiltonian_mol(error, mol, ref)
       end do
    end do
 
+   ! Compare cuda-computed hamiltonian with reference
+   do ii = 1, size(hamiltonian, 2)
+    do jj = 1, size(hamiltonian, 1)
+       call check(error, hamiltonian_cu(jj, ii), ref(jj, ii), thr=thr2)
+       if (allocated(error)) then
+          print '(2es20.13)', hamiltonian_cu(jj, ii), ref(jj, ii), &
+             & hamiltonian_cu(jj, ii) - ref(jj, ii)
+          return
+       end if
+    end do
+ end do
+ 
    !allocate(eigval(bas%nao))
    !call sygvd%solve(hamiltonian, overlap, eigval, error)
    !if (allocated(error)) return

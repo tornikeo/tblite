@@ -38,9 +38,16 @@ module tblite_xtb_h0
       end subroutine get_vec_
    end interface
 
+   interface 
+      subroutine cuda_get_hamiltonian_kernel() bind(C, name="cuda_get_hamiltonian_kernel_")
+         implicit none
+          
+      end subroutine
+   end interface
+
    private
    public :: tb_hamiltonian, new_hamiltonian
-   public :: get_selfenergy, get_hamiltonian, get_occupation, get_hamiltonian_gradient
+   public :: get_selfenergy, get_hamiltonian, cuda_get_hamiltonian, get_occupation, get_hamiltonian_gradient
 
    type :: tb_hamiltonian
       !> Atomic level information
@@ -162,6 +169,30 @@ contains
 
    end subroutine get_selfenergy
 
+   subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
+    & hamiltonian)
+       !> Molecular structure data
+       type(structure_type), intent(in) :: mol
+       !> Lattice points within a given realspace cutoff
+       real(wp), intent(in) :: trans(:, :)
+       !> Neighbour list
+       type(adjacency_list), intent(in) :: alist
+       !> Basis set information
+       type(basis_type), intent(in) :: bas
+       !> Hamiltonian interaction data
+       type(tb_hamiltonian), intent(in) :: h0
+       !> Diagonal elememts of the Hamiltonian
+       real(wp), intent(in) :: selfenergy(:)
+       !> Overlap integral matrix
+       real(wp), intent(out) :: overlap(:, :)
+       !> Dipole moment integral matrix
+       real(wp), intent(out) :: dpint(:, :, :)
+       !> Quadrupole moment integral matrix
+       real(wp), intent(out) :: qpint(:, :, :)
+       !> Effective Hamiltonian
+       real(wp), intent(out) :: hamiltonian(:, :)
+       call cuda_get_hamiltonian_kernel()
+   end subroutine cuda_get_hamiltonian
 
    subroutine get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
    & hamiltonian)

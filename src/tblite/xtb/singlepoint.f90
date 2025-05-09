@@ -38,7 +38,7 @@ module tblite_xtb_singlepoint
       & get_molecular_quadrupole_moment, magnet_to_updown, updown_to_magnet
    use tblite_xtb_calculator, only : xtb_calculator
    use tblite_xtb_h0, only : get_selfenergy, get_hamiltonian, get_occupation, &
-      & get_hamiltonian_gradient
+      & get_hamiltonian_gradient, cuda_get_hamiltonian
    implicit none
    private
 
@@ -47,47 +47,6 @@ module tblite_xtb_singlepoint
    real(wp), parameter :: cn_cutoff = 25.0_wp
 
 contains
-
-!    !> Structure representation
-! type :: structure_type
-
-! !> Number of atoms
-! integer :: nat = 0
-
-! !> Number of unique species
-! integer :: nid = 0
-
-! !> Number of bonds
-! integer :: nbd = 0
-
-! !> Species identifier
-! integer, allocatable :: id(:)
-
-! !> Atomic number for each species
-! integer, allocatable :: num(:)
-
-! !> Element symbol for each species
-! character(len=symbol_length), allocatable :: sym(:)
-
-! !> Cartesian coordinates, in Bohr
-! real(wp), allocatable :: xyz(:, :)
-
-! !> Number of unpaired electrons
-! integer :: uhf = 0
-
-! !> Total charge
-! real(wp) :: charge = 0.0_wp
-
-! !> Lattice parameters
-! real(wp), allocatable :: lattice(:, :)
-
-! !> Periodic directions
-! logical, allocatable :: periodic(:)
-
-! !> Bond indices
-! integer, allocatable :: bond(:, :)
-
-! end type structure_type
 
 subroutine print_structure_type(mol)
   implicit none
@@ -148,21 +107,6 @@ subroutine print_structure_type(mol)
   write(*,*) "int uhf = ", mol%uhf, ";"
   write(*,*) "double charge = ", mol%charge, ";"
 
-  ! write(*,*) "double lattice[][] = {"
-  ! do i = 1, size(mol%lattice,1)
-  !   write(*,*) "  {", (mol%lattice(i, j), j = 1, size(mol%lattice, 2)), "},"
-  ! end do
-  ! write(*,*) "};"
-
-  ! write(*,*) "bool periodic[] = {"
-  ! do i = 1, size(mol%periodic)
-  !   if (i < size(mol%periodic)) then
-  !     write(*,'(L1, a)', advance="no") mol%periodic(i), ", ";
-  !   else
-  !     write(*,'(L1)', advance="no") mol%periodic(i);
-  !   end if
-  ! end do
-  ! write(*,*) "};"
   if (allocated(mol%bond)) then
     write(*,*) "int bond[][] = {"
     do i = 1, size(mol%bond, 1)
@@ -306,7 +250,9 @@ subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigm
    end if
 
    call new_integral(ints, calc%bas%nao)
-
+   
+   call cuda_get_hamiltonian(mol, lattr, list, calc%bas, calc%h0, selfenergy, &
+    & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian)
    call get_hamiltonian(mol, lattr, list, calc%bas, calc%h0, selfenergy, &
       & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian)
    call timer%pop
