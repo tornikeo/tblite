@@ -40,10 +40,10 @@ module tblite_xtb_h0
    end interface
 
    interface 
-      subroutine cuda_get_hamiltonian_kernel( nao, selfenergy, overlap, dpint, qpint, hamiltonian) bind(C, name="cuda_get_hamiltonian_kernel_")
+      subroutine cuda_get_hamiltonian_kernel( nao, nelem, selfenergy, overlap, dpint, qpint, hamiltonian) bind(C, name="cuda_get_hamiltonian_kernel_")
         use iso_c_binding
         implicit none
-        integer(c_int), value :: nao
+        integer(c_int), value :: nao, nelem
         real(c_double), intent(in) :: selfenergy(*) !(:)
         real(c_double), intent(out) :: overlap(*) !(:, :)
         real(c_double), intent(out) :: dpint(*) !(:, :, :)
@@ -201,10 +201,13 @@ contains
        !> Effective Hamiltonian
        real(wp), intent(out) :: hamiltonian(:, :)
 
-       integer(kind=c_int) :: nao
+       integer(kind=c_int) :: nao, nelem
+
        nao = size(hamiltonian, 1);
-       hamiltonian = real(100, c_double)
-       call cuda_get_hamiltonian_kernel( nao, selfenergy, overlap, dpint, qpint, hamiltonian)
+       nelem = size(selfenergy, 1);
+       hamiltonian = 1
+       overlap = 2
+       call cuda_get_hamiltonian_kernel( nelem, nao, selfenergy, overlap, dpint, qpint, hamiltonian)
        print*,"";
    end subroutine cuda_get_hamiltonian
 

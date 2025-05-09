@@ -1,31 +1,39 @@
 {
-    "configurations": [
+  "configurations": [
+    {
+      "name": "Debug with Meson",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceRoot}/build/test/unit/tester",
+      "environment": [
         {
-            "name": "Debug with Meson",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceRoot}/build/test/unit/tester",
-            "environment": [
-                {"name": "OMP_NUM_THREADS", "value": "1"}
-            ],
-            "args": ["hamiltonian"],
-            "cwd": "${workspaceRoot}",
-            "preLaunchTask": "setup",
-            "externalConsole": false,
-            "linux": {
-                "MIMode": "gdb",
-                "setupCommands": [
-                    { "text": "-enable-pretty-printing", "description": "enable pretty printing", "ignoreFailures": true },
-                    { "text": "handle SIGPIPE nostop noprint pass", "description": "ignore SIGPIPE", "ignoreFailures": true },
-                    {
-                        "description": "Enable gdbinit",
-                        "text": "source .gdbinit",
-                        "ignoreFailures": true
-                      }
-              
-                ]
-            },
+          "name": "OMP_NUM_THREADS",
+          "value": "1"
         }
-    ]
+      ],
+      "args": [
+        "hamiltonian"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "setup",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "text": "source ${workspaceFolder}/.gdbinit",
+          "ignoreFailures": false
+        },
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
 }
-
