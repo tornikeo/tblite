@@ -44,7 +44,17 @@ module tblite_xtb_h0
       !> On Fortran side, dimensions are passed in reverse (arr, size(arr, 2), size(arr, 1)).
       !> On C side, dimension are correct, without change. No transpose is done.
       subroutine cuda_get_hamiltonian_kernel( nao, nelem, &
-        alist_inl, alist_inl_dim1, &
+        mol_nat, mol_nid, mol_nbd, & !> structure_type
+        mol_id, mol_id_dim1, &
+        mol_num, mol_num_dim1, &
+        mol_xyz, mol_xyz_dim1, mol_xyz_dim2, &
+        mol_uhf, &
+        mol_charge, &
+        mol_lattice, mol_lattice_dim1, mol_lattice_dim2, &
+        mol_periodic, mol_periodic_dim1, &
+        mol_bond, mol_bond_dim1, mol_bond_dim2, &
+        trans, trans_dim1, trans_dim2, & !> trans
+        alist_inl, alist_inl_dim1, & !> adjacency_list
         alist_nnl, alist_nnl_dim1, &
         alist_nlat, alist_nlat_dim1, &
         alist_nltr, alist_nltr_dim1, &
@@ -74,6 +84,30 @@ module tblite_xtb_h0
 
         implicit none
         integer(c_int), value :: nao, nelem
+
+        !> structure_type
+        integer(c_int), value :: mol_nat
+        integer(c_int), value :: mol_nid
+        integer(c_int), value :: mol_nbd
+        integer(c_int), intent(in) :: mol_id(*)
+        integer(c_int), value :: mol_id_dim1
+        integer(c_int), intent(in) :: mol_num(*)
+        integer(c_int), value :: mol_num_dim1
+        real(c_double), intent(in) :: mol_xyz(*)
+        integer(c_int), value :: mol_xyz_dim1, mol_xyz_dim2
+        integer(c_int), value :: mol_uhf
+        real(c_double), value :: mol_charge
+        real(c_double), intent(in) :: mol_lattice(*)
+        integer(c_int), value :: mol_lattice_dim1, mol_lattice_dim2
+        integer(c_int), intent(in) :: mol_periodic(*)
+        integer(c_int), value :: mol_periodic_dim1
+        integer(c_int), intent(in) :: mol_bond(*)
+        integer(c_int), value :: mol_bond_dim1, mol_bond_dim2
+
+        !> trans
+        real(c_double), intent(in) :: trans(*)
+        integer(c_int), value :: trans_dim1
+        integer(c_int), value :: trans_dim2
 
         !> adjacency_list
         integer(c_int), intent(in) :: alist_inl(*)
@@ -335,20 +369,56 @@ contains
 
       integer(kind=c_int) :: nao 
       integer(kind=c_int) :: nelem
+      integer(c_int), allocatable :: periodic_as_integers(:)
       integer :: i, j, k
       nao = size(hamiltonian, 1)
       nelem = size(selfenergy, 1)
+      !> transform logical periodic to integer
+
+      !> 0 = false, 1 = true
+      allocate(periodic_as_integers(size(mol%periodic, 1)))
+      periodic_as_integers = 0
+      do i = 1, size(mol%periodic, 1)
+         if (mol%periodic(i)) periodic_as_integers(i) = 1
+      end do
+
       !  overlap = 1
       !  dpint = 2
       !  qpint = 3
       !  hamiltonian = 4
-      
+      ! since we don't support lattices yet, if trans is not zero, error
+      ! if (any(trans /= 0.0_wp)) then
+      !    print*, "Error: Non-zero translation vector provided."
+      !    stop
+      ! end if
+      ! if (any(mol%periodic)) then
+      !    print*, "Error: Periodic boundary conditions not supported in CUDA yet."
+      !    stop
+      ! end if
+
       !> Print all cgtos in order
       ! call print_cgtos(bas)
       print*, "================= FORTRAN ================="
       call print_adjlist(alist)
 
+      
+      
       call cuda_get_hamiltonian_kernel( nao, nelem, &
+        !> structure_type
+        mol%nat,&
+        mol%nid, &
+        mol%nbd, &
+        mol%id, size(mol%id, 1), &
+        mol%num, size(mol%num, 1), &
+        mol%xyz, size(mol%xyz, 2), size(mol%xyz, 1), &
+        mol%uhf, &
+        mol%charge, &
+        mol%lattice, size(mol%lattice, 2), size(mol%lattice, 1), &
+        periodic_as_integers, size(periodic_as_integers, 1), &
+        mol%bond, size(mol%bond, 2), size(mol%bond, 1), &
+        !> trans
+        trans, size(trans, 2), size(trans, 1), &
+        !> adjacency_list
         alist%inl, size(alist%inl, 1), &
         alist%nnl, size(alist%nnl, 1), &
         alist%nlat, size(alist%nlat, 1), &
