@@ -43,80 +43,96 @@ module tblite_xtb_h0
       !> Notice: Dimensions are passed in C order. 
       !> On Fortran side, dimensions are passed in reverse (arr, size(arr, 2), size(arr, 1)).
       !> On C side, dimension are correct, without change. No transpose is done.
-      subroutine cuda_get_hamiltonian_kernel( nao, nelem, & 
-         bas_maxl, bas_nsh, bas_nao, bas_intcut, bas_min_alpha, & !> basis_type
-         bas_nsh_id, bas_nsh_id_dim1, &
-         bas_nsh_at, bas_nsh_at_dim1, &
-         bas_nao_sh, bas_nao_sh_dim1, &
-         bas_iao_sh, bas_iao_sh_dim1, &
-         bas_ish_at, bas_ish_at_dim1, &
-         bas_ao2at, bas_ao2at_dim1, &
-         bas_ao2sh, bas_ao2sh_dim1, &
-         bas_sh2at, bas_sh2at_dim1, &
-         cgto, cgto_dim1, cgto_dim2, & 
-         h0_selfenergy, h0_selfenergy_dim1, h0_selfenergy_dim2, & !> tb_hamiltonian
-         h0_kcn, h0_kcn_dim1, h0_kcn_dim2, &
-         h0_kq1, h0_kq1_dim1, h0_kq1_dim2, &
-         h0_kq2, h0_kq2_dim1, h0_kq2_dim2, &
-         h0_hscale, h0_hscale_dim1, h0_hscale_dim2, h0_hscale_dim3, h0_hscale_dim4, &
-         h0_shpoly, h0_shpoly_dim1, h0_shpoly_dim2, &
-         h0_rad, h0_rad_dim1, &
-         h0_refocc, h0_refocc_dim1, h0_refocc_dim2, & !> other vars
-         selfenergy, overlap, dpint, qpint, hamiltonian &
+      subroutine cuda_get_hamiltonian_kernel( nao, nelem, &
+        alist_inl, alist_inl_dim1, &
+        alist_nnl, alist_nnl_dim1, &
+        alist_nlat, alist_nlat_dim1, &
+        alist_nltr, alist_nltr_dim1, &
+        bas_maxl, bas_nsh, bas_nao, bas_intcut, bas_min_alpha, & !> basis_type
+        bas_nsh_id, bas_nsh_id_dim1, &
+        bas_nsh_at, bas_nsh_at_dim1, &
+        bas_nao_sh, bas_nao_sh_dim1, &
+        bas_iao_sh, bas_iao_sh_dim1, &
+        bas_ish_at, bas_ish_at_dim1, &
+        bas_ao2at, bas_ao2at_dim1, &
+        bas_ao2sh, bas_ao2sh_dim1, &
+        bas_sh2at, bas_sh2at_dim1, &
+        cgto, cgto_dim1, cgto_dim2, & 
+        h0_selfenergy, h0_selfenergy_dim1, h0_selfenergy_dim2, & !> tb_hamiltonian
+        h0_kcn, h0_kcn_dim1, h0_kcn_dim2, &
+        h0_kq1, h0_kq1_dim1, h0_kq1_dim2, &
+        h0_kq2, h0_kq2_dim1, h0_kq2_dim2, &
+        h0_hscale, h0_hscale_dim1, h0_hscale_dim2, h0_hscale_dim3, h0_hscale_dim4, &
+        h0_shpoly, h0_shpoly_dim1, h0_shpoly_dim2, &
+        h0_rad, h0_rad_dim1, &
+        h0_refocc, h0_refocc_dim1, h0_refocc_dim2, & !> other vars
+        selfenergy, overlap, dpint, qpint, hamiltonian &
       ) bind(C, name="cuda_get_hamiltonian_kernel_")
-         use iso_c_binding
-         use tblite_basis_type, only : basis_type, cgto_type
-         implicit none
-         integer(c_int), value :: nao, nelem
+        use iso_c_binding
+        use tblite_basis_type, only : basis_type, cgto_type
+        use tblite_adjlist, only : adjacency_list
 
-         !> basis_type
-         integer(c_int), value :: bas_maxl
-         integer(c_int), value :: bas_nsh
-         integer(c_int), value :: bas_nao
-         real(c_double), value :: bas_intcut
-         real(c_double), value :: bas_min_alpha
-         integer(c_int), intent(in) :: bas_nsh_id(*)
-         integer(c_int), value :: bas_nsh_id_dim1
-         integer(c_int), intent(in) :: bas_nsh_at(*)
-         integer(c_int), value :: bas_nsh_at_dim1
-         integer(c_int), intent(in) :: bas_nao_sh(*)
-         integer(c_int), value :: bas_nao_sh_dim1
-         integer(c_int), intent(in) :: bas_iao_sh(*)
-         integer(c_int), value :: bas_iao_sh_dim1
-         integer(c_int), intent(in) :: bas_ish_at(*)
-         integer(c_int), value :: bas_ish_at_dim1
-         integer(c_int), intent(in) :: bas_ao2at(*)
-         integer(c_int), value :: bas_ao2at_dim1
-         integer(c_int), intent(in) :: bas_ao2sh(*)
-         integer(c_int), value :: bas_ao2sh_dim1
-         integer(c_int), intent(in) :: bas_sh2at(*)
-         integer(c_int), value :: bas_sh2at_dim1
-         type(cgto_type), intent(in) :: cgto(*)
-         integer(c_int), value :: cgto_dim1, cgto_dim2
+        implicit none
+        integer(c_int), value :: nao, nelem
 
-         !> tb_hamiltonian
-         real(c_double), intent(in) :: h0_selfenergy(*)
-         integer(c_int), value :: h0_selfenergy_dim1, h0_selfenergy_dim2
-         real(c_double), intent(in) :: h0_kcn(*)
-         integer(c_int), value :: h0_kcn_dim1, h0_kcn_dim2
-         real(c_double), intent(in) :: h0_kq1(*)
-         integer(c_int), value :: h0_kq1_dim1, h0_kq1_dim2
-         real(c_double), intent(in) :: h0_kq2(*)
-         integer(c_int), value :: h0_kq2_dim1, h0_kq2_dim2
-         real(c_double), intent(in) :: h0_hscale(*)
-         integer(c_int), value :: h0_hscale_dim1, h0_hscale_dim2, h0_hscale_dim3, h0_hscale_dim4
-         real(c_double), intent(in) :: h0_shpoly(*)
-         integer(c_int), value :: h0_shpoly_dim1, h0_shpoly_dim2
-         real(c_double), intent(in) :: h0_rad(*)
-         integer(c_int), value :: h0_rad_dim1
-         real(c_double), intent(in) :: h0_refocc(*)
-         integer(c_int), value :: h0_refocc_dim1, h0_refocc_dim2
+        !> adjacency_list
+        integer(c_int), intent(in) :: alist_inl(*)
+        integer(c_int), value :: alist_inl_dim1
+        integer(c_int), intent(in) :: alist_nnl(*)
+        integer(c_int), value :: alist_nnl_dim1
+        integer(c_int), intent(in) :: alist_nlat(*)
+        integer(c_int), value :: alist_nlat_dim1
+        integer(c_int), intent(in) :: alist_nltr(*)
+        integer(c_int), value :: alist_nltr_dim1
 
-         real(c_double), intent(in) :: selfenergy(*) !(:)
-         real(c_double), intent(out) :: overlap(*) !(:, :)
-         real(c_double), intent(out) :: dpint(*) !(:, :, :)
-         real(c_double), intent(out) :: qpint(*) !(:, :, :)
-         real(c_double), intent(out) :: hamiltonian(*) !(:,:)
+        !> basis_type
+        integer(c_int), value :: bas_maxl
+        integer(c_int), value :: bas_nsh
+        integer(c_int), value :: bas_nao
+        real(c_double), value :: bas_intcut
+        real(c_double), value :: bas_min_alpha
+        integer(c_int), intent(in) :: bas_nsh_id(*)
+        integer(c_int), value :: bas_nsh_id_dim1
+        integer(c_int), intent(in) :: bas_nsh_at(*)
+        integer(c_int), value :: bas_nsh_at_dim1
+        integer(c_int), intent(in) :: bas_nao_sh(*)
+        integer(c_int), value :: bas_nao_sh_dim1
+        integer(c_int), intent(in) :: bas_iao_sh(*)
+        integer(c_int), value :: bas_iao_sh_dim1
+        integer(c_int), intent(in) :: bas_ish_at(*)
+        integer(c_int), value :: bas_ish_at_dim1
+        integer(c_int), intent(in) :: bas_ao2at(*)
+        integer(c_int), value :: bas_ao2at_dim1
+        integer(c_int), intent(in) :: bas_ao2sh(*)
+        integer(c_int), value :: bas_ao2sh_dim1
+        integer(c_int), intent(in) :: bas_sh2at(*)
+        integer(c_int), value :: bas_sh2at_dim1
+        type(cgto_type), intent(in) :: cgto(*)
+        integer(c_int), value :: cgto_dim1, cgto_dim2
+
+        !> tb_hamiltonian
+        real(c_double), intent(in) :: h0_selfenergy(*)
+        integer(c_int), value :: h0_selfenergy_dim1, h0_selfenergy_dim2
+        real(c_double), intent(in) :: h0_kcn(*)
+        integer(c_int), value :: h0_kcn_dim1, h0_kcn_dim2
+        real(c_double), intent(in) :: h0_kq1(*)
+        integer(c_int), value :: h0_kq1_dim1, h0_kq1_dim2
+        real(c_double), intent(in) :: h0_kq2(*)
+        integer(c_int), value :: h0_kq2_dim1, h0_kq2_dim2
+        real(c_double), intent(in) :: h0_hscale(*)
+        integer(c_int), value :: h0_hscale_dim1, h0_hscale_dim2, h0_hscale_dim3, h0_hscale_dim4
+        real(c_double), intent(in) :: h0_shpoly(*)
+        integer(c_int), value :: h0_shpoly_dim1, h0_shpoly_dim2
+        real(c_double), intent(in) :: h0_rad(*)
+        integer(c_int), value :: h0_rad_dim1
+        real(c_double), intent(in) :: h0_refocc(*)
+        integer(c_int), value :: h0_refocc_dim1, h0_refocc_dim2
+
+        real(c_double), intent(in) :: selfenergy(*) !(:)
+        real(c_double), intent(out) :: overlap(*) !(:, :)
+        real(c_double), intent(out) :: dpint(*) !(:, :, :)
+        real(c_double), intent(out) :: qpint(*) !(:, :, :)
+        real(c_double), intent(out) :: hamiltonian(*) !(:,:)
       end subroutine
    end interface
 
@@ -242,37 +258,7 @@ contains
       end if
 
    end subroutine get_selfenergy
-   ! type :: basis_type
-   !    !> Maximum angular momentum of all basis functions,
-   !    !> used to determine scratch size in integral calculation
-   !    integer :: maxl = 0
-   !    !> Number of shells in this basis set
-   !    integer :: nsh = 0
-   !    !> Number of spherical atomic orbitals in this basis set
-   !    integer :: nao = 0
-   !    !> Integral cutoff as maximum exponent of Gaussian product theoreom to consider
-   !    real(wp) :: intcut = 0.0_wp
-   !    !> Smallest primitive exponent in the basis set
-   !    real(wp) :: min_alpha = huge(0.0_wp)
-   !    !> Number of shells for each species
-   !    integer, allocatable :: nsh_id(:)
-   !    !> Number of shells for each atom
-   !    integer, allocatable :: nsh_at(:)
-   !    !> Number of spherical atomic orbitals for each shell
-   !    integer, allocatable :: nao_sh(:)
-   !    !> Index offset for each shell in the atomic orbital space
-   !    integer, allocatable :: iao_sh(:)
-   !    !> Index offset for each atom in the shell space
-   !    integer, allocatable :: ish_at(:)
-   !    !> Mapping from spherical atomic orbitals to the respective atom
-   !    integer, allocatable :: ao2at(:)
-   !    !> Mapping from spherical atomic orbitals to the respective shell
-   !    integer, allocatable :: ao2sh(:)
-   !    !> Mapping from shells to the respective atom
-   !    integer, allocatable :: sh2at(:)
-   !    !> Contracted Gaussian basis functions forming the basis set
-   !    type(cgto_type), allocatable :: cgto(:, :)
-   ! end type basis_type
+
    subroutine print_cgtos(bas)
     type(basis_type), intent(in) :: bas
     integer :: i, j, k
@@ -296,6 +282,32 @@ contains
       end do
     end do
    end subroutine print_cgtos
+
+   subroutine print_adjlist(alist)
+      type(adjacency_list), intent(in) :: alist
+      integer :: i, j
+      write(*, "(A)", advance="no") "inl: "
+      do i = 1, size(alist%inl, 1)
+        write(*, "(I3)", advance="no") alist%inl(i)
+      end do
+      print*,""  ! Add a newline after printing the inl values
+      write(*, "(A)", advance="no") "nnl: "
+      do i = 1, size(alist%nnl, 1)
+        write(*, "(I3)", advance="no") alist%nnl(i)
+      end do
+      print*,""  ! Add a newline after printing the nnl values
+      write(*, "(A)", advance="no") "nlat: "
+      do i = 1, size(alist%nlat, 1)
+        write(*, "(I3)", advance="no") alist%nlat(i)
+      end do
+      print*,""  ! Add a newline after printing the nlat values
+      write(*, "(A)", advance="no") "nltr: "
+      do i = 1, size(alist%nltr, 1)
+        write(*, "(I3)", advance="no") alist%nltr(i)
+      end do
+      print*,""  ! Add a newline after printing the nltr values
+   end subroutine print_adjlist
+
    subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
     & hamiltonian)
       use iso_c_binding
@@ -332,31 +344,37 @@ contains
       !  hamiltonian = 4
       
       !> Print all cgtos in order
-      call print_cgtos(bas)
-      
+      ! call print_cgtos(bas)
+      print*, "================= FORTRAN ================="
+      call print_adjlist(alist)
+
       call cuda_get_hamiltonian_kernel( nao, nelem, &
+        alist%inl, size(alist%inl, 1), &
+        alist%nnl, size(alist%nnl, 1), &
+        alist%nlat, size(alist%nlat, 1), &
+        alist%nltr, size(alist%nltr, 1), &
          !> basis_type
-         bas%maxl, bas%nsh, bas%nao, bas%intcut, bas%min_alpha, &
-         bas%nsh_id, size(bas%nsh_id, 1), &
-         bas%nsh_at, size(bas%nsh_at, 1), &
-         bas%nao_sh, size(bas%nao_sh, 1), &
-         bas%iao_sh, size(bas%iao_sh, 1), &
-         bas%ish_at, size(bas%ish_at, 1), &
-         bas%ao2at, size(bas%ao2at, 1), &
-         bas%ao2sh, size(bas%ao2sh, 1), &
-         bas%sh2at, size(bas%sh2at, 1), &
-         bas%cgto, size(bas%cgto, 2), size(bas%cgto, 1), &
-         !> tb_hamiltonian
-         h0%selfenergy, size(h0%selfenergy,2), size(h0%selfenergy,1), &
-         h0%kcn, size(h0%kcn,2), size(h0%kcn,1), &
-         h0%kq1, size(h0%kq1,2), size(h0%kq1,1), &
-         h0%kq2, size(h0%kq2,2), size(h0%kq2,1), &
-         h0%hscale, size(h0%hscale,4), size(h0%hscale,3), size(h0%hscale,2), size(h0%hscale,1), &
-         h0%shpoly, size(h0%shpoly,2), size(h0%shpoly,1), &
-         h0%rad, size(h0%rad,1), &
-         h0%refocc, size(h0%refocc,2), size(h0%refocc,1), &
-         !> selfenergy, overlap, dpint, qpint, hamiltonian
-         selfenergy, overlap, dpint, qpint, hamiltonian)
+        bas%maxl, bas%nsh, bas%nao, bas%intcut, bas%min_alpha, &
+        bas%nsh_id, size(bas%nsh_id, 1), &
+        bas%nsh_at, size(bas%nsh_at, 1), &
+        bas%nao_sh, size(bas%nao_sh, 1), &
+        bas%iao_sh, size(bas%iao_sh, 1), &
+        bas%ish_at, size(bas%ish_at, 1), &
+        bas%ao2at, size(bas%ao2at, 1), &
+        bas%ao2sh, size(bas%ao2sh, 1), &
+        bas%sh2at, size(bas%sh2at, 1), &
+        bas%cgto, size(bas%cgto, 2), size(bas%cgto, 1), &
+        !> tb_hamiltonian
+        h0%selfenergy, size(h0%selfenergy,2), size(h0%selfenergy,1), &
+        h0%kcn, size(h0%kcn,2), size(h0%kcn,1), &
+        h0%kq1, size(h0%kq1,2), size(h0%kq1,1), &
+        h0%kq2, size(h0%kq2,2), size(h0%kq2,1), &
+        h0%hscale, size(h0%hscale,4), size(h0%hscale,3), size(h0%hscale,2), size(h0%hscale,1), &
+        h0%shpoly, size(h0%shpoly,2), size(h0%shpoly,1), &
+        h0%rad, size(h0%rad,1), &
+        h0%refocc, size(h0%refocc,2), size(h0%refocc,1), &
+        !> selfenergy, overlap, dpint, qpint, hamiltonian
+        selfenergy, overlap, dpint, qpint, hamiltonian)
 
       print*,"";
    end subroutine cuda_get_hamiltonian
