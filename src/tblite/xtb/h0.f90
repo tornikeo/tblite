@@ -342,112 +342,226 @@ contains
       print*,""  ! Add a newline after printing the nltr values
    end subroutine print_adjlist
 
-   subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
-    & hamiltonian)
-      use iso_c_binding
-      implicit none
-      !> Molecular structure data
-      type(structure_type), intent(in) :: mol
-      !> Lattice points within a given realspace cutoff
-      real(wp), intent(in) :: trans(:, :)
-      !> Neighbour list
-      type(adjacency_list), intent(in) :: alist
-      !> Basis set information
-      type(basis_type), intent(in) :: bas
-      !> Hamiltonian interaction data
-      type(tb_hamiltonian), intent(in) :: h0
-      !> Diagonal elememts of the Hamiltonian
-      real(wp), intent(in) :: selfenergy(:)
-      !> Overlap integral matrix
-      real(wp), intent(out) :: overlap(:, :)
-      !> Dipole moment integral matrix
-      real(wp), intent(out) :: dpint(:, :, :)
-      !> Quadrupole moment integral matrix
-      real(wp), intent(out) :: qpint(:, :, :)
-      !> Effective Hamiltonian
-      real(wp), intent(out) :: hamiltonian(:, :)
-
-      integer(kind=c_int) :: nao 
-      integer(kind=c_int) :: nelem
-      integer(c_int), allocatable :: periodic_as_integers(:)
-      integer :: i, j, k
-      nao = size(hamiltonian, 1)
-      nelem = size(selfenergy, 1)
-      !> transform logical periodic to integer
-
-      !> 0 = false, 1 = true
-      allocate(periodic_as_integers(size(mol%periodic, 1)))
-      periodic_as_integers = 0
-      do i = 1, size(mol%periodic, 1)
-         if (mol%periodic(i)) periodic_as_integers(i) = 1
+  subroutine print_tb_hamiltonian(h0)
+    type(tb_hamiltonian), intent(in) :: h0
+    integer :: i, j, k, l, m
+    write(*, "(A)", advance="no") "selfenergy: "
+    do i = 1, size(h0%selfenergy, 1)
+      do j = 1, size(h0%selfenergy, 2)
+        write(*, "(F12.8)", advance="no") h0%selfenergy(i, j)
       end do
+    end do
+    print*,""  ! Add a newline after printing the selfenergy values
+    write(*, "(A)", advance="no") "kcn: "
+    do i = 1, size(h0%kcn, 1)
+      do j = 1, size(h0%kcn, 2)
+        write(*, "(F12.8)", advance="no") h0%kcn(i, j)
+      end do
+    end do
+    print*,""  ! Add a newline after printing the kcn values
+    write(*, "(A)", advance="no") "kq1: "
+    do i = 1, size(h0%kq1, 1)
+      do j = 1, size(h0%kq1, 2)
+        write(*, "(F12.8)", advance="no") h0%kq1(i, j)
+      end do
+    end do
+    print*,""  ! Add a newline after printing the kq1 values
+    write(*, "(A)", advance="no") "kq2: "
+    do i = 1, size(h0%kq2, 1)
+      do j = 1, size(h0%kq2, 2)
+        write(*, "(F12.8)", advance="no") h0%kq2(i, j)
+      end do
+    end do
+    print*,""  ! Add a newline after printing the kq2 values
+    write(*, "(A)", advance="no") "hscale: "
+    do i = 1, size(h0%hscale, 1)
+      do j = 1, size(h0%hscale, 2)
+        do k = 1, size(h0%hscale, 3)
+          do l = 1, size(h0%hscale, 4)
+            write(*, "(F12.8)", advance="no") h0%hscale(i, j, k, l)
+          end do
+        end do
+      end do
+    end do
+    print*,""  ! Add a newline after printing the hscale values
+    write(*, "(A)", advance="no") "shpoly: "
+    do i = 1, size(h0%shpoly, 1)
+      do j = 1, size(h0%shpoly, 2)
+        write(*, "(F12.8)", advance="no") h0%shpoly(i, j)
+      end do
+    end do
+    print*,""  ! Add a newline after printing the shpoly values
+    write(*, "(A)", advance="no") "rad: "
+    do i = 1, size(h0%rad, 1)
+      write(*, "(F12.8)", advance="no") h0%rad(i)
+    end do
+    print*,""  ! Add a newline after printing the rad values
+    write(*, "(A)", advance="no") "refocc: "
+    do i = 1, size(h0%refocc, 1)
+      do j = 1, size(h0%refocc, 2)
+        write(*, "(F12.8)", advance="no") h0%refocc(i, j)
+      end do
+    end do
+    print*,""  ! Add a newline after printing the refocc values
+  end subroutine print_tb_hamiltonian
 
-      !  overlap = 1
-      !  dpint = 2
-      !  qpint = 3
-      !  hamiltonian = 4
-      ! since we don't support lattices yet, if trans is not zero, error
-      ! if (any(trans /= 0.0_wp)) then
-      !    print*, "Error: Non-zero translation vector provided."
-      !    stop
-      ! end if
-      ! if (any(mol%periodic)) then
-      !    print*, "Error: Periodic boundary conditions not supported in CUDA yet."
-      !    stop
-      ! end if
+  subroutine print_basis_type(bas)
+    type(basis_type), intent(in) :: bas
+    integer :: i, j, k
+    write(*, "(A, I3, A)") "maxl: ", bas%maxl, " "
+    write(*, "(A, I3, A)") "nsh: ", bas%nsh, " "
+    write(*, "(A, I3, A)") "nao: ", bas%nao, " "
+    write(*, "(A, F12.8, A)") "intcut: ", bas%intcut, " "
+    write(*, "(A, F12.8, A)") "min_alpha: ", bas%min_alpha, " "
 
-      !> Print all cgtos in order
-      ! call print_cgtos(bas)
-      print*, "================= FORTRAN ================="
-      call print_adjlist(alist)
+    write(*, "(A)", advance="no") "nsh_id: "
+    do i = 1, size(bas%nsh_id, 1)
+      write(*, "(I3)", advance="no") bas%nsh_id(i)
+    end do
+    print*,""  ! Add a newline after printing the nsh_id values
+    write(*, "(A)", advance="no") "nsh_at: "
+    do i = 1, size(bas%nsh_at, 1)
+      write(*, "(I3)", advance="no") bas%nsh_at(i)
+    end do
+    print*,""  ! Add a newline after printing the nsh_at values
+    write(*, "(A)", advance="no") "nao_sh: "
+    do i = 1, size(bas%nao_sh, 1)
+      write(*, "(I3)", advance="no") bas%nao_sh(i)
+    end do
+    print*,""  ! Add a newline after printing the nao_sh values
+    write(*, "(A)", advance="no") "iao_sh: "
+    do i = 1, size(bas%iao_sh, 1)
+      write(*, "(I3)", advance="no") bas%iao_sh(i)
+    end do
+    print*,""  ! Add a newline after printing the iao_sh values
+    write(*, "(A)", advance="no") "ish_at: "
+    do i = 1, size(bas%ish_at, 1)
+      write(*, "(I3)", advance="no") bas%ish_at(i)
+    end do
+    print*,""  ! Add a newline after printing the ish_at values
+    write(*, "(A)", advance="no") "ao2at: "
+    do i = 1, size(bas%ao2at, 1)
+      write(*, "(I3)", advance="no") bas%ao2at(i)
+    end do
+    print*,""  ! Add a newline after printing the ao2at values
+    write(*, "(A)", advance="no") "ao2sh: "
+    do i = 1, size(bas%ao2sh, 1)
+      write(*, "(I3)", advance="no") bas%ao2sh(i)
+    end do
+    print*,""  ! Add a newline after printing the ao2sh values
+    write(*, "(A)", advance="no") "sh2at: "
+    do i = 1, size(bas%sh2at, 1)
+      write(*, "(I3)", advance="no") bas%sh2at(i)
+    end do
+    print*,""  ! Add a newline after printing the sh2at values
+  end subroutine print_basis_type
 
-      
-      
-      call cuda_get_hamiltonian_kernel( nao, nelem, &
-        !> structure_type
-        mol%nat,&
-        mol%nid, &
-        mol%nbd, &
-        mol%id, size(mol%id, 1), &
-        mol%num, size(mol%num, 1), &
-        mol%xyz, size(mol%xyz, 2), size(mol%xyz, 1), &
-        mol%uhf, &
-        mol%charge, &
-        mol%lattice, size(mol%lattice, 2), size(mol%lattice, 1), &
-        periodic_as_integers, size(periodic_as_integers, 1), &
-        mol%bond, size(mol%bond, 2), size(mol%bond, 1), &
-        !> trans
-        trans, size(trans, 2), size(trans, 1), &
-        !> adjacency_list
-        alist%inl, size(alist%inl, 1), &
-        alist%nnl, size(alist%nnl, 1), &
-        alist%nlat, size(alist%nlat, 1), &
-        alist%nltr, size(alist%nltr, 1), &
-         !> basis_type
-        bas%maxl, bas%nsh, bas%nao, bas%intcut, bas%min_alpha, &
-        bas%nsh_id, size(bas%nsh_id, 1), &
-        bas%nsh_at, size(bas%nsh_at, 1), &
-        bas%nao_sh, size(bas%nao_sh, 1), &
-        bas%iao_sh, size(bas%iao_sh, 1), &
-        bas%ish_at, size(bas%ish_at, 1), &
-        bas%ao2at, size(bas%ao2at, 1), &
-        bas%ao2sh, size(bas%ao2sh, 1), &
-        bas%sh2at, size(bas%sh2at, 1), &
-        bas%cgto, size(bas%cgto, 2), size(bas%cgto, 1), &
-        !> tb_hamiltonian
-        h0%selfenergy, size(h0%selfenergy,2), size(h0%selfenergy,1), &
-        h0%kcn, size(h0%kcn,2), size(h0%kcn,1), &
-        h0%kq1, size(h0%kq1,2), size(h0%kq1,1), &
-        h0%kq2, size(h0%kq2,2), size(h0%kq2,1), &
-        h0%hscale, size(h0%hscale,4), size(h0%hscale,3), size(h0%hscale,2), size(h0%hscale,1), &
-        h0%shpoly, size(h0%shpoly,2), size(h0%shpoly,1), &
-        h0%rad, size(h0%rad,1), &
-        h0%refocc, size(h0%refocc,2), size(h0%refocc,1), &
-        !> selfenergy, overlap, dpint, qpint, hamiltonian
-        selfenergy, overlap, dpint, qpint, hamiltonian)
+  subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
+  & hamiltonian)
+    use iso_c_binding
+    implicit none
+    !> Molecular structure data
+    type(structure_type), intent(in) :: mol
+    !> Lattice points within a given realspace cutoff
+    real(wp), intent(in) :: trans(:, :)
+    !> Neighbour list
+    type(adjacency_list), intent(in) :: alist
+    !> Basis set information
+    type(basis_type), intent(in) :: bas
+    !> Hamiltonian interaction data
+    type(tb_hamiltonian), intent(in) :: h0
+    !> Diagonal elememts of the Hamiltonian
+    real(wp), intent(in) :: selfenergy(:)
+    !> Overlap integral matrix
+    real(wp), intent(out) :: overlap(:, :)
+    !> Dipole moment integral matrix
+    real(wp), intent(out) :: dpint(:, :, :)
+    !> Quadrupole moment integral matrix
+    real(wp), intent(out) :: qpint(:, :, :)
+    !> Effective Hamiltonian
+    real(wp), intent(out) :: hamiltonian(:, :)
 
-      print*,"";
-   end subroutine cuda_get_hamiltonian
+    integer(kind=c_int) :: nao 
+    integer(kind=c_int) :: nelem
+    integer(c_int), allocatable :: periodic_as_integers(:)
+    integer :: i, j, k
+    nao = size(hamiltonian, 1)
+    nelem = size(selfenergy, 1)
+    !> transform logical periodic to integer
+
+    !> 0 = false, 1 = true
+    allocate(periodic_as_integers(size(mol%periodic, 1)))
+    periodic_as_integers = 0
+    do i = 1, size(mol%periodic, 1)
+      if (mol%periodic(i)) periodic_as_integers(i) = 1
+    end do
+
+    !  overlap = 1
+    !  dpint = 2
+    !  qpint = 3
+    !  hamiltonian = 4
+    ! since we don't support lattices yet, if trans is not zero, error
+    ! if (any(trans /= 0.0_wp)) then
+    !    print*, "Error: Non-zero translation vector provided."
+    !    stop
+    ! end if
+    ! if (any(mol%periodic)) then
+    !    print*, "Error: Periodic boundary conditions not supported in CUDA yet."
+    !    stop
+    ! end if
+
+    !> Print all cgtos in order
+    ! call print_cgtos(bas)
+    print*, "================= FORTRAN ================="
+    ! call print_adjlist(alist)
+    ! call print_tb_hamiltonian(h0)
+    call print_basis_type(bas)
+    
+    call cuda_get_hamiltonian_kernel( nao, nelem, &
+      !> structure_type
+      mol%nat,&
+      mol%nid, &
+      mol%nbd, &
+      mol%id, size(mol%id, 1), &
+      mol%num, size(mol%num, 1), &
+      mol%xyz, size(mol%xyz, 2), size(mol%xyz, 1), &
+      mol%uhf, &
+      mol%charge, &
+      mol%lattice, size(mol%lattice, 2), size(mol%lattice, 1), &
+      periodic_as_integers, size(periodic_as_integers, 1), &
+      mol%bond, size(mol%bond, 2), size(mol%bond, 1), &
+      !> trans
+      trans, size(trans, 2), size(trans, 1), &
+      !> adjacency_list
+      alist%inl, size(alist%inl, 1), &
+      alist%nnl, size(alist%nnl, 1), &
+      alist%nlat, size(alist%nlat, 1), &
+      alist%nltr, size(alist%nltr, 1), &
+        !> basis_type
+      bas%maxl, bas%nsh, bas%nao, bas%intcut, bas%min_alpha, &
+      bas%nsh_id, size(bas%nsh_id, 1), &
+      bas%nsh_at, size(bas%nsh_at, 1), &
+      bas%nao_sh, size(bas%nao_sh, 1), &
+      bas%iao_sh, size(bas%iao_sh, 1), &
+      bas%ish_at, size(bas%ish_at, 1), &
+      bas%ao2at, size(bas%ao2at, 1), &
+      bas%ao2sh, size(bas%ao2sh, 1), &
+      bas%sh2at, size(bas%sh2at, 1), &
+      bas%cgto, size(bas%cgto, 2), size(bas%cgto, 1), &
+      !> tb_hamiltonian
+      h0%selfenergy, size(h0%selfenergy,2), size(h0%selfenergy,1), &
+      h0%kcn, size(h0%kcn,2), size(h0%kcn,1), &
+      h0%kq1, size(h0%kq1,2), size(h0%kq1,1), &
+      h0%kq2, size(h0%kq2,2), size(h0%kq2,1), &
+      h0%hscale, size(h0%hscale,4), size(h0%hscale,3), size(h0%hscale,2), size(h0%hscale,1), &
+      h0%shpoly, size(h0%shpoly,2), size(h0%shpoly,1), &
+      h0%rad, size(h0%rad,1), &
+      h0%refocc, size(h0%refocc,2), size(h0%refocc,1), &
+      !> selfenergy, overlap, dpint, qpint, hamiltonian
+      selfenergy, overlap, dpint, qpint, hamiltonian)
+
+    print*,"";
+  end subroutine cuda_get_hamiltonian
 
    subroutine get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
    & hamiltonian)
