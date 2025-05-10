@@ -18,6 +18,7 @@
 module tblite_basis_type
    use mctc_env, only : wp
    use mctc_io, only : structure_type
+   use iso_c_binding, only : c_int, c_double
    implicit none
    private
 
@@ -29,16 +30,16 @@ module tblite_basis_type
    integer, parameter :: maxg = 12
 
    !> Contracted Gaussian type basis function
-   type :: cgto_type
+   type, bind(C) :: cgto_type
       !> Angular momentum of this basis function
-      integer :: ang = -1
+      integer(c_int) :: ang = -1
       !> Contraction length of this basis function
-      integer :: nprim = 0
+      integer(c_int) :: nprim = 0
       !> Exponent of the primitive Gaussian functions
-      real(wp) :: alpha(maxg) = 0.0_wp
+      real(c_double) :: alpha(maxg) = 0.0_wp
       !> Contraction coefficients of the primitive Gaussian functions,
       !> might contain normalization
-      real(wp) :: coeff(maxg) = 0.0_wp
+      real(c_double) :: coeff(maxg) = 0.0_wp
    end type cgto_type
 
    !> Collection of information regarding the basis set of a system

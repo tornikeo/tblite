@@ -22,7 +22,7 @@ module tblite_xtb_h0
    use mctc_env, only : wp
    use mctc_io, only : structure_type
    use tblite_adjlist, only : adjacency_list
-   use tblite_basis_type, only : basis_type
+   use tblite_basis_type, only : basis_type, cgto_type
    use tblite_integral_multipole, only : multipole_cgto, multipole_grad_cgto, maxl, msao
    use tblite_scf_potential, only : potential_type
    use tblite_xtb_spec, only : tb_h0spec
@@ -40,10 +40,11 @@ module tblite_xtb_h0
    end interface
 
    interface 
-   ! bas%maxl, bas%nsh, bas%nao, bas%intcut, bas%min_alpha
-      subroutine cuda_get_hamiltonian_kernel( &
-         nao, nelem, &
-         bas_maxl, bas_nsh, bas_nao, bas_intcut, bas_min_alpha, &
+      !> Notice: Dimensions are passed in C order. 
+      !> On Fortran side, dimensions are passed in reverse (arr, size(arr, 2), size(arr, 1)).
+      !> On C side, dimension are correct, without change. No transpose is done.
+      subroutine cuda_get_hamiltonian_kernel( nao, nelem, & 
+         bas_maxl, bas_nsh, bas_nao, bas_intcut, bas_min_alpha, & !> basis_type
          bas_nsh_id, bas_nsh_id_dim1, &
          bas_nsh_at, bas_nsh_at_dim1, &
          bas_nao_sh, bas_nao_sh_dim1, &
@@ -52,17 +53,19 @@ module tblite_xtb_h0
          bas_ao2at, bas_ao2at_dim1, &
          bas_ao2sh, bas_ao2sh_dim1, &
          bas_sh2at, bas_sh2at_dim1, &
-         h0_selfenergy, h0_selfenergy_dim1, h0_selfenergy_dim2, &
+         cgto, cgto_dim1, cgto_dim2, & 
+         h0_selfenergy, h0_selfenergy_dim1, h0_selfenergy_dim2, & !> tb_hamiltonian
          h0_kcn, h0_kcn_dim1, h0_kcn_dim2, &
          h0_kq1, h0_kq1_dim1, h0_kq1_dim2, &
          h0_kq2, h0_kq2_dim1, h0_kq2_dim2, &
          h0_hscale, h0_hscale_dim1, h0_hscale_dim2, h0_hscale_dim3, h0_hscale_dim4, &
          h0_shpoly, h0_shpoly_dim1, h0_shpoly_dim2, &
          h0_rad, h0_rad_dim1, &
-         h0_refocc, h0_refocc_dim1, h0_refocc_dim2, &
+         h0_refocc, h0_refocc_dim1, h0_refocc_dim2, & !> other vars
          selfenergy, overlap, dpint, qpint, hamiltonian &
       ) bind(C, name="cuda_get_hamiltonian_kernel_")
          use iso_c_binding
+         use tblite_basis_type, only : basis_type, cgto_type
          implicit none
          integer(c_int), value :: nao, nelem
 
@@ -88,6 +91,8 @@ module tblite_xtb_h0
          integer(c_int), value :: bas_ao2sh_dim1
          integer(c_int), intent(in) :: bas_sh2at(*)
          integer(c_int), value :: bas_sh2at_dim1
+         type(cgto_type), intent(in) :: cgto(*)
+         integer(c_int), value :: cgto_dim1, cgto_dim2
 
          !> tb_hamiltonian
          real(c_double), intent(in) :: h0_selfenergy(*)
@@ -268,6 +273,29 @@ contains
    !    !> Contracted Gaussian basis functions forming the basis set
    !    type(cgto_type), allocatable :: cgto(:, :)
    ! end type basis_type
+   subroutine print_cgtos(bas)
+    type(basis_type), intent(in) :: bas
+    integer :: i, j, k
+    do i = 1, size(bas%cgto, 1)
+      do j = 1, size(bas%cgto, 2)
+        ! write in C style, with %f format (limit number of digits )
+        print*, " "
+        write(*, "(A, I1, A, I1, A)") "cgto(", i, ",", j, ")"
+        write(*, "(A, I3)") "  ang: ", bas%cgto(i, j)%ang
+        write(*, "(A, I3)") "  nprim: ", bas%cgto(i, j)%nprim
+        write(*, "(A, I3)") "  alpha: "
+        do k = 1, bas%cgto(i, j)%nprim
+          write(*, "(A, F12.8)", advance="no") " ", bas%cgto(i, j)%alpha(k)
+        end do
+        print*, " "
+        write(*, "(A, I3)") "  coeff: "
+        do k = 1, bas%cgto(i, j)%nprim
+          write(*, "(A, F12.8)", advance="no") " ", bas%cgto(i, j)%coeff(k)
+        end do
+        print*, " "
+      end do
+    end do
+   end subroutine print_cgtos
    subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
     & hamiltonian)
       use iso_c_binding
@@ -295,14 +323,19 @@ contains
 
       integer(kind=c_int) :: nao 
       integer(kind=c_int) :: nelem
-
+      integer :: i, j, k
       nao = size(hamiltonian, 1)
       nelem = size(selfenergy, 1)
       !  overlap = 1
       !  dpint = 2
       !  qpint = 3
       !  hamiltonian = 4
+      
+      !> Print all cgtos in order
+      call print_cgtos(bas)
+      
       call cuda_get_hamiltonian_kernel( nao, nelem, &
+         !> basis_type
          bas%maxl, bas%nsh, bas%nao, bas%intcut, bas%min_alpha, &
          bas%nsh_id, size(bas%nsh_id, 1), &
          bas%nsh_at, size(bas%nsh_at, 1), &
@@ -312,7 +345,9 @@ contains
          bas%ao2at, size(bas%ao2at, 1), &
          bas%ao2sh, size(bas%ao2sh, 1), &
          bas%sh2at, size(bas%sh2at, 1), &
-         h0%selfenergy, size(h0%selfenergy,2), size(h0%selfenergy,1),&
+         bas%cgto, size(bas%cgto, 2), size(bas%cgto, 1), &
+         !> tb_hamiltonian
+         h0%selfenergy, size(h0%selfenergy,2), size(h0%selfenergy,1), &
          h0%kcn, size(h0%kcn,2), size(h0%kcn,1), &
          h0%kq1, size(h0%kq1,2), size(h0%kq1,1), &
          h0%kq2, size(h0%kq2,2), size(h0%kq2,1), &
@@ -320,6 +355,7 @@ contains
          h0%shpoly, size(h0%shpoly,2), size(h0%shpoly,1), &
          h0%rad, size(h0%rad,1), &
          h0%refocc, size(h0%refocc,2), size(h0%refocc,1), &
+         !> selfenergy, overlap, dpint, qpint, hamiltonian
          selfenergy, overlap, dpint, qpint, hamiltonian)
 
       print*,"";
