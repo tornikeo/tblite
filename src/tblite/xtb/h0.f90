@@ -515,14 +515,14 @@ contains
     print*, "================= FORTRAN ================="
     ! call print_adjlist(alist)
     ! call print_tb_hamiltonian(h0)
-    call print_basis_type(bas)
+    ! call print_basis_type(bas)
     
     call cuda_get_hamiltonian_kernel( nao, nelem, &
       !> structure_type
       mol%nat,&
       mol%nid, &
       mol%nbd, &
-      mol%id, size(mol%id, 1), &
+      mol%id - 1, size(mol%id, 1), & !> -1 because C is 0-based
       mol%num, size(mol%num, 1), &
       mol%xyz, size(mol%xyz, 2), size(mol%xyz, 1), &
       mol%uhf, &
@@ -535,9 +535,9 @@ contains
       !> adjacency_list
       alist%inl, size(alist%inl, 1), &
       alist%nnl, size(alist%nnl, 1), &
-      alist%nlat, size(alist%nlat, 1), &
-      alist%nltr, size(alist%nltr, 1), &
-        !> basis_type
+      alist%nlat - 1, size(alist%nlat, 1), & !> nlat - 1 because C is 0-based
+      alist%nltr - 1, size(alist%nltr, 1), & !> nltr - 1 because C is 0-based 
+      !> basis_type
       bas%maxl, bas%nsh, bas%nao, bas%intcut, bas%min_alpha, &
       bas%nsh_id, size(bas%nsh_id, 1), &
       bas%nsh_at, size(bas%nsh_at, 1), &
@@ -545,8 +545,8 @@ contains
       bas%iao_sh, size(bas%iao_sh, 1), &
       bas%ish_at, size(bas%ish_at, 1), &
       bas%ao2at, size(bas%ao2at, 1), &
-      bas%ao2sh, size(bas%ao2sh, 1), &
-      bas%sh2at, size(bas%sh2at, 1), &
+      bas%ao2sh - 1, size(bas%ao2sh, 1), &
+      bas%sh2at - 1, size(bas%sh2at, 1), &
       bas%cgto, size(bas%cgto, 2), size(bas%cgto, 1), &
       !> tb_hamiltonian
       h0%selfenergy, size(h0%selfenergy,2), size(h0%selfenergy,1), &
