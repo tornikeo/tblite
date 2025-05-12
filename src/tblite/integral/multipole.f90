@@ -342,8 +342,27 @@ pure subroutine multipole_grad_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d, 
 
 end subroutine multipole_grad_3d
 
+subroutine print_cgto(cgto)
+  type(cgto_type), intent(in) :: cgto
+  integer :: i
+  print*, "cgto_type:"
+  write(*,*) "  ang=", cgto%ang
+  write(*,*) "  nprim=", cgto%nprim
+  write(*,'(A)', advance="no"), "  alpha="
+  do i = 1, cgto%nprim
+    write(*,'(F12.6)', advance="no") cgto%alpha(i)
+    if (i < cgto%nprim) write(*,'(A)', advance="no") ", "
+  end do
+  print*, ""
+  write(*,'(A)', advance="no") "  coeff="
+  do i = 1, cgto%nprim
+    write(*,'(F12.6)', advance="no") cgto%coeff(i)
+    if (i < cgto%nprim) write(*,'(A)', advance="no") ", "
+  end do
+  print*, ""
+end subroutine print_cgto
 
-pure subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
+subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi
    !> Description of contracted Gaussian function on center j
@@ -370,7 +389,10 @@ pure subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qp
    s3d(:, :) = 0.0_wp
    d3d(:, :, :) = 0.0_wp
    q3d(:, :, :) = 0.0_wp
-
+  !  print*, "cgtoj="
+  !  call print_cgto(cgtoj)
+  !  print*, "cgtoi="
+  !  call print_cgto(cgtoi)
    do ip = 1, cgtoi%nprim
       do jp = 1, cgtoj%nprim
          eab = cgtoi%alpha(ip) + cgtoj%alpha(jp)
@@ -386,6 +408,20 @@ pure subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qp
          cc = cgtoi%coeff(ip) * cgtoj%coeff(jp) * pre
          do mli = 1, mlao(cgtoi%ang)
             do mlj = 1, mlao(cgtoj%ang)
+              
+              !  write(*,*) "=================== MULTIPOLE_CGTO INNER LOOP ================="
+              !   ! write(*,*) "bid %i tid %i: multipole_cgto inner loop"
+              !  write(*,*) "Parameters"
+              !   write(*,*) "mli=", mli, "mlj=", mlj
+              !   write(*,'(A, F12.6, F12.6, F12.6)') "rpi=", rpi(1), rpi(2), rpi(3)
+              !   write(*,'(A, F12.6, F12.6, F12.6)') "rpj=", rpj(1), rpj(2), rpj(3)
+              !   write(*,'(A, I3, A, F12.6)') "cgtoj.alpha[", jp, "]=", cgtoj%alpha(jp)
+              !   write(*,'(A, I3, A, F12.6)') "cgtoi.alpha[", ip, "]=", cgtoi%alpha(ip)
+              !   write(*,'(A, I3, A, I3, I3, I3)') "lx[", mlj + lmap(cgtoj%ang), "][:] = [", &
+              !     & lx(mlj + lmap(cgtoj%ang), 1), lx(mlj + lmap(cgtoj%ang), 2), lx(mlj + lmap(cgtoj%ang), 3)
+              !   write(*,'(A, I3, A, I3, I3, I3)') "lx[", mli + lmap(cgtoi%ang), "][:] = [", &
+              !     & lx(mli + lmap(cgtoi%ang), 1), lx(mli + lmap(cgtoi%ang), 2), lx(mli + lmap(cgtoi%ang), 3)
+              !  write(*,*) "==============================================================="
                call multipole_3d(rpj, rpi, cgtoj%alpha(jp), cgtoi%alpha(ip), &
                   & lx(:, mlj+lmap(cgtoj%ang)), lx(:, mli+lmap(cgtoi%ang)), &
                   & s1d, val, dip, quad)
