@@ -293,27 +293,34 @@ contains
 
    end subroutine get_selfenergy
 
+   subroutine print_cgto(cgto)
+    type(cgto_type), intent(in) :: cgto
+    ! write in C style, with %f format (limit number of digits )
+    integer :: i
+    print*, " "
+    write(*, "(A, I3)") "  ang: ", cgto%ang
+    write(*, "(A, I3)") "  nprim: ", cgto%nprim
+    write(*, "(A, I3)", advance="no") "  alpha: "
+    do i = 1, cgto%nprim
+      write(*, "(A, F12.8)", advance="no") " ", cgto%alpha(i)
+    end do
+    print*, " "  ! Add a newline after printing the alpha values
+    write(*, "(A, I3)", advance="no") "  coeff: "
+    do i = 1, cgto%nprim
+      write(*, "(A, F12.8)", advance="no") " ", cgto%coeff(i)
+    end do
+    print*, " "  ! Add a newline after printing the coeff values
+   end subroutine print_cgto
+
    subroutine print_cgtos(bas)
     type(basis_type), intent(in) :: bas
     integer :: i, j, k
     do i = 1, size(bas%cgto, 1)
       do j = 1, size(bas%cgto, 2)
         ! write in C style, with %f format (limit number of digits )
-        print*, " "
-        write(*, "(A, I1, A, I1, A)") "cgto(", i, ",", j, ")"
-        write(*, "(A, I3)") "  ang: ", bas%cgto(i, j)%ang
-        write(*, "(A, I3)") "  nprim: ", bas%cgto(i, j)%nprim
-        write(*, "(A, I3)") "  alpha: "
-        do k = 1, bas%cgto(i, j)%nprim
-          write(*, "(A, F12.8)", advance="no") " ", bas%cgto(i, j)%alpha(k)
-        end do
-        print*, " "
-        write(*, "(A, I3)") "  coeff: "
-        do k = 1, bas%cgto(i, j)%nprim
-          write(*, "(A, F12.8)", advance="no") " ", bas%cgto(i, j)%coeff(k)
-        end do
-        print*, " "
+        call print_cgto(bas%cgto(i, j))
       end do
+      print*,""  ! Add a newline after printing each row of cgto
     end do
    end subroutine print_cgtos
 
@@ -456,6 +463,37 @@ contains
     print*,""  ! Add a newline after printing the sh2at values
   end subroutine print_basis_type
 
+  subroutine print2d_arr(arr)
+    real(wp), intent(in) :: arr(:,:)
+    integer :: i, j
+    write(*, "(A, I3, A, I3, A)") "(", size(arr, 1), ",", size(arr, 2), ") =" 
+    do i = 1, size(arr, 1)
+      write(*,"(A)", advance="no"), "["
+      do j = 1, size(arr, 2)
+        write(*, "(F12.8)", advance="no") arr(i,j)
+      end do
+      write(*,"(A)"), "]"  ! Add a newline after printing each row of the 2D array
+    end do
+    print*,""  ! Add a newline after printing the entire 2D array
+  end subroutine print2d_arr
+
+  subroutine print3d_arr(arr)
+    real(wp), intent(in) :: arr(:,:,:)
+    integer :: i, j, k
+    write(*, "(A, I3, A, I3, A, I3, A)") "(", size(arr, 1), ",", size(arr, 2), ",", size(arr, 3), ") =" 
+    do i = 1, size(arr, 1)
+      do j = 1, size(arr, 2)
+        write(*,"(A)", advance="no"), "["
+        do k = 1, size(arr, 3)
+          write(*, "(F12.8)", advance="no") arr(i,j,k)
+        end do
+        write(*,"(A)"), "]"  ! Add a newline after printing each row of the 3D array
+      end do
+      print*,""  ! Add a newline after printing each slice of the 3D array
+    end do
+    print*,""  ! Add a newline after printing the entire 3D array
+  end subroutine print3d_arr
+
   subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
   & hamiltonian)
     use iso_c_binding
@@ -585,7 +623,8 @@ contains
       real(wp), intent(out) :: qpint(:, :, :)
       !> Effective Hamiltonian
       real(wp), intent(out) :: hamiltonian(:, :)
-
+      
+      integer :: printcounter = 0;
       integer :: i,j,l;
       integer :: iat, jat, izp, jzp, itr, k, img, inl
       integer :: ish, jsh, is, js, ii, jj, iao, jao, nao, ij
@@ -619,9 +658,43 @@ contains
                ii = bas%iao_sh(is+ish)
                do jsh = 1, bas%nsh_id(jzp)
                   jj = bas%iao_sh(js+jsh)
+                  ! debug
+                  ! write(*,*) "===================== DEBUG ====================="
+                  ! write(*,('(A, I3, A, I3, A, I3, A, I3)')) "cgto = bas.cgto(", jsh, ",", jzp, "), bas.cgto(", &
+                  ! & ish, ",", izp, ")"
+                  ! call print_cgto(bas%cgto(jsh, jzp))
+                  ! write(*,('(A, I3, A, I3, A, I3, A, I3)')) "cgto = bas.cgto(", ish, ",", izp, "), bas.cgto(", &
+                  ! & jsh, ",", jzp, ")"
+                  ! call print_cgto(bas%cgto(ish, izp))
                   call multipole_cgto(bas%cgto(jsh, jzp), bas%cgto(ish, izp), &
                   & r2, vec, bas%intcut, stmp, dtmpi, qtmpi)
 
+                  ! write(*,'(A)') 'stmp = '
+                  ! do l = 1, size(stmp)
+                  !    write(*,'(F12.8)', advance="no") stmp(l)
+                  ! end do
+                  ! print*,""
+                  ! write(*,'(A)') 'dtmpi = '
+                  ! do l = 1, size(dtmpi, 1)
+                  !   do k = 1, size(dtmpi, 2)
+                  !     write(*,'(A, F12.8 A)', advance="no") " ", dtmpi(l, k), ", "
+                  !   end do
+                  !   write(*,*) ""  ! Add newline after each row
+                  ! end do
+                  ! write(*,*) ""  ! Add newline after each row
+                  ! write(*,'(A)') 'qtmpi = '
+                  ! do l = 1, size(qtmpi, 1)
+                  !   do k = 1, size(qtmpi, 2)
+                  !     write(*,'(A, F12.8 A)', advance="no") " ", qtmpi(l, k), ", "
+                  !   end do
+                  !   write(*,*) ""  ! Add newline after each row
+                  ! end do
+                  ! write(*,*) ""  ! Add newline after each row
+                  ! write(*,*) "===================== DEBUG ====================="
+                  ! printcounter = printcounter + 1
+                  ! if (printcounter > 5) then
+                  !   return
+                  ! endif
                   shpoly = (1.0_wp + h0%shpoly(ish, izp)*rr) &
                      * (1.0_wp + h0%shpoly(jsh, jzp)*rr)
 
@@ -681,6 +754,19 @@ contains
 
          end do
       end do
+
+      ! Debug, print overlap, dpint, qpint, hamiltonian
+      print*, "================= DEBUG ================="
+      print*, "overlap = "
+      call print2d_arr(overlap)
+      print*,""
+      print*, "dpint = "
+      call print3d_arr(dpint)
+      print*, "qpint = "
+      call print3d_arr(qpint) 
+      print*, "hamiltonian = "
+      call print2d_arr(hamiltonian)
+      print*, "================= DEBUG ================="
 
       ! $omp parallel do schedule(runtime) default(none) &
       ! $omp shared(mol, bas, trans, cutoff2, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -1079,7 +1165,7 @@ contains
 !> Shift multipole operator from Ket function (center i) to Bra function (center j),
 !> the multipole operator on the Bra function can be assembled from the lower moments
 !> on the Ket function and the displacement vector using horizontal shift rules.
-   pure subroutine shift_operator(vec, s, di, qi, dj, qj)
+pure subroutine shift_operator(vec, s, di, qi, dj, qj)
       !> Displacement vector of center i and j
       real(wp),intent(in) :: vec(:)
       !> Overlap integral between basis functions
