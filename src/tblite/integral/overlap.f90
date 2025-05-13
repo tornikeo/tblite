@@ -284,7 +284,7 @@ pure subroutine overlap_grad_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, ds3d)
 end subroutine overlap_grad_3d
 
 
-pure subroutine overlap_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap)
+subroutine overlap_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi
    !> Description of contracted Gaussian function on center j
@@ -333,7 +333,7 @@ pure subroutine overlap_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap)
 end subroutine overlap_cgto
 
 
-pure subroutine overlap_grad_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, doverlap)
+subroutine overlap_grad_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, doverlap)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi
    !> Description of contracted Gaussian function on center j

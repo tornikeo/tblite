@@ -84,7 +84,7 @@ elemental function overlap_1d(moment, alpha) result(overlap)
 end function overlap_1d
 
 
-pure subroutine horizontal_shift(ae, l, cfs)
+subroutine horizontal_shift(ae, l, cfs)
    integer, intent(in) :: l
    real(wp), intent(in) :: ae
    real(wp), intent(inout) :: cfs(*)
@@ -108,7 +108,7 @@ pure subroutine horizontal_shift(ae, l, cfs)
    end select
 end subroutine horizontal_shift
 
-pure subroutine form_product(a, b, la, lb, d)
+subroutine form_product(a, b, la, lb, d)
    real(wp), intent(in) :: a(*), b(*)
    integer, intent(in) :: la, lb
    real(wp), intent(inout) :: d(*)
@@ -199,7 +199,7 @@ pure subroutine form_product(a, b, la, lb, d)
 end subroutine form_product
 
 
-pure subroutine multipole_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d)
+subroutine multipole_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d)
    real(wp), intent(in) :: rpi(3)
    real(wp), intent(in) :: rpj(3)
    real(wp), intent(in) :: ai
@@ -246,7 +246,7 @@ pure subroutine multipole_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d)
 end subroutine multipole_3d
 
 
-pure subroutine multipole_grad_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d, &
+subroutine multipole_grad_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d, &
       & ds3d, dd3d, dq3d)
    real(wp), intent(in) :: rpi(3)
    real(wp), intent(in) :: rpj(3)
@@ -362,6 +362,22 @@ subroutine print_cgto(cgto)
   print*, ""
 end subroutine print_cgto
 
+
+subroutine print2d_arr(arr)
+  real(wp), intent(in) :: arr(:,:)
+  integer :: i, j
+  write(*, "(A, I3, A, I3, A)") "(", size(arr, 1), ",", size(arr, 2), ") =" 
+  do i = 1, size(arr, 1)
+    write(*,"(A)", advance="no"), "["
+    do j = 1, size(arr, 2)
+      write(*, "(F12.8)", advance="no") arr(i,j)
+    end do
+    write(*,"(A)"), "]"  ! Add a newline after printing each row of the 2D array
+  end do
+  print*,""  ! Add a newline after printing the entire 2D array
+end subroutine print2d_arr
+
+
 subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi
@@ -433,6 +449,9 @@ subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
       end do
    end do
 
+  !  print*, "s3d = "
+  !  call print2d_arr(s3d)
+
    call transform0(cgtoj%ang, cgtoi%ang, s3d, overlap)
    call transform1(cgtoj%ang, cgtoi%ang, d3d, dpint)
    call transform1(cgtoj%ang, cgtoi%ang, q3d, qpint)
@@ -453,7 +472,7 @@ subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
 end subroutine multipole_cgto
 
 
-pure subroutine multipole_grad_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint, &
+subroutine multipole_grad_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint, &
       & doverlap, ddpintj, dqpintj, ddpinti, dqpinti)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi

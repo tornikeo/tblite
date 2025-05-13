@@ -308,7 +308,7 @@ pure subroutine dipole_grad_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, &
 end subroutine dipole_grad_3d
 
 
-pure subroutine dipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint)
+subroutine dipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi
    !> Description of contracted Gaussian function on center j
@@ -363,7 +363,7 @@ pure subroutine dipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint)
 end subroutine dipole_cgto
 
 
-pure subroutine dipole_grad_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, &
+subroutine dipole_grad_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, &
       & doverlap, ddpint)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi

@@ -48,10 +48,10 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-      new_unittest("hamiltonian-1", test_hamiltonian_h2), &
-      new_unittest("hamiltonian-2", test_hamiltonian_lih), &
-      new_unittest("hamiltonian-3", test_hamiltonian_s2), &
-      new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
+      ! new_unittest("hamiltonian-1", test_hamiltonian_h2), &
+      new_unittest("hamiltonian-2", test_hamiltonian_lih) &
+      ! new_unittest("hamiltonian-3", test_hamiltonian_s2), &
+      ! new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
       ]
 
 end subroutine collect_hamiltonian

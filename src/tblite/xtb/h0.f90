@@ -49,10 +49,7 @@ module tblite_xtb_h0
         mol_num, mol_num_dim1, &
         mol_xyz, mol_xyz_dim1, mol_xyz_dim2, &
         mol_uhf, &
-        mol_charge, &
-        mol_lattice, mol_lattice_dim1, mol_lattice_dim2, &
-        mol_periodic, mol_periodic_dim1, &
-        mol_bond, mol_bond_dim1, mol_bond_dim2, &
+        mol_charge, & !mol_lattice, mol_lattice_dim1, mol_lattice_dim2, ! mol_periodic, mol_periodic_dim1, ! mol_bond, mol_bond_dim1, mol_bond_dim2,
         trans, trans_dim1, trans_dim2, & !> trans
         alist_inl, alist_inl_dim1, & !> adjacency_list
         alist_nnl, alist_nnl_dim1, &
@@ -97,12 +94,12 @@ module tblite_xtb_h0
         integer(c_int), value :: mol_xyz_dim1, mol_xyz_dim2
         integer(c_int), value :: mol_uhf
         real(c_double), value :: mol_charge
-        real(c_double), intent(in) :: mol_lattice(*)
-        integer(c_int), value :: mol_lattice_dim1, mol_lattice_dim2
-        integer(c_int), intent(in) :: mol_periodic(*)
-        integer(c_int), value :: mol_periodic_dim1
-        integer(c_int), intent(in) :: mol_bond(*)
-        integer(c_int), value :: mol_bond_dim1, mol_bond_dim2
+        ! real(c_double), intent(in) :: mol_lattice(*)
+        ! integer(c_int), value :: mol_lattice_dim1, mol_lattice_dim2
+        ! integer(c_int), intent(in) :: mol_periodic(*)
+        ! integer(c_int), value :: mol_periodic_dim1
+        ! integer(c_int), intent(in) :: mol_bond(*)
+        ! integer(c_int), value :: mol_bond_dim1, mol_bond_dim2
 
         !> trans
         real(c_double), intent(in) :: trans(*)
@@ -463,6 +460,18 @@ contains
     print*,""  ! Add a newline after printing the sh2at values
   end subroutine print_basis_type
 
+  subroutine print1d_arr(arr)
+    real(wp), intent(in) :: arr(:)
+    integer :: i
+    write(*, "(A, I3, A)") "(", size(arr, 1), ") ="
+    do i = 1, size(arr, 1)
+      write(*,"(A)", advance="no"), "["
+      write(*, "(F12.8)", advance="no") arr(i)
+      write(*,"(A)"), "]"  ! Add a newline after printing each element of the array
+    end do
+    print*,""  ! Add a newline after printing the entire array
+  end subroutine print1d_arr
+
   subroutine print2d_arr(arr)
     real(wp), intent(in) :: arr(:,:)
     integer :: i, j
@@ -526,8 +535,8 @@ contains
     nao = size(hamiltonian, 1)
     nelem = size(selfenergy, 1)
     !> transform logical periodic to integer
-
     !> 0 = false, 1 = true
+    ! write(*,*) "bas.cgto has shape", size(bas%cgto, 1), size(bas%cgto, 2)
     allocate(periodic_as_integers(size(mol%periodic, 1)))
     periodic_as_integers = 0
     do i = 1, size(mol%periodic, 1)
@@ -565,9 +574,9 @@ contains
       mol%xyz, size(mol%xyz, 2), size(mol%xyz, 1), &
       mol%uhf, &
       mol%charge, &
-      mol%lattice, size(mol%lattice, 2), size(mol%lattice, 1), &
-      periodic_as_integers, size(periodic_as_integers, 1), &
-      mol%bond, size(mol%bond, 2), size(mol%bond, 1), &
+      ! mol%lattice, size(mol%lattice, 2), size(mol%lattice, 1), &
+      ! periodic_as_integers, size(periodic_as_integers, 1), &
+      ! mol%bond, size(mol%bond, 2), size(mol%bond, 1), &
       !> trans
       trans, size(trans, 2), size(trans, 1), &
       !> adjacency_list
@@ -637,7 +646,6 @@ contains
       hamiltonian(:, :) = 0.0_wp
 
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
- 
       ! $omp parallel do schedule(runtime) default(none) &
       ! $omp shared(mol, bas, trans, alist, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
       ! $omp private(iat, jat, izp, jzp, itr, is, js, ish, jsh, ii, jj, iao, jao, nao, ij, k) &
@@ -656,8 +664,10 @@ contains
             rr = sqrt(sqrt(r2) / (h0%rad(jzp) + h0%rad(izp)))
             do ish = 1, bas%nsh_id(izp)
                ii = bas%iao_sh(is+ish)
+              !  print*, "ii = ", ii
                do jsh = 1, bas%nsh_id(jzp)
                   jj = bas%iao_sh(js+jsh)
+                  ! print*, "jj = ", jj
                   ! debug
                   ! write(*,*) "===================== DEBUG ====================="
                   ! write(*,('(A, I3, A, I3, A, I3, A, I3)')) "cgto = bas.cgto(", jsh, ",", jzp, "), bas.cgto(", &
@@ -754,19 +764,28 @@ contains
 
          end do
       end do
-
-      ! Debug, print overlap, dpint, qpint, hamiltonian
-      print*, "================= DEBUG ================="
-      print*, "overlap = "
-      call print2d_arr(overlap)
-      print*,""
-      print*, "dpint = "
-      call print3d_arr(dpint)
-      print*, "qpint = "
-      call print3d_arr(qpint) 
-      print*, "hamiltonian = "
+      write(*,*) "================= DEBUG ================="
+      ! write(*,*) "overlap = "
+      ! call print2d_arr(overlap)
+      ! write(*,*) "dpint = "
+      ! call print3d_arr(dpint)
+      ! write(*,*) "qpint = "
+      ! call print3d_arr(qpint)
+      write(*,*) "hamiltonian(pre) = "
       call print2d_arr(hamiltonian)
-      print*, "================= DEBUG ================="
+      write(*,*) "================= DEBUG ================="
+      ! Debug, print overlap, dpint, qpint, hamiltonian
+      ! print*, "================= DEBUG ================="
+      ! print*, "overlap = "
+      ! call print2d_arr(overlap)
+      ! print*,""
+      ! print*, "dpint = "
+      ! call print3d_arr(dpint)
+      ! print*, "qpint = "
+      ! call print3d_arr(qpint) 
+      ! print*, "hamiltonian = "
+      ! call print2d_arr(hamiltonian)
+      ! print*, "================= DEBUG ================="
 
       ! $omp parallel do schedule(runtime) default(none) &
       ! $omp shared(mol, bas, trans, cutoff2, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -790,11 +809,18 @@ contains
 
                hij = 0.5_wp * (selfenergy(is+ish) + selfenergy(is+jsh)) &
                   * shpoly
-
+                
                nao = msao(bas%cgto(jsh, izp)%ang)
+              !  call print_cgto(bas%cgto(jsh, izp))
+              !  write(*,*) "nao = ", nao
                do iao = 1, msao(bas%cgto(ish, izp)%ang)
                   do jao = 1, nao
                      ij = jao + nao*(iao-1)
+                     ! printf("msao(bas.cgto(ish, izp)%ang) = %d\n", msao(bas%cgto(ish, izp)%ang))
+                    !  write(*,*) "msao(bas.cgto(ish, izp)%ang) = ", msao(bas%cgto(ish, izp)%ang)
+                    !  !            printf("overlap(%d + %d, %d + %d) += stmp(%d, %d)\n", ii + iao, jj + jao, iao, jao, iao, jao);
+                    !  write(*, *) "overlap(", ii, "+", iao, ",", jj, "+", jao, ") += stmp(", ij, ")"
+                    !  write(*, *) "nao = ", nao
                      overlap(jj+jao, ii+iao) = overlap(jj+jao, ii+iao) &
                         + stmp(ij)
 
@@ -813,7 +839,24 @@ contains
          end do
 
       end do
-
+   !   printf("d_overlap = \n");
+  ! overlap.print();
+  ! printf("d_dpint = \n");
+  ! dpint.print();
+  ! printf("d_qpint = \n");
+  ! qpint.print();
+  ! printf("d_hamiltonian = \n");
+  ! hamiltonian.print();
+    ! write(*,*) "================= DEBUG ================="
+    ! write(*,*) "overlap = "
+    ! call print2d_arr(overlap)
+    ! write(*,*) "dpint = "
+    ! call print3d_arr(dpint)
+    ! write(*,*) "qpint = "
+    ! call print3d_arr(qpint)
+    ! write(*,*) "hamiltonian = "
+    ! call print2d_arr(hamiltonian)
+    ! write(*,*) "================= DEBUG ================="
    end subroutine get_hamiltonian
 
   subroutine print_4d_array_literal(arr)
@@ -1107,7 +1150,7 @@ contains
 
          end do
       end do
-
+      
       ! $omp parallel do schedule(runtime) default(none) reduction(+:dEdcn) &
       ! $omp shared(mol, bas, dsedcn, pmat, nspin) &
       ! $omp private(iat, izp, jzp, is, ish, ii, iao, dcni, dhdcni, spin)

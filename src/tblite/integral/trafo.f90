@@ -92,12 +92,13 @@ module tblite_integral_trafo
 contains
 
 
-pure subroutine transform0(lj, li, cart, sphr)
+subroutine transform0(lj, li, cart, sphr)
    integer, intent(in) :: li
    integer, intent(in) :: lj
    real(wp), intent(in) :: cart(:, :)
    real(wp), intent(out) :: sphr(:, :)
-
+   
+  !  write(*,*), "li = ", li, " lj = ", lj
    select case(li)
    case(0, 1)
       select case(lj)
@@ -193,7 +194,7 @@ pure subroutine transform0(lj, li, cart, sphr)
 
 end subroutine transform0
 
-pure subroutine transform1(lj, li, cart, sphr)
+subroutine transform1(lj, li, cart, sphr)
    integer, intent(in) :: li
    integer, intent(in) :: lj
    real(wp), intent(in) :: cart(:, :, :)
@@ -205,7 +206,7 @@ pure subroutine transform1(lj, li, cart, sphr)
    end do
 end subroutine transform1
 
-pure subroutine transform2(lj, li, cart, sphr)
+subroutine transform2(lj, li, cart, sphr)
    integer, intent(in) :: li
    integer, intent(in) :: lj
    real(wp), intent(in) :: cart(:, :, :, :)
