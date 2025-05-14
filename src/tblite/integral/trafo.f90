@@ -91,19 +91,41 @@ module tblite_integral_trafo
 
 contains
 
+!> numpy-like fancy printing for 2D array
+subroutine print2d_arr(arr)
+   real(wp), intent(in) :: arr(:, :)
+   integer :: i, j
+    integer :: nrow, ncol
+    nrow = size(arr, 1)
+    ncol = size(arr, 2)
+    write(*,*) "(", nrow, ", ", ncol, ")"
+    write(*,"(A)", advance="no") "["
+    do i = 1, nrow
+       do j = 1, ncol
+          write(*,"(F12.8)", advance="no") arr(i, j)
+          if (j < ncol) write(*,"(A)", advance="no") ", "
+       end do
+       write(*,*)
+    end do
+    write(*,*) "]"
+end subroutine print2d_arr
 
 subroutine transform0(lj, li, cart, sphr)
    integer, intent(in) :: li
    integer, intent(in) :: lj
    real(wp), intent(in) :: cart(:, :)
    real(wp), intent(out) :: sphr(:, :)
-   
+  !  write(*,*), "cart(", size(cart, 2), ", ", size(cart, 1), ")"
+  !  write(*,*), "sphr(", size(sphr, 2), ", ", size(sphr, 1), ")"
   !  write(*,*), "li = ", li, " lj = ", lj
+  !  print*, "li = ", li, " lj = ", lj
    select case(li)
    case(0, 1)
       select case(lj)
       case(0, 1)
-         sphr = cart
+        sphr = cart
+        ! print*, "sphr ="
+        ! call print2d_arr(sphr)
       case(2)
          ! sphr = matmul(dtrafo, cart)
          ! sphr(1,1) = cart(3, 1) - .5 * (cart(1,1) + cart(2,:))
@@ -124,6 +146,7 @@ subroutine transform0(lj, li, cart, sphr)
    case(2)
       select case(lj)
       case(0, 1)
+        ! print*, "sphr (", size(sphr, 1), ", ", size(sphr, 2), ") ", "cart (", size(cart, 1), ", ", size(cart, 2), ")"  
          ! sphr = matmul(cart, transpose(dtrafo))
          sphr(:, 1) = cart(:, 3) - 0.5_wp * (cart(:, 1) + cart(:, 2))
          sphr(:, 2) = s3 * cart(:, 5)

@@ -1,7 +1,9 @@
 {
   "configurations": [
     {
-      "name": "Debug with Meson",
+      
+      "name": "gdb",
+      // "type": "cuda-gdb",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceRoot}/build/test/unit/tester",
@@ -14,6 +16,7 @@
       "args": [
         "hamiltonian"
       ],
+      "stopAtEntry": false,
       "cwd": "${workspaceRoot}",
       "preLaunchTask": "setup",
       "externalConsole": false,
@@ -23,6 +26,7 @@
           "text": "source ${workspaceFolder}/.gdbinit",
           "ignoreFailures": false
         },
+        
         {
           "description": "Enable pretty-printing for gdb",
           "text": "-enable-pretty-printing",
@@ -34,6 +38,24 @@
           "ignoreFailures": true
         }
       ]
+    },
+    {
+      "name": "cudagdb",
+      "type": "cuda-gdb",
+      "request": "launch",
+      "program": "${workspaceRoot}/build/test/unit/tester",
+      "environment": [
+        {
+          "name": "OMP_NUM_THREADS",
+          "value": "1"
+        }
+      ],
+      "args": [
+        "hamiltonian"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "setup",
     }
   ]
 }

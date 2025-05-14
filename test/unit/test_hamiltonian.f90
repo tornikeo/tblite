@@ -40,6 +40,19 @@ module test_hamiltonian
 
 contains
 
+subroutine print2d_mat(mat)
+    real(wp), intent(in) :: mat(:, :)
+    integer :: i, j, k
+
+    !print in numpy style
+    do i = 1, size(mat, 1)
+        write(*, '(a)', advance='no') '['
+        do j = 1, size(mat, 2)
+            write(*, '(F8.4 A)', advance='no') mat(i, j), ', '
+        end do
+        write(*, '(a)', advance='yes') ']'
+    end do
+end subroutine print2d_mat
 
 !> Collect all exported unit tests
 subroutine collect_hamiltonian(testsuite)
@@ -48,9 +61,9 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-      ! new_unittest("hamiltonian-1", test_hamiltonian_h2), &
-      new_unittest("hamiltonian-2", test_hamiltonian_lih) &
-      ! new_unittest("hamiltonian-3", test_hamiltonian_s2), &
+      new_unittest("hamiltonian-1", test_hamiltonian_h2), &
+      new_unittest("hamiltonian-2", test_hamiltonian_lih), &
+      new_unittest("hamiltonian-3", test_hamiltonian_s2) &
       ! new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
       ]
 
@@ -128,6 +141,7 @@ subroutine test_hamiltonian_mol(error, mol, ref)
    real(wp), allocatable :: dpint_cu(:, :, :), qpint_cu(:, :, :)
 
    real(wp) :: cutoff
+   real(wp), allocatable :: diff(:, :)
    integer :: ii, jj
 
    call make_basis(bas, mol, 6)
@@ -180,6 +194,19 @@ subroutine test_hamiltonian_mol(error, mol, ref)
        if (allocated(error)) then
           print '(2es20.13)', hamiltonian_cu(jj, ii), ref(jj, ii), &
              & hamiltonian_cu(jj, ii) - ref(jj, ii)
+          ! find the difference matrix
+          allocate(diff(size(hamiltonian, 1), size(hamiltonian, 2)))
+
+          diff(:, :) = hamiltonian_cu(:, :) - ref(:, :)
+          ! Additional processing for diff can be added here
+          print*, "expected matrix:"
+          call print2d_mat(ref)
+          print*, "cuda matrix:"
+          call print2d_mat(hamiltonian_cu)
+          print *, "Difference matrix:"
+          call print2d_mat(diff)
+          print*, "largest difference: ", maxval(abs(diff))
+          print*, "at i=", ii, " j=", jj
           return
        end if
     end do

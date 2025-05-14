@@ -563,7 +563,10 @@ contains
     ! call print_adjlist(alist)
     ! call print_tb_hamiltonian(h0)
     ! call print_basis_type(bas)
-    
+    hamiltonian = 0.0_wp
+    overlap = 0.0_wp
+    dpint = 0.0_wp
+    qpint = 0.0_wp
     call cuda_get_hamiltonian_kernel( nao, nelem, &
       !> structure_type
       mol%nat,&
@@ -644,7 +647,7 @@ contains
       dpint(:, :, :) = 0.0_wp
       qpint(:, :, :) = 0.0_wp
       hamiltonian(:, :) = 0.0_wp
-
+      ! print*, "bas.maxl = ", bas%maxl, "msao(bas%maxl) = ", msao(bas%maxl)
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
       ! $omp parallel do schedule(runtime) default(none) &
       ! $omp shared(mol, bas, trans, alist, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -678,7 +681,10 @@ contains
                   ! call print_cgto(bas%cgto(ish, izp))
                   call multipole_cgto(bas%cgto(jsh, jzp), bas%cgto(ish, izp), &
                   & r2, vec, bas%intcut, stmp, dtmpi, qtmpi)
-
+                  ! if (stmp(2) > 0) then
+                  !   print*, "stmp =  ", stmp
+                  ! end if
+                  ! write(*,'(A)') 'vec = '
                   ! write(*,'(A)') 'stmp = '
                   ! do l = 1, size(stmp)
                   !    write(*,'(F12.8)', advance="no") stmp(l)

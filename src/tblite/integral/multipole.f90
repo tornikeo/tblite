@@ -211,7 +211,7 @@ subroutine multipole_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d)
    real(wp), intent(out) :: d3d(3)
    real(wp), intent(out) :: q3d(6)
 
-   integer :: k, l
+   integer :: k, l, i, j
    real(wp) :: vi(0:maxl), vj(0:maxl), vv(0:maxl2), v1d(3, 3)
 
    v1d(:, :) = 0.0_wp
@@ -231,11 +231,13 @@ subroutine multipole_3d(rpj, rpi, aj, ai, lj, li, s1d, s3d, d3d, q3d)
          v1d(k, 3) = v1d(k, 3) + (s1d(l+2) + 2*rpi(k)*s1d(l+1) + rpi(k)*rpi(k)*s1d(l)) * vv(l)
       end do
    end do
-
+   
    s3d = v1d(1, 1) * v1d(2, 1) * v1d(3, 1)
+
    d3d(1) = v1d(1, 2) * v1d(2, 1) * v1d(3, 1)
    d3d(2) = v1d(1, 1) * v1d(2, 2) * v1d(3, 1)
    d3d(3) = v1d(1, 1) * v1d(2, 1) * v1d(3, 2)
+
    q3d(1) = v1d(1, 3) * v1d(2, 1) * v1d(3, 1)
    q3d(2) = v1d(1, 2) * v1d(2, 2) * v1d(3, 1)
    q3d(3) = v1d(1, 1) * v1d(2, 3) * v1d(3, 1)
@@ -363,6 +365,19 @@ subroutine print_cgto(cgto)
 end subroutine print_cgto
 
 
+subroutine print2d_arr_int(arr)
+  integer, intent(in) :: arr(:,:)
+  integer :: i, j
+  write(*, "(A, I3, A, I3, A)") "(", size(arr, 1), ",", size(arr, 2), ") ="
+  do i = 1, size(arr, 1)
+    write(*,"(A)", advance="no"), "{"
+    do j = 1, size(arr, 2)
+      write(*, "(I1, A)", advance="no") arr(i,j), ","
+    end do
+    write(*,"(A)"), "}"  ! Add a newline after printing each row of the 2D array
+  end do
+end subroutine print2d_arr_int
+
 subroutine print2d_arr(arr)
   real(wp), intent(in) :: arr(:,:)
   integer :: i, j
@@ -396,11 +411,14 @@ subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
    !> Quadrupole moment integrals for the given pair i  and j
    real(wp), intent(out) :: qpint(6, msao(cgtoj%ang), msao(cgtoi%ang))
 
-   integer :: ip, jp, mli, mlj, l
+   integer :: ip, jp, mli, mlj, l, i, j, k
    real(wp) :: eab, oab, est, s1d(0:maxl2), rpi(3), rpj(3), cc, val, dip(3), quad(6), pre, tr
    real(wp) :: s3d(mlao(cgtoj%ang), mlao(cgtoi%ang))
    real(wp) :: d3d(3, mlao(cgtoj%ang), mlao(cgtoi%ang))
    real(wp) :: q3d(6, mlao(cgtoj%ang), mlao(cgtoi%ang))
+
+  !  print*, "cgtoj.ang=", cgtoj%ang, "mlao(cgtoj%ang)=", mlao(cgtoj%ang)
+  !  print*, "cgtoi.ang=", cgtoi%ang, "mlao(cgtoi%ang)=", mlao(cgtoi%ang)
 
    s3d(:, :) = 0.0_wp
    d3d(:, :, :) = 0.0_wp
@@ -422,23 +440,10 @@ subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
             s1d(l) = overlap_1d(l, eab)
          end do
          cc = cgtoi%coeff(ip) * cgtoj%coeff(jp) * pre
+         
          do mli = 1, mlao(cgtoi%ang)
             do mlj = 1, mlao(cgtoj%ang)
-              
-              !  write(*,*) "=================== MULTIPOLE_CGTO INNER LOOP ================="
-              !   ! write(*,*) "bid %i tid %i: multipole_cgto inner loop"
-              !  write(*,*) "Parameters"
-              !   write(*,*) "mli=", mli, "mlj=", mlj
-              !   write(*,'(A, F12.6, F12.6, F12.6)') "rpi=", rpi(1), rpi(2), rpi(3)
-              !   write(*,'(A, F12.6, F12.6, F12.6)') "rpj=", rpj(1), rpj(2), rpj(3)
-              !   write(*,'(A, I3, A, F12.6)') "cgtoj.alpha[", jp, "]=", cgtoj%alpha(jp)
-              !   write(*,'(A, I3, A, F12.6)') "cgtoi.alpha[", ip, "]=", cgtoi%alpha(ip)
-              !   write(*,'(A, I3, A, I3, I3, I3)') "lx[", mlj + lmap(cgtoj%ang), "][:] = [", &
-              !     & lx(mlj + lmap(cgtoj%ang), 1), lx(mlj + lmap(cgtoj%ang), 2), lx(mlj + lmap(cgtoj%ang), 3)
-              !   write(*,'(A, I3, A, I3, I3, I3)') "lx[", mli + lmap(cgtoi%ang), "][:] = [", &
-              !     & lx(mli + lmap(cgtoi%ang), 1), lx(mli + lmap(cgtoi%ang), 2), lx(mli + lmap(cgtoi%ang), 3)
-              !  write(*,*) "==============================================================="
-               call multipole_3d(rpj, rpi, cgtoj%alpha(jp), cgtoi%alpha(ip), &
+              call multipole_3d(rpj, rpi, cgtoj%alpha(jp), cgtoi%alpha(ip), &
                   & lx(:, mlj+lmap(cgtoj%ang)), lx(:, mli+lmap(cgtoi%ang)), &
                   & s1d, val, dip, quad)
                s3d(mlj, mli) = s3d(mlj, mli) + cc*val
@@ -448,9 +453,6 @@ subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
          end do
       end do
    end do
-
-  !  print*, "s3d = "
-  !  call print2d_arr(s3d)
 
    call transform0(cgtoj%ang, cgtoi%ang, s3d, overlap)
    call transform1(cgtoj%ang, cgtoi%ang, d3d, dpint)
