@@ -393,7 +393,8 @@ subroutine print2d_arr(arr)
 end subroutine print2d_arr
 
 
-subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
+subroutine multipole_cgto(&
+  cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint, debugin)
    !> Description of contracted Gaussian function on center i
    type(cgto_type), intent(in) :: cgtoi
    !> Description of contracted Gaussian function on center j
@@ -410,12 +411,21 @@ subroutine multipole_cgto(cgtoj, cgtoi, r2, vec, intcut, overlap, dpint, qpint)
    real(wp), intent(out) :: dpint(3, msao(cgtoj%ang), msao(cgtoi%ang))
    !> Quadrupole moment integrals for the given pair i  and j
    real(wp), intent(out) :: qpint(6, msao(cgtoj%ang), msao(cgtoi%ang))
-
+   !> Debug flag
+   logical, optional :: debugin
+   logical :: debug
    integer :: ip, jp, mli, mlj, l, i, j, k
    real(wp) :: eab, oab, est, s1d(0:maxl2), rpi(3), rpj(3), cc, val, dip(3), quad(6), pre, tr
    real(wp) :: s3d(mlao(cgtoj%ang), mlao(cgtoi%ang))
    real(wp) :: d3d(3, mlao(cgtoj%ang), mlao(cgtoi%ang))
    real(wp) :: q3d(6, mlao(cgtoj%ang), mlao(cgtoi%ang))
+   
+   ! if debug not preset, set to false
+   if(.not. present(debugin)) then
+      debug = .false.
+   else
+      debug = .true.
+   end if
 
   !  print*, "cgtoj.ang=", cgtoj%ang, "mlao(cgtoj%ang)=", mlao(cgtoj%ang)
   !  print*, "cgtoi.ang=", cgtoi%ang, "mlao(cgtoi%ang)=", mlao(cgtoi%ang)

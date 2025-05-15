@@ -164,6 +164,8 @@ module tblite_xtb_h0
         real(c_double), intent(out) :: dpint(*) !(:, :, :)
         real(c_double), intent(out) :: qpint(*) !(:, :, :)
         real(c_double), intent(out) :: hamiltonian(*) !(:,:)
+
+        ! real(c_double), intent(out) :: time(*) !(:)
       end subroutine
    end interface
 
@@ -486,6 +488,24 @@ contains
     print*,""  ! Add a newline after printing the entire 2D array
   end subroutine print2d_arr
 
+  subroutine print2d_arr_sq(n, m, arr)
+    integer, intent(in) :: n, m
+    real(wp), intent(in) :: arr(n,m)
+    real(wp), allocatable :: arr_t(:, :)
+    integer :: i, j
+    allocate(arr_t(m, n))
+    arr_t = transpose(arr)
+    write(*, "(A, I3, A, I3, A)") "(", size(arr_t, 1), ",", size(arr_t, 2), ") =" 
+    do i = 1, size(arr_t, 1)
+      write(*,"(A)", advance="no"), "["
+      do j = 1, size(arr_t, 2)  ! Updated to use arr_t instead of arr
+        write(*, "(F12.8)", advance="no") arr_t(i,j)  ! Updated to use arr_t instead of arr
+      end do
+      write(*,"(A)"), "]"  ! Add a newline after printing each row of the 2D array
+    end do
+    print*,""  ! Add a newline after printing the entire 2D array
+  end subroutine print2d_arr_sq
+
   subroutine print3d_arr(arr)
     real(wp), intent(in) :: arr(:,:,:)
     integer :: i, j, k
@@ -527,11 +547,13 @@ contains
     real(wp), intent(out) :: qpint(:, :, :)
     !> Effective Hamiltonian
     real(wp), intent(out) :: hamiltonian(:, :)
+    ! real(c_double), intent(out) :: time(:)
 
     integer(kind=c_int) :: nao 
     integer(kind=c_int) :: nelem
     integer(c_int), allocatable :: periodic_as_integers(:)
     integer :: i, j, k
+
     nao = size(hamiltonian, 1)
     nelem = size(selfenergy, 1)
     !> transform logical periodic to integer
@@ -559,7 +581,7 @@ contains
 
     !> Print all cgtos in order
     ! call print_cgtos(bas)
-    print*, "================= FORTRAN ================="
+    ! print*, "================= FORTRAN ================="
     ! call print_adjlist(alist)
     ! call print_tb_hamiltonian(h0)
     ! call print_basis_type(bas)
@@ -567,6 +589,7 @@ contains
     overlap = 0.0_wp
     dpint = 0.0_wp
     qpint = 0.0_wp
+
     call cuda_get_hamiltonian_kernel( nao, nelem, &
       !> structure_type
       mol%nat,&
@@ -608,7 +631,8 @@ contains
       h0%rad, size(h0%rad,1), &
       h0%refocc, size(h0%refocc,2), size(h0%refocc,1), &
       !> selfenergy, overlap, dpint, qpint, hamiltonian
-      selfenergy, overlap, dpint, qpint, hamiltonian)
+      selfenergy, overlap, dpint, qpint, hamiltonian &
+      )
 
     print*,"";
   end subroutine cuda_get_hamiltonian
@@ -642,11 +666,13 @@ contains
       integer :: ish, jsh, is, js, ii, jj, iao, jao, nao, ij
       real(wp) :: rr, r2, vec(3), cutoff2, hij, shpoly, dtmpj(3), qtmpj(6)
       real(wp), allocatable :: stmp(:), dtmpi(:, :), qtmpi(:, :)
-
+      real(wp) :: list(42)
+      logical :: debug = .false.
       overlap(:, :) = 0.0_wp
       dpint(:, :, :) = 0.0_wp
       qpint(:, :, :) = 0.0_wp
       hamiltonian(:, :) = 0.0_wp
+      list = 3
       ! print*, "bas.maxl = ", bas%maxl, "msao(bas%maxl) = ", msao(bas%maxl)
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
       ! $omp parallel do schedule(runtime) default(none) &
@@ -679,8 +705,17 @@ contains
                   ! write(*,('(A, I3, A, I3, A, I3, A, I3)')) "cgto = bas.cgto(", ish, ",", izp, "), bas.cgto(", &
                   ! & jsh, ",", jzp, ")"
                   ! call print_cgto(bas%cgto(ish, izp))
+
                   call multipole_cgto(bas%cgto(jsh, jzp), bas%cgto(ish, izp), &
                   & r2, vec, bas%intcut, stmp, dtmpi, qtmpi)
+                  
+                  ! if (jj == 4 .and. ii == 10) then
+                  !   print*, "ii + iao = ", ii, "+", iao, "jj + jao = ", jj, "+", jao
+                  !   write(*,*) "stmp(", ij, ") * hij = ", stmp(ij), "*", hij, " = ", stmp(ij) * hij
+                  !   print*, "stmp(", size(stmp), ") = "
+                  !   call print2d_arr_sq(5,5,stmp)
+                  !   ! print*, "stmp(4,3) = ", stmp(4,3)
+                  ! end if
                   ! if (stmp(2) > 0) then
                   !   print*, "stmp =  ", stmp
                   ! end if
@@ -720,7 +755,8 @@ contains
                   nao = msao(bas%cgto(jsh, jzp)%ang)
                   do iao = 1, msao(bas%cgto(ish, izp)%ang)
                      do jao = 1, nao
-                        ij = jao + nao*(iao-1)
+                      ij = jao + nao*(iao-1)
+
                         call shift_operator(vec, stmp(ij), dtmpi(:, ij), qtmpi(:, ij), &
                         & dtmpj, qtmpj)
                         ! $omp atomic
@@ -770,16 +806,16 @@ contains
 
          end do
       end do
-      write(*,*) "================= DEBUG ================="
-      ! write(*,*) "overlap = "
-      ! call print2d_arr(overlap)
-      ! write(*,*) "dpint = "
-      ! call print3d_arr(dpint)
-      ! write(*,*) "qpint = "
-      ! call print3d_arr(qpint)
-      write(*,*) "hamiltonian(pre) = "
-      call print2d_arr(hamiltonian)
-      write(*,*) "================= DEBUG ================="
+      ! write(*,*) "================= DEBUG ================="
+      ! ! write(*,*) "overlap = "
+      ! ! call print2d_arr(overlap)
+      ! ! write(*,*) "dpint = "
+      ! ! call print3d_arr(dpint)
+      ! ! write(*,*) "qpint = "
+      ! ! call print3d_arr(qpint)
+      ! write(*,*) "hamiltonian(pre) = "
+      ! call print2d_arr(hamiltonian)
+      ! write(*,*) "================= DEBUG ================="
       ! Debug, print overlap, dpint, qpint, hamiltonian
       ! print*, "================= DEBUG ================="
       ! print*, "overlap = "

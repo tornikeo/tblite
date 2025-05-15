@@ -16,6 +16,7 @@
 
 module test_hamiltonian
    use mctc_env, only : wp
+   use tblite_timer, only : timer_type, format_time
    use mctc_env_testing, only : new_unittest, unittest_type, error_type, check, &
       & test_failed
    use mctc_io, only : structure_type
@@ -61,11 +62,12 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-      new_unittest("hamiltonian-1", test_hamiltonian_h2), &
-      new_unittest("hamiltonian-2", test_hamiltonian_lih), &
-      new_unittest("hamiltonian-3", test_hamiltonian_s2) &
-      ! new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
-      ]
+    new_unittest("hamiltonian-1", test_hamiltonian_h2), &
+    new_unittest("hamiltonian-2", test_hamiltonian_lih), &
+    new_unittest("hamiltonian-3", test_hamiltonian_s2), &
+    new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
+    new_unittest("hamiltonian-5", test_ice10) &
+  ]
 
 end subroutine collect_hamiltonian
 
@@ -118,6 +120,94 @@ subroutine make_basis(bas, mol, ng)
 
 end subroutine make_basis
 
+subroutine test_hamiltonian_mol_no_ref(error, mol)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+
+  type(structure_type), intent(in) :: mol
+
+  type(basis_type) :: bas
+  type(tb_hamiltonian) :: h0
+  type(adjacency_list) :: list
+
+  real(wp), parameter :: cn_cutoff = 30.0_wp
+  real(wp), allocatable :: lattr(:, :), cn(:), rcov(:)
+
+  real(wp), allocatable :: overlap(:, :), hamiltonian(:, :), selfenergy(:)
+  real(wp), allocatable :: dpint(:, :, :), qpint(:, :, :)
+
+
+  real(wp), allocatable :: overlap_cu(:, :), hamiltonian_cu(:, :)
+  real(wp), allocatable :: dpint_cu(:, :, :), qpint_cu(:, :, :)
+
+  real(wp) :: cutoff
+  real(wp), allocatable :: diff(:, :)
+  integer :: ii, jj
+
+  type(timer_type) :: timer
+  real(wp) :: stime
+
+  call make_basis(bas, mol, 6)
+  !print*, bas%nao
+  ! call check(error, bas%nao, size(ref, 1))
+  if (allocated(error)) return
+
+  call new_hamiltonian(h0, mol, bas, gfn2_h0spec(mol))
+
+  allocate(cn(mol%nat), rcov(mol%nid))
+  rcov(:) = get_covalent_rad(mol%num)
+  call get_lattice_points(mol%periodic, mol%lattice, cn_cutoff, lattr)
+  call get_coordination_number(mol, lattr, cn_cutoff, rcov, cn)
+
+  cutoff = get_cutoff(bas)
+  call get_lattice_points(mol%periodic, mol%lattice, cutoff, lattr)
+  call new_adjacency_list(list, mol, lattr, cutoff)
+
+  allocate(selfenergy(bas%nsh))
+  call get_selfenergy(h0, mol%id, bas%ish_at, bas%nsh_id, cn=cn, selfenergy=selfenergy)
+
+  allocate(overlap(bas%nao, bas%nao), dpint(3, bas%nao, bas%nao), &
+     & qpint(6, bas%nao, bas%nao), hamiltonian(bas%nao, bas%nao))
+ allocate(overlap_cu(bas%nao, bas%nao), dpint_cu(3, bas%nao, bas%nao), &
+     & qpint_cu(6, bas%nao, bas%nao), hamiltonian_cu(bas%nao, bas%nao))
+  
+
+  call timer%push("cpu")
+  call get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap, dpint, qpint, &
+      & hamiltonian)
+  call timer%pop
+  stime = timer%get("cpu")
+  write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
+
+  write(*,*) " - ", format_time(stime)
+  call cuda_get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap_cu, dpint_cu, qpint_cu, &
+    & hamiltonian_cu)
+
+  ! Compare cuda-computed hamiltonian with reference
+  do ii = 1, size(hamiltonian, 2)
+    do jj = 1, size(hamiltonian, 1)
+      call check(error, hamiltonian_cu(jj, ii), hamiltonian(jj, ii), thr=thr2)
+      if (allocated(error)) then
+          print '(2es20.13)', hamiltonian_cu(jj, ii), hamiltonian(jj, ii), &
+            & hamiltonian_cu(jj, ii) - hamiltonian(jj, ii)
+          ! find the difference matrix
+          allocate(diff(size(hamiltonian, 1), size(hamiltonian, 2)))
+
+          diff(:, :) = hamiltonian_cu(:, :) - hamiltonian(:, :)
+          ! Additional processing for diff can be added here
+          ! print*, "expected matrix:"
+          ! call print2d_mat(ref)
+          ! print*, "cuda matrix:"
+          ! call print2d_mat(hamiltonian_cu)
+          ! print *, "Difference matrix:"
+          ! call print2d_mat(diff)
+          ! print*, "largest difference: ", maxval(abs(diff))
+          ! print*, "at i=", ii, " j=", jj
+          return
+        end if
+      end do
+  end do
+end subroutine test_hamiltonian_mol_no_ref
 
 subroutine test_hamiltonian_mol(error, mol, ref)
 
@@ -144,6 +234,9 @@ subroutine test_hamiltonian_mol(error, mol, ref)
    real(wp), allocatable :: diff(:, :)
    integer :: ii, jj
 
+   type(timer_type) :: timer
+   real(wp) :: stime 
+
    call make_basis(bas, mol, 6)
    !print*, bas%nao
    call check(error, bas%nao, size(ref, 1))
@@ -168,8 +261,13 @@ subroutine test_hamiltonian_mol(error, mol, ref)
   allocate(overlap_cu(bas%nao, bas%nao), dpint_cu(3, bas%nao, bas%nao), &
       & qpint_cu(6, bas%nao, bas%nao), hamiltonian_cu(bas%nao, bas%nao))
 
-   call get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap, dpint, qpint, &
-      & hamiltonian)
+    call timer%push("cpu")
+    call get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap, dpint, qpint, &
+        & hamiltonian)
+    call timer%pop
+    stime = timer%get("cpu")
+    write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
+
    call cuda_get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap_cu, dpint_cu, qpint_cu, &
     & hamiltonian_cu)
    !where(abs(hamiltonian) < thr) hamiltonian = 0.0_wp
@@ -187,30 +285,30 @@ subroutine test_hamiltonian_mol(error, mol, ref)
       end do
    end do
 
-   ! Compare cuda-computed hamiltonian with reference
-   do ii = 1, size(hamiltonian, 2)
+  ! Compare cuda-computed hamiltonian with reference
+  do ii = 1, size(hamiltonian, 2)
     do jj = 1, size(hamiltonian, 1)
-       call check(error, hamiltonian_cu(jj, ii), ref(jj, ii), thr=thr2)
-       if (allocated(error)) then
+      call check(error, hamiltonian_cu(jj, ii), ref(jj, ii), thr=thr2)
+      if (allocated(error)) then
           print '(2es20.13)', hamiltonian_cu(jj, ii), ref(jj, ii), &
-             & hamiltonian_cu(jj, ii) - ref(jj, ii)
+            & hamiltonian_cu(jj, ii) - ref(jj, ii)
           ! find the difference matrix
           allocate(diff(size(hamiltonian, 1), size(hamiltonian, 2)))
 
           diff(:, :) = hamiltonian_cu(:, :) - ref(:, :)
           ! Additional processing for diff can be added here
-          print*, "expected matrix:"
-          call print2d_mat(ref)
-          print*, "cuda matrix:"
-          call print2d_mat(hamiltonian_cu)
-          print *, "Difference matrix:"
-          call print2d_mat(diff)
-          print*, "largest difference: ", maxval(abs(diff))
-          print*, "at i=", ii, " j=", jj
+          ! print*, "expected matrix:"
+          ! call print2d_mat(ref)
+          ! print*, "cuda matrix:"
+          ! call print2d_mat(hamiltonian_cu)
+          ! print *, "Difference matrix:"
+          ! call print2d_mat(diff)
+          ! print*, "largest difference: ", maxval(abs(diff))
+          ! print*, "at i=", ii, " j=", jj
           return
-       end if
-    end do
- end do
+        end if
+      end do
+  end do
  
    !allocate(eigval(bas%nao))
    !call sygvd%solve(hamiltonian, overlap, eigval, error)
@@ -458,5 +556,16 @@ subroutine test_hamiltonian_sih4(error)
 
 end subroutine test_hamiltonian_sih4
 
+
+subroutine test_ice10(error)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+
+  type(structure_type) :: mol
+
+  call get_structure(mol, "ICE10", "xii")
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+end subroutine test_ice10
 
 end module test_hamiltonian
