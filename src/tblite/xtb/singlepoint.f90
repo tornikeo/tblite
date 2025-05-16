@@ -148,6 +148,7 @@ subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigm
    type(sygvd_solver) :: sygvd
    type(adjacency_list) :: list
    integer :: iscf, spin
+   real(wp) :: stime
    call timer%push("total")
     ! call print_structure_type(mol)
    if (present(verbosity)) then
@@ -227,7 +228,7 @@ subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigm
 
    if (prlevel > 1) print *, property("number of electrons", wfn%nocc, "e")
 
-   call timer%push("hamiltonian")
+  !  call timer%push("hamiltonian")
    if (allocated(calc%ncoord)) then
       allocate(cn(mol%nat))
       if (grad) then
@@ -251,11 +252,16 @@ subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigm
 
    call new_integral(ints, calc%bas%nao)
    
+   call timer%push("hamiltonian")
+   call get_hamiltonian(mol, lattr, list, calc%bas, calc%h0, selfenergy, &
+   & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian)
+   call timer%pop
+   
+   stime = timer%get("hamiltonian")
+   write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
+   
    call cuda_get_hamiltonian(mol, lattr, list, calc%bas, calc%h0, selfenergy, &
     & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian)
-   call get_hamiltonian(mol, lattr, list, calc%bas, calc%h0, selfenergy, &
-      & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian)
-   call timer%pop
 
    call timer%push("scc")
    allocate(eelec(mol%nat), source=0.0_wp)

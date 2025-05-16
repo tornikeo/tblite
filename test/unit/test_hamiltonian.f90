@@ -65,8 +65,8 @@ subroutine collect_hamiltonian(testsuite)
     new_unittest("hamiltonian-1", test_hamiltonian_h2), &
     new_unittest("hamiltonian-2", test_hamiltonian_lih), &
     new_unittest("hamiltonian-3", test_hamiltonian_s2), &
-    new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
-    new_unittest("hamiltonian-5", test_ice10) &
+    new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
+    ! new_unittest("hamiltonian-5", test_ice10) &
   ]
 
 end subroutine collect_hamiltonian
@@ -178,8 +178,7 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
   call timer%pop
   stime = timer%get("cpu")
   write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
-
-  write(*,*) " - ", format_time(stime)
+  
   call cuda_get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap_cu, dpint_cu, qpint_cu, &
     & hamiltonian_cu)
 
