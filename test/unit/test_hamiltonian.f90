@@ -15,11 +15,12 @@
 ! along with tblite.  If not, see <https://www.gnu.org/licenses/>.
 
 module test_hamiltonian
-   use mctc_env, only : wp
+   use mctc_io, only : structure_type, read_structure
+   use mctc_io_filetype, only : filetype
+   use mctc_env, only : wp, error_type
    use tblite_timer, only : timer_type, format_time
    use mctc_env_testing, only : new_unittest, unittest_type, error_type, check, &
       & test_failed
-   use mctc_io, only : structure_type
    use mstore, only : get_structure
    use tblite_adjlist, only : adjacency_list, new_adjacency_list
    use tblite_basis_type
@@ -65,8 +66,9 @@ subroutine collect_hamiltonian(testsuite)
     new_unittest("hamiltonian-1", test_hamiltonian_h2), &
     new_unittest("hamiltonian-2", test_hamiltonian_lih), &
     new_unittest("hamiltonian-3", test_hamiltonian_s2), &
-    new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
-    ! new_unittest("hamiltonian-5", test_ice10) &
+    new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
+    new_unittest("hamiltonian-5", test_ice10), &
+    new_unittest("hamiltonian-6", test_dna_xyz) &
   ]
 
 end subroutine collect_hamiltonian
@@ -566,5 +568,24 @@ subroutine test_ice10(error)
   call test_hamiltonian_mol_no_ref(error, mol)
 
 end subroutine test_ice10
+
+subroutine test_dna_xyz(error)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+  
+  type(structure_type) :: mol
+  character(len=:), allocatable :: input
+
+  input = "test/perf/dna.xyz"
+
+  call read_structure(mol, input, error, filetype%xyz)
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+end subroutine test_dna_xyz
 
 end module test_hamiltonian
