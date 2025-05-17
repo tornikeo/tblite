@@ -67,8 +67,13 @@ subroutine collect_hamiltonian(testsuite)
     new_unittest("hamiltonian-2", test_hamiltonian_lih), &
     new_unittest("hamiltonian-3", test_hamiltonian_s2), &
     new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
-    new_unittest("hamiltonian-5", test_ice10), &
-    new_unittest("hamiltonian-6", test_dna_xyz) &
+    new_unittest("hamiltonian-5", test_hamiltonian_glu), &
+    new_unittest("hamiltonian-6", test_ice10), &
+    new_unittest("hamiltonian-7", test_dna_xyz), &
+    new_unittest("hamiltonian-8", test_protein_1lyz_pdb) &
+    ! new_unittest("hamiltonian-8", test_protein_101d_pdb), &
+    ! new_unittest("hamiltonian-8", test_protein_103l_pdb), &
+    ! new_unittest("hamiltonian-8", test_protein_1mbn_pdb) & ! not enough memory
   ]
 
 end subroutine collect_hamiltonian
@@ -557,6 +562,13 @@ subroutine test_hamiltonian_sih4(error)
 
 end subroutine test_hamiltonian_sih4
 
+subroutine test_hamiltonian_glu(error)
+  type(error_type), allocatable, intent(out) :: error
+  type(structure_type) :: mol
+  call get_structure(mol, "Amino20x4", "GLN_xan")
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+end subroutine test_hamiltonian_glu
 
 subroutine test_ice10(error)
   !> Error handling
@@ -587,5 +599,79 @@ subroutine test_dna_xyz(error)
   call test_hamiltonian_mol_no_ref(error, mol)
 
 end subroutine test_dna_xyz
+
+subroutine test_protein_101d_pdb(error)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+  
+  type(structure_type) :: mol
+  character(len=:), allocatable :: input
+
+  input = "test/perf/101d.pdb"
+
+  call read_structure(mol, input, error, filetype%pdb)
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+end subroutine test_protein_101d_pdb
+
+subroutine test_protein_103l_pdb(error)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+  
+  type(structure_type) :: mol
+  character(len=:), allocatable :: input
+
+  input = "test/perf/103l.pdb"
+
+  call read_structure(mol, input, error, filetype%pdb)
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+end subroutine test_protein_103l_pdb
+
+subroutine test_protein_1lyz_pdb(error)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+  
+  type(structure_type) :: mol
+  character(len=:), allocatable :: input
+
+  input = "test/perf/1lyz.pdb"
+
+  call read_structure(mol, input, error, filetype%pdb)
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+end subroutine test_protein_1lyz_pdb
+
+subroutine test_protein_1mbn_pdb(error)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+  
+  type(structure_type) :: mol
+  character(len=:), allocatable :: input
+
+  input = "test/perf/1mbn.pdb"
+
+  call read_structure(mol, input, error, filetype%pdb)
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+end subroutine test_protein_1mbn_pdb
 
 end module test_hamiltonian
