@@ -673,6 +673,16 @@ contains
       qpint(:, :, :) = 0.0_wp
       hamiltonian(:, :) = 0.0_wp
       list = 3
+      
+      ! print, num atoms
+      print*, "bas.nprim max", bas%cgto(1,1)%nprim
+      print*, "bas.maxl = ", bas%maxl
+      print*, "num atoms = ", mol%nat
+      ! print maximum alist.nnl
+      print*, "max alist.nnl = ", maxval(alist%nnl)
+      ! print maximum nsh_id
+      print*, "max nsh_id = ", maxval(bas%nsh_id)
+
       ! print*, "bas.maxl = ", bas%maxl, "msao(bas%maxl) = ", msao(bas%maxl)
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
       ! $omp parallel do schedule(runtime) default(none) &
@@ -693,65 +703,14 @@ contains
             rr = sqrt(sqrt(r2) / (h0%rad(jzp) + h0%rad(izp)))
             do ish = 1, bas%nsh_id(izp)
                ii = bas%iao_sh(is+ish)
-              !  print*, "ii = ", ii
                do jsh = 1, bas%nsh_id(jzp)
                   jj = bas%iao_sh(js+jsh)
-                  ! print*, "jj = ", jj
-                  ! debug
-                  ! write(*,*) "===================== DEBUG ====================="
-                  ! write(*,('(A, I3, A, I3, A, I3, A, I3)')) "cgto = bas.cgto(", jsh, ",", jzp, "), bas.cgto(", &
-                  ! & ish, ",", izp, ")"
-                  ! call print_cgto(bas%cgto(jsh, jzp))
-                  ! write(*,('(A, I3, A, I3, A, I3, A, I3)')) "cgto = bas.cgto(", ish, ",", izp, "), bas.cgto(", &
-                  ! & jsh, ",", jzp, ")"
-                  ! call print_cgto(bas%cgto(ish, izp))
-
                   call multipole_cgto(bas%cgto(jsh, jzp), bas%cgto(ish, izp), &
                   & r2, vec, bas%intcut, stmp, dtmpi, qtmpi)
-                  
-                  ! if (jj == 4 .and. ii == 10) then
-                  !   print*, "ii + iao = ", ii, "+", iao, "jj + jao = ", jj, "+", jao
-                  !   write(*,*) "stmp(", ij, ") * hij = ", stmp(ij), "*", hij, " = ", stmp(ij) * hij
-                  !   print*, "stmp(", size(stmp), ") = "
-                  !   call print2d_arr_sq(5,5,stmp)
-                  !   ! print*, "stmp(4,3) = ", stmp(4,3)
-                  ! end if
-                  ! if (stmp(2) > 0) then
-                  !   print*, "stmp =  ", stmp
-                  ! end if
-                  ! write(*,'(A)') 'vec = '
-                  ! write(*,'(A)') 'stmp = '
-                  ! do l = 1, size(stmp)
-                  !    write(*,'(F12.8)', advance="no") stmp(l)
-                  ! end do
-                  ! print*,""
-                  ! write(*,'(A)') 'dtmpi = '
-                  ! do l = 1, size(dtmpi, 1)
-                  !   do k = 1, size(dtmpi, 2)
-                  !     write(*,'(A, F12.8 A)', advance="no") " ", dtmpi(l, k), ", "
-                  !   end do
-                  !   write(*,*) ""  ! Add newline after each row
-                  ! end do
-                  ! write(*,*) ""  ! Add newline after each row
-                  ! write(*,'(A)') 'qtmpi = '
-                  ! do l = 1, size(qtmpi, 1)
-                  !   do k = 1, size(qtmpi, 2)
-                  !     write(*,'(A, F12.8 A)', advance="no") " ", qtmpi(l, k), ", "
-                  !   end do
-                  !   write(*,*) ""  ! Add newline after each row
-                  ! end do
-                  ! write(*,*) ""  ! Add newline after each row
-                  ! write(*,*) "===================== DEBUG ====================="
-                  ! printcounter = printcounter + 1
-                  ! if (printcounter > 5) then
-                  !   return
-                  ! endif
                   shpoly = (1.0_wp + h0%shpoly(ish, izp)*rr) &
                      * (1.0_wp + h0%shpoly(jsh, jzp)*rr)
-
                   hij = 0.5_wp * (selfenergy(is+ish) + selfenergy(js+jsh)) &
                      * h0%hscale(jsh, ish, jzp, izp) * shpoly
-
                   nao = msao(bas%cgto(jsh, jzp)%ang)
                   do iao = 1, msao(bas%cgto(ish, izp)%ang)
                      do jao = 1, nao
@@ -778,7 +737,6 @@ contains
                         ! $omp atomic
                         hamiltonian(jj+jao, ii+iao) = hamiltonian(jj+jao, ii+iao) &
                            + stmp(ij) * hij
-
                         if (iat /= jat) then
                            ! $omp atomic
                            overlap(ii+iao, jj+jao) = overlap(ii+iao, jj+jao) &
@@ -803,31 +761,8 @@ contains
 
                end do
             end do
-
          end do
       end do
-      ! write(*,*) "================= DEBUG ================="
-      ! ! write(*,*) "overlap = "
-      ! ! call print2d_arr(overlap)
-      ! ! write(*,*) "dpint = "
-      ! ! call print3d_arr(dpint)
-      ! ! write(*,*) "qpint = "
-      ! ! call print3d_arr(qpint)
-      ! write(*,*) "hamiltonian(pre) = "
-      ! call print2d_arr(hamiltonian)
-      ! write(*,*) "================= DEBUG ================="
-      ! Debug, print overlap, dpint, qpint, hamiltonian
-      ! print*, "================= DEBUG ================="
-      ! print*, "overlap = "
-      ! call print2d_arr(overlap)
-      ! print*,""
-      ! print*, "dpint = "
-      ! call print3d_arr(dpint)
-      ! print*, "qpint = "
-      ! call print3d_arr(qpint) 
-      ! print*, "hamiltonian = "
-      ! call print2d_arr(hamiltonian)
-      ! print*, "================= DEBUG ================="
 
       ! $omp parallel do schedule(runtime) default(none) &
       ! $omp shared(mol, bas, trans, cutoff2, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -853,16 +788,9 @@ contains
                   * shpoly
                 
                nao = msao(bas%cgto(jsh, izp)%ang)
-              !  call print_cgto(bas%cgto(jsh, izp))
-              !  write(*,*) "nao = ", nao
                do iao = 1, msao(bas%cgto(ish, izp)%ang)
                   do jao = 1, nao
                      ij = jao + nao*(iao-1)
-                     ! printf("msao(bas.cgto(ish, izp)%ang) = %d\n", msao(bas%cgto(ish, izp)%ang))
-                    !  write(*,*) "msao(bas.cgto(ish, izp)%ang) = ", msao(bas%cgto(ish, izp)%ang)
-                    !  !            printf("overlap(%d + %d, %d + %d) += stmp(%d, %d)\n", ii + iao, jj + jao, iao, jao, iao, jao);
-                    !  write(*, *) "overlap(", ii, "+", iao, ",", jj, "+", jao, ") += stmp(", ij, ")"
-                    !  write(*, *) "nao = ", nao
                      overlap(jj+jao, ii+iao) = overlap(jj+jao, ii+iao) &
                         + stmp(ij)
 
