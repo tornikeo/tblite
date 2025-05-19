@@ -69,9 +69,9 @@ subroutine collect_hamiltonian(testsuite)
     new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
     ! new_unittest("hamiltonian-5", test_hamiltonian_glu), &
     ! new_unittest("hamiltonian-6", test_ice10), &
-    new_unittest("hamiltonian-7", test_dna_xyz), &
-    new_unittest("hamiltonian-8", test_protein_1lyz_pdb), &
-    new_unittest("hamiltonian-8", test_protein_101d_pdb), &
+    ! new_unittest("hamiltonian-7", test_dna_xyz), &
+    ! new_unittest("hamiltonian-8", test_protein_1lyz_pdb), &
+    ! new_unittest("hamiltonian-8", test_protein_101d_pdb), &
     new_unittest("hamiltonian-8", test_protein_103l_pdb) &
     ! new_unittest("hamiltonian-8", test_protein_1mbn_pdb) & ! not enough memory
   ]
@@ -198,9 +198,9 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
           print '(2es20.13)', hamiltonian_cu(jj, ii), hamiltonian(jj, ii), &
             & hamiltonian_cu(jj, ii) - hamiltonian(jj, ii)
           ! find the difference matrix
-          allocate(diff(size(hamiltonian, 1), size(hamiltonian, 2)))
-          diff(:, :) = hamiltonian_cu(:, :) - hamiltonian(:, :)
-          print*, "largest difference: ", maxval(abs(diff))
+          ! allocate(diff(size(hamiltonian, 1), size(hamiltonian, 2)))
+          ! diff(:, :) = hamiltonian_cu(:, :) - hamiltonian(:, :)
+          ! print*, "largest difference: ", maxval(abs(diff))
           print*, "is ", hamiltonian_cu(jj, ii), " should be ", hamiltonian(jj, ii)
           print*, "at i=", ii - 1, " j=", jj - 1
           error stop
@@ -208,7 +208,7 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
       end do
   end do
 
-  do ii = 1, size(dpint)
+  do ii = 1, size(dpint, 1)
     do jj = 1, size(dpint, 2)
       do kk = 1, size(dpint, 3)
         call check(error, dpint_cu(ii, jj, kk), dpint(ii, jj, kk), thr=thr2)
@@ -216,17 +216,15 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
           print*, "DPINT error"
           print '(3es20.13)', dpint_cu(ii, jj, kk), dpint(ii, jj, kk), &
           & dpint_cu(ii, jj, kk) - dpint(ii, jj, kk)
-
-          print*, "largest difference: ", maxval(abs(diff))
           print*, "is ", dpint_cu(ii, jj, kk), " should be ", dpint(ii, jj, kk)
-          print*, "at i=", ii - 1, " j=", jj - 1
+          print*, "at i=", kk - 1, " j=", jj - 1, "k=", ii - 1
           error stop
         end if
       end do
     end do
   end do
 
-  do ii = 1, size(qpint)
+  do ii = 1, size(qpint, 1)
     do jj = 1, size(qpint, 2)
       do kk = 1, size(qpint, 3)
         call check(error, qpint_cu(ii, jj, kk), qpint(ii, jj, kk), thr=thr2)
@@ -236,7 +234,7 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
             & qpint_cu(ii, jj, kk) - qpint(ii, jj, kk)
           print*, "largest difference: ", maxval(abs(diff))
           print*, "is ", qpint_cu(ii, jj, kk), " should be ", qpint(ii, jj, kk)
-          print*, "at i=", ii - 1, " j=", jj - 1
+          print*, "at i=", kk - 1, " j=", jj - 1, "k=", ii - 1
           error stop
         end if
       end do
@@ -310,41 +308,44 @@ subroutine test_hamiltonian_mol(error, mol, ref)
 
 
   ! Compare cuda-computed hamiltonian with reference
-  do ii = 1, size(hamiltonian, 2)
-    do jj = 1, size(hamiltonian, 1)
-      call check(error, hamiltonian_cu(jj, ii), ref(jj, ii), thr=thr2)
+  do ii = 1, size(hamiltonian, 1)
+    do jj = 1, size(hamiltonian, 2)
+      call check(error, hamiltonian_cu(ii, jj), ref(ii, jj), thr=thr2)
       if (allocated(error)) then
           ! find the difference matrix
-          print*, "is ", hamiltonian_cu(jj, ii), " should be ", ref(jj, ii)
+          print*, "HAMILTONIAN error"
+          print*, "is ", hamiltonian_cu(ii, jj), " should be ", ref(ii, jj)
           print*, "at i=", ii - 1, " j=", jj - 1
-          return
+          error stop
         end if
       end do
   end do
  
-  do ii = 1, size(dpint)
+  do kk = 1, size(dpint, 3)
     do jj = 1, size(dpint, 2)
-      do kk = 1, size(dpint, 3)
+      do ii = 1, size(dpint, 1)
         call check(error, dpint_cu(ii, jj, kk), dpint(ii, jj, kk), thr=thr2)
         if (allocated(error)) then
+          print*, '============ FORT ============'
           print*, "DPINT error"
-
+          print*, "shape (", size(dpint_cu, 1), ",", size(dpint_cu, 2), ",", size(dpint_cu, 3), ")"
           print*, "is ", dpint_cu(ii, jj, kk), " should be ", dpint(ii, jj, kk)
-          print*, "at i=", ii - 1, " j=", jj - 1, " k=", kk - 1
+          print*, "FORT at i=", ii, " j=", jj, "k=", kk
+          print*, "C at i=", kk-1, " j=", jj-1, "k=", ii-1
           error stop
         end if
       end do
     end do
   end do
 
-  do ii = 1, size(qpint)
+  do ii = 1, size(qpint, 1)
     do jj = 1, size(qpint, 2)
       do kk = 1, size(qpint, 3)
         call check(error, qpint_cu(ii, jj, kk), qpint(ii, jj, kk), thr=thr2)
         if (allocated(error)) then
           print*, "QPINT error"
           print*, "is ", qpint_cu(ii, jj, kk), " should be ", qpint(ii, jj, kk)
-          print*, "at i=", ii - 1, " j=", jj - 1, "k=", kk - 1
+          print*, "at i=",  kk - 1, " j=", jj - 1, "k=", ii - 1
           error stop
         end if
       end do

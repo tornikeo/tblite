@@ -763,7 +763,6 @@ contains
             end do
          end do
       end do
-
       ! $omp parallel do schedule(runtime) default(none) &
       ! $omp shared(mol, bas, trans, cutoff2, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
       ! $omp private(iat, izp, itr, is, ish, jsh, ii, jj, iao, jao, nao, ij) &
@@ -809,6 +808,7 @@ contains
          end do
 
       end do
+  
    !   printf("d_overlap = \n");
   ! overlap.print();
   ! printf("d_dpint = \n");
