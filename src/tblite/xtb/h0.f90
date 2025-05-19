@@ -675,20 +675,19 @@ contains
       list = 3
       
       ! print, num atoms
-      print*, "bas.nprim max", bas%cgto(1,1)%nprim
-      print*, "bas.maxl = ", bas%maxl
-      print*, "num atoms = ", mol%nat
-      ! print maximum alist.nnl
-      print*, "max alist.nnl = ", maxval(alist%nnl)
-      ! print maximum nsh_id
-      print*, "max nsh_id = ", maxval(bas%nsh_id)
+      print*, "nat", mol%nat
+      print*, "nprim", bas%cgto(1,1)%nprim
+      print*, "maxl", bas%maxl
+      print*, "max_nnl", maxval(alist%nnl)
+      print*, "mean_nnl", sum(alist%nnl) / size(alist%nnl) 
+      print*, "max_nsh", maxval(bas%nsh_id)
 
       ! print*, "bas.maxl = ", bas%maxl, "msao(bas%maxl) = ", msao(bas%maxl)
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
-      ! $omp parallel do schedule(runtime) default(none) &
-      ! $omp shared(mol, bas, trans, alist, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
-      ! $omp private(iat, jat, izp, jzp, itr, is, js, ish, jsh, ii, jj, iao, jao, nao, ij, k) &
-      ! $omp private(r2, vec, stmp, dtmpi, qtmpi, dtmpj, qtmpj, hij, shpoly, rr, inl, img)
+      !$omp parallel do schedule(runtime) default(none) &
+      !$omp shared(mol, bas, trans, alist, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
+      !$omp private(iat, jat, izp, jzp, itr, is, js, ish, jsh, ii, jj, iao, jao, nao, ij, k) &
+      !$omp private(r2, vec, stmp, dtmpi, qtmpi, dtmpj, qtmpj, hij, shpoly, rr, inl, img)
       do iat = 1, mol%nat
          izp = mol%id(iat)
          is = bas%ish_at(iat)
@@ -763,10 +762,11 @@ contains
             end do
          end do
       end do
-      ! $omp parallel do schedule(runtime) default(none) &
-      ! $omp shared(mol, bas, trans, cutoff2, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
-      ! $omp private(iat, izp, itr, is, ish, jsh, ii, jj, iao, jao, nao, ij) &
-      ! $omp private(r2, vec, stmp, dtmpi, qtmpi, hij, shpoly, rr)
+
+      !$omp parallel do schedule(runtime) default(none) &
+      !$omp shared(mol, bas, trans, cutoff2, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
+      !$omp private(iat, izp, itr, is, ish, jsh, ii, jj, iao, jao, nao, ij) &
+      !$omp private(r2, vec, stmp, dtmpi, qtmpi, hij, shpoly, rr)
       do iat = 1, mol%nat
          izp = mol%id(iat)
          is = bas%ish_at(iat)
