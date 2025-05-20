@@ -63,15 +63,15 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-    ! new_unittest("hamiltonian-1", test_hamiltonian_h2), &
-    ! new_unittest("hamiltonian-2", test_hamiltonian_lih), &
-    ! new_unittest("hamiltonian-3", test_hamiltonian_s2), &
-    ! new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
-    ! new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
+    new_unittest("hamiltonian-1", test_hamiltonian_h2), &
+    new_unittest("hamiltonian-2", test_hamiltonian_lih), &
+    new_unittest("hamiltonian-3", test_hamiltonian_s2), &
+    new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
+    new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
     ! new_unittest("hamiltonian-ICEX", test_ice10), &
-    ! new_unittest("hamiltonian-DNA-strand", test_dna_xyz), &
-    ! new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
-    ! new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
+    new_unittest("hamiltonian-DNA-strand", test_dna_xyz), &
+    new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
+    new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
     new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb) &
     ! new_unittest("hamiltonian-8", test_protein_1mbn_pdb) & ! not enough memory
   ]

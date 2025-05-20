@@ -43,7 +43,7 @@ module tblite_xtb_h0
       !> Notice: Dimensions are passed in C order. 
       !> On Fortran side, dimensions are passed in reverse (arr, size(arr, 2), size(arr, 1)).
       !> On C side, dimension are correct, without change. No transpose is done.
-      subroutine cuda_get_hamiltonian_kernel( batch_size, nao, nelem, &
+      subroutine cuda_get_hamiltonian_kernel( nao, nelem, &
         mol_nat, mol_nid, mol_nbd, & !> structure_type
         mol_id, mol_id_dim1, &
         mol_num, mol_num_dim1, &
@@ -80,7 +80,7 @@ module tblite_xtb_h0
         use tblite_adjlist, only : adjacency_list
 
         implicit none
-        integer(c_int), value :: batch_size
+        ! integer(c_int), value :: batch_size
         integer(c_int), value :: nao, nelem
 
         !> structure_type
@@ -573,7 +573,7 @@ contains
     dpint = 0.0_wp
     qpint = 0.0_wp
 
-    call cuda_get_hamiltonian_kernel( batch_size, & 
+    call cuda_get_hamiltonian_kernel( &
       nao, nelem, &
       mol%nat, &
       mol%nid, &
