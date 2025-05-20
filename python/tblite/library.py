@@ -78,9 +78,8 @@ def error_check(func):
 @ffi.def_extern()
 def logger_callback(message, nchar, data):
     """Custom logger callback to write output in a Python friendly way"""
-
+    nchar = ffi.cast("int", nchar[0])
     print(ffi.unpack(message, nchar).decode())
-
 
 def context_check(func):
     """Handle errors for library functions that require a context handle"""

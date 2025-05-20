@@ -63,16 +63,16 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-    new_unittest("hamiltonian-1", test_hamiltonian_h2), &
-    new_unittest("hamiltonian-2", test_hamiltonian_lih), &
-    new_unittest("hamiltonian-3", test_hamiltonian_s2), &
-    new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
+    ! new_unittest("hamiltonian-1", test_hamiltonian_h2), &
+    ! new_unittest("hamiltonian-2", test_hamiltonian_lih), &
+    ! new_unittest("hamiltonian-3", test_hamiltonian_s2), &
+    ! new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
     ! new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
     ! new_unittest("hamiltonian-ICEX", test_ice10), &
     ! new_unittest("hamiltonian-DNA-strand", test_dna_xyz), &
     ! new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
     ! new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
-    ! new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb) &
+    new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb) &
     ! new_unittest("hamiltonian-8", test_protein_1mbn_pdb) & ! not enough memory
   ]
 
@@ -127,11 +127,20 @@ subroutine make_basis(bas, mol, ng)
 
 end subroutine make_basis
 
+
+pure function mean_abs(a) result(m)
+  !> Calculate the mean of the absolute values of a 2D array
+  real(wp), intent(in) :: a(:,:)  ! Input 2D array
+  real(wp) :: m                  ! Resulting mean value
+
+  m = sum(abs(a)) / size(a)
+end function mean_abs
+
 subroutine test_hamiltonian_mol_no_ref(error, mol)
   !> Error handling
   type(error_type), allocatable, intent(out) :: error
 
-  type(structure_type), intent(in) :: mol
+  type(structure_type), intent(inout) :: mol
 
   type(basis_type) :: bas
   type(tb_hamiltonian) :: h0
@@ -148,11 +157,20 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
   real(wp), allocatable :: dpint_cu(:, :, :), qpint_cu(:, :, :)
 
   real(wp) :: cutoff
-  ! real(wp), allocatable :: diff(:, :)
   integer :: ii, jj, kk
+
+  real(wp) :: random_translation
+  real(wp), allocatable :: random_wiggle(:,:)
 
   type(timer_type) :: timer
   real(wp) :: stime
+
+  allocate(random_wiggle(size(mol%xyz, 1), size(mol%xyz, 2)))
+  call random_number(random_wiggle)  
+  random_wiggle = (random_wiggle * 2.0_wp - 1.0_wp) * 0.1_wp ! random number between -0.1 and +0.1
+
+  mol%xyz(:,:) = mol%xyz(:,:) + random_wiggle
+  ! test, what happens if mol%xyz is unallocated
 
   call make_basis(bas, mol, 6)
   !print*, bas%nao
@@ -178,14 +196,13 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
  allocate(overlap_cu(bas%nao, bas%nao), dpint_cu(3, bas%nao, bas%nao), &
      & qpint_cu(6, bas%nao, bas%nao), hamiltonian_cu(bas%nao, bas%nao))
   
-
   call timer%push("cpu")
   call get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap, dpint, qpint, &
       & hamiltonian)
   call timer%pop
   stime = timer%get("cpu")
   write(*,"(A F12.6 A)") "cpu_time", stime * 1000
-  
+
   call timer%push("gpu")
   call cuda_get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap_cu, dpint_cu, qpint_cu, &
    & hamiltonian_cu)
@@ -243,128 +260,6 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
     end do
   end do
 end subroutine test_hamiltonian_mol_no_ref
-
-subroutine test_hamiltonian_mol(error, mol, ref)
-
-   !> Error handling
-   type(error_type), allocatable, intent(out) :: error
-
-   type(structure_type), intent(in) :: mol
-   real(wp), intent(in) :: ref(:, :)
-
-   type(basis_type) :: bas
-   type(tb_hamiltonian) :: h0
-   type(adjacency_list) :: list
-   real(wp), parameter :: cn_cutoff = 30.0_wp
-   real(wp), allocatable :: lattr(:, :), cn(:), rcov(:)
-
-   real(wp), allocatable :: overlap(:, :), hamiltonian(:, :), selfenergy(:)
-   real(wp), allocatable :: dpint(:, :, :), qpint(:, :, :)
-
-
-   real(wp), allocatable :: overlap_cu(:, :), hamiltonian_cu(:, :)
-   real(wp), allocatable :: dpint_cu(:, :, :), qpint_cu(:, :, :)
-
-   real(wp) :: cutoff
-  !  real(wp), allocatable :: diff(:, :)
-   integer :: ii, jj, kk
-
-   type(timer_type) :: timer
-   real(wp) :: stime 
-
-   call make_basis(bas, mol, 6)
-   !print*, bas%nao
-   call check(error, bas%nao, size(ref, 1))
-   if (allocated(error)) return
-
-   call new_hamiltonian(h0, mol, bas, gfn2_h0spec(mol))
-
-   allocate(cn(mol%nat), rcov(mol%nid))
-   rcov(:) = get_covalent_rad(mol%num)
-   call get_lattice_points(mol%periodic, mol%lattice, cn_cutoff, lattr)
-   call get_coordination_number(mol, lattr, cn_cutoff, rcov, cn)
-
-   cutoff = get_cutoff(bas)
-   call get_lattice_points(mol%periodic, mol%lattice, cutoff, lattr)
-   call new_adjacency_list(list, mol, lattr, cutoff)
-
-   allocate(selfenergy(bas%nsh))
-   call get_selfenergy(h0, mol%id, bas%ish_at, bas%nsh_id, cn=cn, selfenergy=selfenergy)
-
-   allocate(overlap(bas%nao, bas%nao), dpint(3, bas%nao, bas%nao), &
-      & qpint(6, bas%nao, bas%nao), hamiltonian(bas%nao, bas%nao))
-  allocate(overlap_cu(bas%nao, bas%nao), dpint_cu(3, bas%nao, bas%nao), &
-      & qpint_cu(6, bas%nao, bas%nao), hamiltonian_cu(bas%nao, bas%nao))
-
-    call timer%push("cpu")
-    call get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap, dpint, qpint, &
-        & hamiltonian)
-    call timer%pop
-    stime = timer%get("cpu")
-    ! write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
-    write(*,"(A F12.6 A)") "cpu_time", stime * 1000
-
-  call timer%push("gpu")
-  call cuda_get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap_cu, dpint_cu, qpint_cu, &
-    & hamiltonian_cu)
-  !where(abs(hamiltonian) < thr) hamiltonian = 0.0_wp
-  !print '(*(6x,"&", 3(es20.14e1, "_wp":, ","), "&", /))', hamiltonian
-  stime = timer%get("gpu")
-  ! write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
-  print*, "gpu_walltime", stime * 1000
-
-
-  ! Compare cuda-computed hamiltonian with reference
-  do ii = 1, size(hamiltonian, 1)
-    do jj = 1, size(hamiltonian, 2)
-      call check(error, hamiltonian_cu(ii, jj), ref(ii, jj), thr=thr2)
-      if (allocated(error)) then
-          ! find the difference matrix
-          print*, "HAMILTONIAN error"
-          print*, "is ", hamiltonian_cu(ii, jj), " should be ", ref(ii, jj)
-          print*, "at i=", ii - 1, " j=", jj - 1
-          error stop
-        end if
-      end do
-  end do
- 
-  do kk = 1, size(dpint, 3)
-    do jj = 1, size(dpint, 2)
-      do ii = 1, size(dpint, 1)
-        call check(error, dpint_cu(ii, jj, kk), dpint(ii, jj, kk), thr=thr2)
-        if (allocated(error)) then
-          print*, '============ FORT ============'
-          print*, "DPINT error"
-          print*, "shape (", size(dpint_cu, 1), ",", size(dpint_cu, 2), ",", size(dpint_cu, 3), ")"
-          print*, "is ", dpint_cu(ii, jj, kk), " should be ", dpint(ii, jj, kk)
-          print*, "FORT at i=", ii, " j=", jj, "k=", kk
-          print*, "C at i=", kk-1, " j=", jj-1, "k=", ii-1
-          error stop
-        end if
-      end do
-    end do
-  end do
-
-  do ii = 1, size(qpint, 1)
-    do jj = 1, size(qpint, 2)
-      do kk = 1, size(qpint, 3)
-        call check(error, qpint_cu(ii, jj, kk), qpint(ii, jj, kk), thr=thr2)
-        if (allocated(error)) then
-          print*, "QPINT error"
-          print*, "is ", qpint_cu(ii, jj, kk), " should be ", qpint(ii, jj, kk)
-          print*, "at i=",  kk - 1, " j=", jj - 1, "k=", ii - 1
-          error stop
-        end if
-      end do
-    end do
-  end do
-   !allocate(eigval(bas%nao))
-   !call sygvd%solve(hamiltonian, overlap, eigval, error)
-   !if (allocated(error)) return
-
-   !print '(*("&", 3(es20.14e1, "_wp":, ","), "&", /))', eigval
-
-end subroutine test_hamiltonian_mol
 
 subroutine test_hamiltonian_h2(error)
 

@@ -1,5 +1,12 @@
 {
     "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
     "C_Cpp.default.compileCommands": "/home/tornikeo/Documents/personal/forks/QCxMS/subprojects/tblite/builddir/compile_commands.json",
-    "mesonbuild.configureOnOpen": false
+    "mesonbuild.configureOnOpen": false,
+    "files.associations": {
+      "array": "cpp",
+      "string_view": "cpp",
+      "initializer_list": "cpp",
+      "cmath": "cpp",
+      "random": "cpp"
+    }
 }

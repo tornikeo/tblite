@@ -43,7 +43,7 @@ module tblite_xtb_h0
       !> Notice: Dimensions are passed in C order. 
       !> On Fortran side, dimensions are passed in reverse (arr, size(arr, 2), size(arr, 1)).
       !> On C side, dimension are correct, without change. No transpose is done.
-      subroutine cuda_get_hamiltonian_kernel( nao, nelem, &
+      subroutine cuda_get_hamiltonian_kernel( batch_size, nao, nelem, &
         mol_nat, mol_nid, mol_nbd, & !> structure_type
         mol_id, mol_id_dim1, &
         mol_num, mol_num_dim1, &
@@ -80,6 +80,7 @@ module tblite_xtb_h0
         use tblite_adjlist, only : adjacency_list
 
         implicit none
+        integer(c_int), value :: batch_size
         integer(c_int), value :: nao, nelem
 
         !> structure_type
@@ -549,6 +550,7 @@ contains
     real(wp), intent(out) :: hamiltonian(:, :)
     ! real(c_double), intent(out) :: time(:)
 
+    integer(kind=c_int) :: batch_size
     integer(kind=c_int) :: nao 
     integer(kind=c_int) :: nelem
     integer(c_int), allocatable :: periodic_as_integers(:)
@@ -565,34 +567,15 @@ contains
       if (mol%periodic(i)) periodic_as_integers(i) = 1
     end do
 
-    !  overlap = 1
-    !  dpint = 2
-    !  qpint = 3
-    !  hamiltonian = 4
-    ! since we don't support lattices yet, if trans is not zero, error
-    ! if (any(trans /= 0.0_wp)) then
-    !    print*, "Error: Non-zero translation vector provided."
-    !    stop
-    ! end if
-    ! if (any(mol%periodic)) then
-    !    print*, "Error: Periodic boundary conditions not supported in CUDA yet."
-    !    stop
-    ! end if
-
-    !> Print all cgtos in order
-    ! call print_cgtos(bas)
-    ! print*, "================= FORTRAN ================="
-    ! call print_adjlist(alist)
-    ! call print_tb_hamiltonian(h0)
-    ! call print_basis_type(bas)
+    batch_size = 1
     hamiltonian = 0.0_wp
     overlap = 0.0_wp
     dpint = 0.0_wp
     qpint = 0.0_wp
 
-    call cuda_get_hamiltonian_kernel( nao, nelem, &
-      !> structure_type
-      mol%nat,&
+    call cuda_get_hamiltonian_kernel( batch_size, & 
+      nao, nelem, &
+      mol%nat, &
       mol%nid, &
       mol%nbd, &
       mol%id - 1, size(mol%id, 1), & !> -1 because C is 0-based
@@ -633,8 +616,6 @@ contains
       !> selfenergy, overlap, dpint, qpint, hamiltonian
       selfenergy, overlap, dpint, qpint, hamiltonian &
       )
-
-    print*,"";
   end subroutine cuda_get_hamiltonian
 
    subroutine get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
