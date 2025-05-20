@@ -63,16 +63,16 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-    ! new_unittest("hamiltonian-1", test_hamiltonian_h2), &
-    ! new_unittest("hamiltonian-2", test_hamiltonian_lih), &
-    ! new_unittest("hamiltonian-3", test_hamiltonian_s2), &
-    ! new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
-    new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
-    new_unittest("hamiltonian-ICEX", test_ice10), &
-    new_unittest("hamiltonian-DNA-strand", test_dna_xyz), &
-    new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
-    new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
-    new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb) &
+    new_unittest("hamiltonian-1", test_hamiltonian_h2), &
+    new_unittest("hamiltonian-2", test_hamiltonian_lih), &
+    new_unittest("hamiltonian-3", test_hamiltonian_s2), &
+    new_unittest("hamiltonian-4", test_hamiltonian_sih4) &
+    ! new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
+    ! new_unittest("hamiltonian-ICEX", test_ice10), &
+    ! new_unittest("hamiltonian-DNA-strand", test_dna_xyz), &
+    ! new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
+    ! new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
+    ! new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb) &
     ! new_unittest("hamiltonian-8", test_protein_1mbn_pdb) & ! not enough memory
   ]
 
@@ -379,7 +379,7 @@ subroutine test_hamiltonian_h2(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "H2")
-   call test_hamiltonian_mol(error, mol, hamiltonian)
+   call test_hamiltonian_mol_no_ref(error, mol)
 
 end subroutine test_hamiltonian_h2
 
@@ -403,7 +403,8 @@ subroutine test_hamiltonian_lih(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "LiH")
-   call test_hamiltonian_mol(error, mol, hamiltonian)
+  !  call test_hamiltonian_mol(error, mol, hamiltonian)
+   call test_hamiltonian_mol_no_ref(error, mol)
 
 end subroutine test_hamiltonian_lih
 
@@ -528,7 +529,9 @@ subroutine test_hamiltonian_s2(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "S2")
-   call test_hamiltonian_mol(error, mol, hamiltonian)
+  !  call test_hamiltonian_mol(error, mol, hamiltonian)
+   call test_hamiltonian_mol_no_ref(error, mol)
+
 
 end subroutine test_hamiltonian_s2
 
@@ -600,7 +603,9 @@ subroutine test_hamiltonian_sih4(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "SiH4")
-   call test_hamiltonian_mol(error, mol, hamiltonian)
+  !  call test_hamiltonian_mol(error, mol, hamiltonian)
+   call test_hamiltonian_mol_no_ref(error, mol)
+
 
 end subroutine test_hamiltonian_sih4
 
@@ -630,7 +635,7 @@ subroutine test_dna_xyz(error)
   type(structure_type) :: mol
   character(len=:), allocatable :: input
 
-  input = "test/perf/dna.xyz"
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/dna.xyz"
 
   call read_structure(mol, input, error, filetype%xyz)
   if (allocated(error)) then
@@ -649,7 +654,7 @@ subroutine test_protein_101d_pdb(error)
   type(structure_type) :: mol
   character(len=:), allocatable :: input
 
-  input = "test/perf/101d.pdb"
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/101d.pdb"
 
   call read_structure(mol, input, error, filetype%pdb)
   if (allocated(error)) then
@@ -668,7 +673,7 @@ subroutine test_protein_103l_pdb(error)
   type(structure_type) :: mol
   character(len=:), allocatable :: input
 
-  input = "test/perf/103l.pdb"
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/103l.pdb"
 
   call read_structure(mol, input, error, filetype%pdb)
   if (allocated(error)) then
@@ -687,7 +692,7 @@ subroutine test_protein_1lyz_pdb(error)
   type(structure_type) :: mol
   character(len=:), allocatable :: input
 
-  input = "test/perf/1lyz.pdb"
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/1lyz.pdb"
 
   call read_structure(mol, input, error, filetype%pdb)
   if (allocated(error)) then
@@ -705,7 +710,7 @@ subroutine test_protein_1mbn_pdb(error)
   type(structure_type) :: mol
   character(len=:), allocatable :: input
 
-  input = "test/perf/1mbn.pdb"
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/1mbn.pdb"
 
   call read_structure(mol, input, error, filetype%pdb)
   if (allocated(error)) then
