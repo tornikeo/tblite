@@ -63,17 +63,16 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-    new_unittest("hamiltonian-1", test_hamiltonian_h2), &
-    new_unittest("hamiltonian-2", test_hamiltonian_lih), &
-    new_unittest("hamiltonian-3", test_hamiltonian_s2), &
-    new_unittest("hamiltonian-4", test_hamiltonian_sih4), &
-    new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
-    ! new_unittest("hamiltonian-ICEX", test_ice10), &
-    new_unittest("hamiltonian-DNA-strand", test_dna_xyz), &
-    new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
-    new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
-    new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb) &
-    ! new_unittest("hamiltonian-8", test_protein_1mbn_pdb) & ! not enough memory
+    & new_unittest("hamiltonian-h2", test_hamiltonian_h2), &
+    & new_unittest("hamiltonian-lih", test_hamiltonian_lih), &
+    & new_unittest("hamiltonian-s2", test_hamiltonian_s2), &
+    & new_unittest("hamiltonian-sih4", test_hamiltonian_sih4), &
+    & new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
+    & new_unittest("hamiltonian-dna", test_dna_xyz), &
+    & new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
+    & new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
+    & new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb), &
+    & new_unittest("hamiltonian-alkane", test_hamiltonian_alkanes) &
   ]
 
 end subroutine collect_hamiltonian
@@ -274,6 +273,7 @@ subroutine test_hamiltonian_h2(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "H2")
+   print*, "structure H2"
    call test_hamiltonian_mol_no_ref(error, mol)
 
 end subroutine test_hamiltonian_h2
@@ -298,6 +298,7 @@ subroutine test_hamiltonian_lih(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "LiH")
+   print*, "structure LiH"
   !  call test_hamiltonian_mol(error, mol, hamiltonian)
    call test_hamiltonian_mol_no_ref(error, mol)
 
@@ -424,6 +425,7 @@ subroutine test_hamiltonian_s2(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "S2")
+    print*, "structure S2"
   !  call test_hamiltonian_mol(error, mol, hamiltonian)
    call test_hamiltonian_mol_no_ref(error, mol)
 
@@ -498,6 +500,7 @@ subroutine test_hamiltonian_sih4(error)
    type(structure_type) :: mol
 
    call get_structure(mol, "MB16-43", "SiH4")
+    print*, "structure SiH4"
   !  call test_hamiltonian_mol(error, mol, hamiltonian)
    call test_hamiltonian_mol_no_ref(error, mol)
 
@@ -508,6 +511,7 @@ subroutine test_hamiltonian_glu(error)
   type(error_type), allocatable, intent(out) :: error
   type(structure_type) :: mol
   call get_structure(mol, "Amino20x4", "GLN_xan")
+  print*, "structure GLU"
   call test_hamiltonian_mol_no_ref(error, mol)
 
 end subroutine test_hamiltonian_glu
@@ -519,6 +523,7 @@ subroutine test_ice10(error)
   type(structure_type) :: mol
 
   call get_structure(mol, "ICE10", "xii")
+  print*, "structure ICE10"
   call test_hamiltonian_mol_no_ref(error, mol)
 
 end subroutine test_ice10
@@ -533,6 +538,7 @@ subroutine test_dna_xyz(error)
   input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/dna.xyz"
 
   call read_structure(mol, input, error, filetype%xyz)
+  print*, "structure dna"
   if (allocated(error)) then
      print '(a)', error%message
      stop 1
@@ -552,6 +558,7 @@ subroutine test_protein_101d_pdb(error)
   input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/101d.pdb"
 
   call read_structure(mol, input, error, filetype%pdb)
+  print*, "structure 101d-netropsin-and-dna"
   if (allocated(error)) then
      print '(a)', error%message
      stop 1
@@ -571,6 +578,7 @@ subroutine test_protein_103l_pdb(error)
   input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/103l.pdb"
 
   call read_structure(mol, input, error, filetype%pdb)
+  print*, "structure 103l-hydrolase"
   if (allocated(error)) then
      print '(a)', error%message
      stop 1
@@ -590,6 +598,7 @@ subroutine test_protein_1lyz_pdb(error)
   input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/1lyz.pdb"
 
   call read_structure(mol, input, error, filetype%pdb)
+  print*, "structure 1lyz-lysozyme"
   if (allocated(error)) then
      print '(a)', error%message
      stop 1
@@ -598,22 +607,80 @@ subroutine test_protein_1lyz_pdb(error)
   call test_hamiltonian_mol_no_ref(error, mol)
 end subroutine test_protein_1lyz_pdb
 
-subroutine test_protein_1mbn_pdb(error)
+subroutine test_hamiltonian_alkanes(error)
   !> Error handling
   type(error_type), allocatable, intent(out) :: error
   
   type(structure_type) :: mol
   character(len=:), allocatable :: input
 
-  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/1mbn.pdb"
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/alkanes/alkane_10.xyz"
 
-  call read_structure(mol, input, error, filetype%pdb)
+  call read_structure(mol, input, error, filetype%xyz)
+  print*, "structure alkane_10"
   if (allocated(error)) then
      print '(a)', error%message
      stop 1
   end if
 
   call test_hamiltonian_mol_no_ref(error, mol)
-end subroutine test_protein_1mbn_pdb
+
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/alkanes/alkane_342.xyz"
+
+  call read_structure(mol, input, error, filetype%xyz)
+  print*, "structure alkane_342"
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/alkanes/alkane_674.xyz"
+
+  call read_structure(mol, input, error, filetype%xyz)
+  print*, "structure alkane_674"
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/alkanes/alkane_1006.xyz"
+
+  call read_structure(mol, input, error, filetype%xyz)
+  print*, "structure alkane_1006"
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/alkanes/alkane_1338.xyz"
+
+  call read_structure(mol, input, error, filetype%xyz)
+  print*, "structure alkane_1338"
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+  input = "/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/test/perf/alkanes/alkane_1671.xyz"
+
+  call read_structure(mol, input, error, filetype%xyz)
+  print*, "structure alkane_1671"
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+end subroutine test_hamiltonian_alkanes
+
 
 end module test_hamiltonian
