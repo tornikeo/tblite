@@ -12,6 +12,7 @@ nvidia-smi
 code tblite/
 git config --global user.email tornikeonoprishvili@gmail.com
 git config --global user.name tornikeo
+meson setup build
 meson test -C build/ hamiltonian
 history 
 ```
