@@ -42,3 +42,4 @@ __pycache__
 *.cif
 *.txt
 subprojects/json-fortran-8.2.5.wrap
+!notes/capture/**/*
