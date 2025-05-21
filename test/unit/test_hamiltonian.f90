@@ -682,5 +682,24 @@ subroutine test_hamiltonian_alkanes(error)
 
 end subroutine test_hamiltonian_alkanes
 
+subroutine test_hamiltonian_4ins(error)
+  !> Error handling
+  type(error_type), allocatable, intent(out) :: error
+  
+  type(structure_type) :: mol
+  character(len=:), allocatable :: input
+
+  input = "../test/perf/4ins.pdb"
+
+  call read_structure(mol, input, error, filetype%pdb)
+  print*, "structure 4ins"
+  if (allocated(error)) then
+     print '(a)', error%message
+     stop 1
+  end if
+
+  call test_hamiltonian_mol_no_ref(error, mol)
+
+end subroutine test_hamiltonian_4ins
 
 end module test_hamiltonian

@@ -1,7 +1,189 @@
 ninja: Entering directory `/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build'
-ninja: no work to do.
+[1/7] Compiling Cuda object subprojects/tblite-gpu/libtblite-gpu.a.p/src_main.cu.o
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(915): warning #177-D: variable "rr" was declared but never referenced
+          const double rr = 0.0;
+                       ^
+
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(915): warning #177-D: variable "rr" was declared but never referenced
+          const double rr = 0.0;
+                       ^
+
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(915): warning #177-D: variable "rr" was declared but never referenced
+          const double rr = 0.0;
+                       ^
+
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+../subprojects/tblite-gpu/src/main.cu(128): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform0 not supported for li=%d lj=%d\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                   ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(251): warning #181-D: argument is incompatible with corresponding format string conversion (expected type "int" but argument has type "unsigned long")
+      printf("[Fatal] transform1 not supported for li=%i lj=%i\n", li, lj);
+                                                                       ^
+          detected during:
+            instantiation of "void multipole_cgto<maxl>(const cgto_type &, const cgto_type &, double, const double (&)[3], double, device_tensor2d_t<double> &, device_tensor3d_t<double> &, device_tensor3d_t<double> &) [with maxl=0UL]" at line 785
+            instantiation of "void get_hamiltonian_between_atoms_kernel<maxl>(structure_type, tensor2d_t<const double>, adjacency_list, basis_type, tb_hamiltonian, tensor1d_t<const double>, tensor2d_t<double>, tensor3d_t<double>, tensor3d_t<double>, tensor2d_t<double>) [with maxl=0UL]" at line 867
+
+../subprojects/tblite-gpu/src/main.cu(915): warning #177-D: variable "rr" was declared but never referenced
+          const double rr = 0.0;
+                       ^
+
+[2/7] Linking static target subprojects/tblite-gpu/libtblite-gpu.a
+[3/7] Linking target libtblite.so.0.2.1
+[4/7] Generating symbol file libtblite.so.0.2.1.p/libtblite.so.0.2.1.symbols
+[5/7] Compiling Fortran object test/unit/tester.p/test_hamiltonian.f90.o
+[01m[K../test/unit/test_hamiltonian.f90:159:23:[m[K
+
+  159 |   integer :: ii, jj, kk
+      |                       [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kkk[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:161:32:[m[K
+
+  161 |   real(wp) :: random_translation
+      |                                [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Krandom_translation[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:47:22:[m[K
+
+   47 |     integer :: i, j, k
+      |                      [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kk[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:45:22:[m[K
+
+   45 | subroutine print2d_mat(mat)
+      |                      [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Kprint2d_mat[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:130:0:[m[K
+
+  130 | pure function mean_abs(a) result(m)
+      | 
+[01;35m[KWarning:[m[K '[01m[Kmean_abs[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:519:21:[m[K
+
+  519 | subroutine test_ice10(error)
+      |                     [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_ice10[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:551:32:[m[K
+
+  551 | subroutine test_protein_101d_pdb(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_protein_101d_pdb[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:685:32:[m[K
+
+  685 | subroutine test_hamiltonian_4ins(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_4ins[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[6/6] Linking target test/unit/tester
+/usr/bin/ld: warning: src_json_value_module.F90.o: requires executable stack (because the .note.GNU-stack section is executable)
 1/1 tblite:unit / hamiltonian RUNNING       
->>> MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=55 MESON_TEST_ITERATION=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian
+>>> MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=19 MESON_TEST_ITERATION=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian
 ――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
 # Testing: hamiltonian
   Starting hamiltonian-h2 ... (1/9)
@@ -12,14 +194,14 @@ ninja: no work to do.
  max_nnl           1
  mean_nnl           0
  max_nsh           1
-cpu_time    0.032201
+cpu_time    0.052038
 gpu_gb_in 0.000001
 gpu_gb_out 0.000000
 gpu_gb_total 0.000002
-gpu_between_atoms 7.281664
-gpu_in_atoms 0.492480
-gpu_time 7.774144
- gpu_walltime   69.187209999654442     
+gpu_between_atoms 6.083584
+gpu_in_atoms 0.385216
+gpu_time 6.468800
+ gpu_walltime   1513.1574150000233     
  structure LiH
  nat           2
  nprim           6
@@ -27,33 +209,33 @@ gpu_time 7.774144
  max_nnl           1
  mean_nnl           0
  max_nsh           2
-cpu_time    0.075984
        ... hamiltonian-h2 [PASSED]
   Starting hamiltonian-lih ... (2/9)
+cpu_time    0.078522
 gpu_gb_in 0.000004
 gpu_gb_out 0.000002
 gpu_gb_total 0.000006
-gpu_between_atoms 1.105920
-gpu_in_atoms 1.162240
-gpu_time 2.268160
- gpu_walltime   2.8409480000846088     
+gpu_between_atoms 1.077248
+gpu_in_atoms 1.125376
+gpu_time 2.202624
+ gpu_walltime   2.7483049998409115     
  structure S2
+       ... hamiltonian-lih [PASSED]
+  Starting hamiltonian-s2 ... (3/9)
  nat           2
  nprim           6
  maxl           2
  max_nnl           1
  mean_nnl           0
  max_nsh           3
-       ... hamiltonian-lih [PASSED]
-  Starting hamiltonian-s2 ... (3/9)
-cpu_time    0.930960
+cpu_time    0.995450
 gpu_gb_in 0.000030
 gpu_gb_out 0.000029
 gpu_gb_total 0.000059
-gpu_between_atoms 8.098080
-gpu_in_atoms 4.414624
-gpu_time 12.512704
- gpu_walltime   13.158306999685010     
+gpu_between_atoms 7.602368
+gpu_in_atoms 4.098048
+gpu_time 11.700417
+ gpu_walltime   12.227446000906639     
  structure SiH4
  nat           5
  nprim           6
@@ -63,14 +245,14 @@ gpu_time 12.512704
  max_nsh           3
        ... hamiltonian-s2 [PASSED]
   Starting hamiltonian-sih4 ... (4/9)
-cpu_time    0.479646
+cpu_time    0.485892
 gpu_gb_in 0.000018
 gpu_gb_out 0.000015
 gpu_gb_total 0.000033
-gpu_between_atoms 1.080000
-gpu_in_atoms 4.326400
-gpu_time 5.406400
- gpu_walltime   5.9353489996283315     
+gpu_between_atoms 1.036192
+gpu_in_atoms 4.050912
+gpu_time 5.087104
+ gpu_walltime   5.6176559992309194     
  structure GLU
        ... hamiltonian-sih4 [PASSED]
   Starting hamiltonian-Glutamine ... (5/9)
@@ -80,14 +262,14 @@ gpu_time 5.406400
  max_nnl          28
  mean_nnl          14
  max_nsh           2
-cpu_time    5.388088
+cpu_time    6.820368
 gpu_gb_in 0.000453
 gpu_gb_out 0.000444
 gpu_gb_total 0.000896
-gpu_between_atoms 4.274176
-gpu_in_atoms 1.371136
-gpu_time 5.645312
- gpu_walltime   6.7020219976257067     
+gpu_between_atoms 3.881984
+gpu_in_atoms 1.084416
+gpu_time 4.966400
+ gpu_walltime   5.8517959987511858     
        ... hamiltonian-Glutamine [PASSED]
   Starting hamiltonian-dna ... (6/9)
  structure dna
@@ -97,48 +279,48 @@ gpu_time 5.645312
  max_nnl         164
  mean_nnl          69
  max_nsh           3
-cpu_time  498.730106
-gpu_gb_in 0.232068
+cpu_time  463.302876
+gpu_gb_in 0.232067
 gpu_gb_out 0.231803
 gpu_gb_total 0.463871
-gpu_between_atoms 303.412231
-gpu_in_atoms 8.185952
-gpu_time 311.598175
- gpu_walltime   414.10014099892578     
+gpu_between_atoms 268.163086
+gpu_in_atoms 7.191552
+gpu_time 275.354645
+ gpu_walltime   376.43594999826746     
        ... hamiltonian-dna [PASSED]
   Starting hamiltonian-lysozyme ... (7/9)
  structure 1lyz-lysozyme
  nat        1102
  nprim           6
  maxl           2
- max_nnl         309
+ max_nnl         310
  mean_nnl          99
  max_nsh           3
-cpu_time 1213.720145
+cpu_time 1127.856173
 gpu_gb_in 1.749900
 gpu_gb_out 1.748891
 gpu_gb_total 3.498791
-gpu_between_atoms 955.986145
-gpu_in_atoms 16.095232
-gpu_time 972.081360
- gpu_walltime   1715.9903749998193     
+gpu_between_atoms 837.918579
+gpu_in_atoms 13.484032
+gpu_time 851.402588
+ gpu_walltime   1601.3347760017496     
        ... hamiltonian-lysozyme [PASSED]
   Starting hamiltonian-103l-t4-lysozyme ... (8/9)
  structure 103l-hydrolase
  nat        1404
  nprim           6
  maxl           2
- max_nnl         312
+ max_nnl         313
  mean_nnl          99
  max_nsh           3
-cpu_time 1550.143526
+cpu_time 1690.300022
 gpu_gb_in 2.816439
 gpu_gb_out 2.815150
-gpu_gb_total 5.631589
-gpu_between_atoms 1199.614990
-gpu_in_atoms 19.272703
-gpu_time 1218.887695
- gpu_walltime   2575.0253619989962     
+gpu_gb_total 5.631588
+gpu_between_atoms 1048.050537
+gpu_in_atoms 16.222208
+gpu_time 1064.272705
+ gpu_walltime   2307.1912669984158     
        ... hamiltonian-103l-t4-lysozyme [PASSED]
   Starting hamiltonian-alkane ... (9/9)
  structure alkane_10
@@ -148,14 +330,14 @@ gpu_time 1218.887695
  max_nnl          25
  mean_nnl          13
  max_nsh           2
-cpu_time    3.215515
+cpu_time    3.157966
 gpu_gb_in 0.000324
 gpu_gb_out 0.000317
 gpu_gb_total 0.000641
-gpu_between_atoms 2.578432
-gpu_in_atoms 1.034464
-gpu_time 3.612896
- gpu_walltime   4.2315249993407633     
+gpu_between_atoms 2.420000
+gpu_in_atoms 0.974848
+gpu_time 3.394848
+ gpu_walltime   4.1332780019729398     
  structure alkane_342
  nat        1026
  nprim           6
@@ -163,14 +345,14 @@ gpu_time 3.612896
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time  181.976179
+cpu_time  175.225207
 gpu_gb_in 0.370811
 gpu_gb_out 0.370542
 gpu_gb_total 0.741353
-gpu_between_atoms 79.875870
-gpu_in_atoms 5.869568
-gpu_time 85.745438
- gpu_walltime   248.16726000062772     
+gpu_between_atoms 66.644989
+gpu_in_atoms 4.572192
+gpu_time 71.217178
+ gpu_walltime   223.84257199882995     
  structure alkane_674
  nat        2022
  nprim           6
@@ -178,14 +360,14 @@ gpu_time 85.745438
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time  425.705372
+cpu_time  384.814244
 gpu_gb_in 1.439677
 gpu_gb_out 1.439146
 gpu_gb_total 2.878823
-gpu_between_atoms 157.584381
-gpu_in_atoms 10.281088
-gpu_time 167.865463
- gpu_walltime   809.58910900153569     
+gpu_between_atoms 131.506210
+gpu_in_atoms 8.390656
+gpu_time 139.896866
+ gpu_walltime   796.67708199849585     
  structure alkane_1006
  nat        3018
  nprim           6
@@ -193,14 +375,14 @@ gpu_time 167.865463
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time  696.497952
+cpu_time  641.953991
 gpu_gb_in 3.206922
 gpu_gb_out 3.206130
 gpu_gb_total 6.413052
-gpu_between_atoms 234.820892
-gpu_in_atoms 14.301280
-gpu_time 249.122177
- gpu_walltime   1577.4318420008058     
+gpu_between_atoms 197.186401
+gpu_in_atoms 12.250304
+gpu_time 209.436707
+ gpu_walltime   1569.8701830006030     
  structure alkane_1338
  nat        4014
  nprim           6
@@ -208,14 +390,14 @@ gpu_time 249.122177
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time 1015.359674
+cpu_time  956.147684
 gpu_gb_in 5.672547
 gpu_gb_out 5.671493
 gpu_gb_total 11.344040
-gpu_between_atoms 312.373260
-gpu_in_atoms 18.899839
-gpu_time 331.273102
- gpu_walltime   2753.9914320004755     
+gpu_between_atoms 262.100983
+gpu_in_atoms 15.516352
+gpu_time 277.617340
+ gpu_walltime   2603.1861539995589     
  structure alkane_1671
  nat        5013
  nprim           6
@@ -223,17 +405,17 @@ gpu_time 331.273102
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time 1385.931875
+cpu_time 1322.314001
 gpu_gb_in 8.847136
 gpu_gb_out 8.845819
 gpu_gb_total 17.692955
-gpu_between_atoms 12781.924805
-gpu_in_atoms 659.237854
-gpu_time 13441.163086
- gpu_walltime   17196.784242001740     
+gpu_between_atoms 12930.203125
+gpu_in_atoms 672.908264
+gpu_time 13603.111328
+ gpu_walltime   16756.194850000611     
        ... hamiltonian-alkane [PASSED]
 ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-1/1 tblite:unit / hamiltonian OK             48.29s
+1/1 tblite:unit / hamiltonian OK             47.55s
 
 
 Ok:                 1   

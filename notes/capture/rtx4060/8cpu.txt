@@ -1,7 +1,7 @@
 ninja: Entering directory `/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build'
 ninja: no work to do.
 1/1 tblite:unit / hamiltonian RUNNING       
->>> ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ MALLOC_PERTURB_=131 MESON_TEST_ITERATION=1 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian
+>>> MESON_TEST_ITERATION=1 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ MALLOC_PERTURB_=232 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian
 ――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
 # Testing: hamiltonian
   Starting hamiltonian-h2 ... (1/9)
@@ -12,14 +12,14 @@ ninja: no work to do.
  max_nnl           1
  mean_nnl           0
  max_nsh           1
-cpu_time    1.451938
+cpu_time    1.190016
 gpu_gb_in 0.000001
 gpu_gb_out 0.000000
 gpu_gb_total 0.000002
-gpu_between_atoms 10.128128
-gpu_in_atoms 0.338144
-gpu_time 10.466272
- gpu_walltime   74.960235000617104     
+gpu_between_atoms 8.672480
+gpu_in_atoms 0.475456
+gpu_time 9.147936
+ gpu_walltime   85.233254001650494     
  structure LiH
  nat           2
  nprim           6
@@ -29,14 +29,16 @@ gpu_time 10.466272
  max_nsh           2
        ... hamiltonian-h2 [PASSED]
   Starting hamiltonian-lih ... (2/9)
-cpu_time    1.124604
+cpu_time    0.955874
 gpu_gb_in 0.000004
 gpu_gb_out 0.000002
 gpu_gb_total 0.000006
-gpu_between_atoms 0.867168
-gpu_in_atoms 0.817536
-gpu_time 1.684704
- gpu_walltime   2.1809119971294422     
+gpu_between_atoms 0.714752
+gpu_in_atoms 0.911360
+gpu_time 1.626112
+ gpu_walltime   2.3736040020594373     
+       ... hamiltonian-lih [PASSED]
+  Starting hamiltonian-s2 ... (3/9)
  structure S2
  nat           2
  nprim           6
@@ -44,50 +46,48 @@ gpu_time 1.684704
  max_nnl           1
  mean_nnl           0
  max_nsh           3
-       ... hamiltonian-lih [PASSED]
-  Starting hamiltonian-s2 ... (3/9)
-cpu_time    1.644268
+cpu_time    2.234108
 gpu_gb_in 0.000030
 gpu_gb_out 0.000029
 gpu_gb_total 0.000059
-gpu_between_atoms 5.885792
-gpu_in_atoms 3.202112
-gpu_time 9.087904
- gpu_walltime   9.6056660004251171     
+gpu_between_atoms 5.593856
+gpu_in_atoms 2.984000
+gpu_time 8.577856
+ gpu_walltime   9.3542579998029396     
  structure SiH4
+       ... hamiltonian-s2 [PASSED]
+  Starting hamiltonian-sih4 ... (4/9)
  nat           5
  nprim           6
  maxl           2
  max_nnl           4
  mean_nnl           2
  max_nsh           3
-       ... hamiltonian-s2 [PASSED]
-  Starting hamiltonian-sih4 ... (4/9)
-cpu_time    1.503481
+cpu_time    1.607272
 gpu_gb_in 0.000018
 gpu_gb_out 0.000015
 gpu_gb_total 0.000033
-gpu_between_atoms 0.797696
-gpu_in_atoms 3.175424
-gpu_time 3.973120
- gpu_walltime   4.7156889995676465     
+gpu_between_atoms 0.756576
+gpu_in_atoms 3.016832
+gpu_time 3.773408
+ gpu_walltime   4.5454510000126902     
+ structure GLU
        ... hamiltonian-sih4 [PASSED]
   Starting hamiltonian-Glutamine ... (5/9)
- structure GLU
  nat          29
  nprim           6
  maxl           1
  max_nnl          28
  mean_nnl          14
  max_nsh           2
-cpu_time    3.091681
+cpu_time    2.520887
 gpu_gb_in 0.000453
 gpu_gb_out 0.000444
 gpu_gb_total 0.000896
-gpu_between_atoms 3.212128
-gpu_in_atoms 0.879840
-gpu_time 4.091968
- gpu_walltime   5.2408499977900647     
+gpu_between_atoms 2.713760
+gpu_in_atoms 0.864096
+gpu_time 3.577856
+ gpu_walltime   4.3886929997825064     
        ... hamiltonian-Glutamine [PASSED]
   Starting hamiltonian-dna ... (6/9)
  structure dna
@@ -97,31 +97,31 @@ gpu_time 4.091968
  max_nnl         165
  mean_nnl          69
  max_nsh           3
-cpu_time  107.834071
+cpu_time   99.364653
 gpu_gb_in 0.232067
 gpu_gb_out 0.231803
 gpu_gb_total 0.463871
-gpu_between_atoms 317.502258
-gpu_in_atoms 8.236032
-gpu_time 325.738281
- gpu_walltime   425.95980500118458     
+gpu_between_atoms 293.661438
+gpu_in_atoms 7.136192
+gpu_time 300.797638
+ gpu_walltime   402.79758500037133     
        ... hamiltonian-dna [PASSED]
   Starting hamiltonian-lysozyme ... (7/9)
  structure 1lyz-lysozyme
  nat        1102
  nprim           6
  maxl           2
- max_nnl         313
+ max_nnl         310
  mean_nnl          99
  max_nsh           3
-cpu_time  326.275669
+cpu_time  314.919562
 gpu_gb_in 1.749900
 gpu_gb_out 1.748891
 gpu_gb_total 3.498791
-gpu_between_atoms 960.817139
-gpu_in_atoms 16.136160
-gpu_time 976.953308
- gpu_walltime   1713.8621570011310     
+gpu_between_atoms 834.037354
+gpu_in_atoms 13.741984
+gpu_time 847.779358
+ gpu_walltime   1614.5088299999770     
        ... hamiltonian-lysozyme [PASSED]
   Starting hamiltonian-103l-t4-lysozyme ... (8/9)
  structure 103l-hydrolase
@@ -131,14 +131,14 @@ gpu_time 976.953308
  max_nnl         312
  mean_nnl          99
  max_nsh           3
-cpu_time  444.103498
+cpu_time  436.000442
 gpu_gb_in 2.816439
 gpu_gb_out 2.815150
 gpu_gb_total 5.631588
-gpu_between_atoms 1207.315430
-gpu_in_atoms 19.387392
-gpu_time 1226.702881
- gpu_walltime   2402.3805279975932     
+gpu_between_atoms 1048.796997
+gpu_in_atoms 16.208033
+gpu_time 1065.005005
+ gpu_walltime   2253.6277790022723     
        ... hamiltonian-103l-t4-lysozyme [PASSED]
   Starting hamiltonian-alkane ... (9/9)
  structure alkane_10
@@ -148,14 +148,14 @@ gpu_time 1226.702881
  max_nnl          25
  mean_nnl          13
  max_nsh           2
-cpu_time    1.980072
+cpu_time    1.773740
 gpu_gb_in 0.000324
 gpu_gb_out 0.000317
 gpu_gb_total 0.000641
-gpu_between_atoms 2.588608
-gpu_in_atoms 0.995328
-gpu_time 3.583936
- gpu_walltime   4.1644570010248572     
+gpu_between_atoms 2.253824
+gpu_in_atoms 0.954176
+gpu_time 3.208000
+ gpu_walltime   3.8867540024511982     
  structure alkane_342
  nat        1026
  nprim           6
@@ -163,14 +163,14 @@ gpu_time 3.583936
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time   61.686387
+cpu_time   52.978766
 gpu_gb_in 0.370811
 gpu_gb_out 0.370542
 gpu_gb_total 0.741353
-gpu_between_atoms 80.313347
-gpu_in_atoms 5.866560
-gpu_time 86.179909
- gpu_walltime   241.34991200116929     
+gpu_between_atoms 66.583618
+gpu_in_atoms 4.512928
+gpu_time 71.096542
+ gpu_walltime   234.18008800217649     
  structure alkane_674
  nat        2022
  nprim           6
@@ -178,14 +178,14 @@ gpu_time 86.179909
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time  166.061027
+cpu_time  155.220501
 gpu_gb_in 1.439677
 gpu_gb_out 1.439146
 gpu_gb_total 2.878823
-gpu_between_atoms 158.580505
-gpu_in_atoms 10.417152
-gpu_time 168.997650
- gpu_walltime   755.22142699992401     
+gpu_between_atoms 131.915710
+gpu_in_atoms 8.474816
+gpu_time 140.390533
+ gpu_walltime   790.68305400141980     
  structure alkane_1006
  nat        3018
  nprim           6
@@ -193,14 +193,14 @@ gpu_time 168.997650
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time  333.289578
+cpu_time  305.789304
 gpu_gb_in 3.206922
 gpu_gb_out 3.206130
 gpu_gb_total 6.413052
-gpu_between_atoms 236.398651
-gpu_in_atoms 14.387200
-gpu_time 250.785858
- gpu_walltime   1671.3614999971469     
+gpu_between_atoms 198.067108
+gpu_in_atoms 12.335104
+gpu_time 210.402206
+ gpu_walltime   1615.0534299995343     
  structure alkane_1338
  nat        4014
  nprim           6
@@ -208,14 +208,14 @@ gpu_time 250.785858
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time  512.579860
+cpu_time  549.570145
 gpu_gb_in 5.672547
 gpu_gb_out 5.671493
 gpu_gb_total 11.344040
-gpu_between_atoms 314.105042
-gpu_in_atoms 19.075808
-gpu_time 333.180847
- gpu_walltime   2724.6692079970671     
+gpu_between_atoms 264.397827
+gpu_in_atoms 15.791872
+gpu_time 280.189697
+ gpu_walltime   2858.8762770014000     
  structure alkane_1671
  nat        5013
  nprim           6
@@ -223,17 +223,17 @@ gpu_time 333.180847
  max_nnl          30
  mean_nnl          21
  max_nsh           2
-cpu_time  768.272348
+cpu_time  773.440897
 gpu_gb_in 8.847136
 gpu_gb_out 8.845819
 gpu_gb_total 17.692955
-gpu_between_atoms 11369.717773
-gpu_in_atoms 659.371948
-gpu_time 12029.089844
- gpu_walltime   14778.321018999122     
+gpu_between_atoms 12061.125977
+gpu_in_atoms 670.155518
+gpu_time 12731.281250
+ gpu_walltime   15876.828246000514     
        ... hamiltonian-alkane [PASSED]
 ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-1/1 tblite:unit / hamiltonian OK             41.68s
+1/1 tblite:unit / hamiltonian OK             41.60s
 
 
 Ok:                 1   
