@@ -1,0 +1,242 @@
+ninja: Entering directory `/root/tblite/build'
+ninja: no work to do.
+1/1 tblite:unit / hamiltonian RUNNING       
+>>> MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/root/tblite/build/:/usr/local/nvidia/lib:/usr/local/nvidia/lib64 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 MESON_TEST_ITERATION=1 MALLOC_PERTURB_=201 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 /root/tblite/build/test/unit/tester hamiltonian
+――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
+# Testing: hamiltonian
+  Starting hamiltonian-h2 ... (1/9)
+ structure H2
+ nat           2
+ nprim           6
+ maxl           0
+ max_nnl           1
+ mean_nnl           0
+ max_nsh           1
+cpu_time    0.506902
+gpu_gb_in 0.000001
+gpu_gb_out 0.000000
+gpu_gb_total 0.000002
+gpu_between_atoms 9.955808
+gpu_in_atoms 0.700864
+gpu_time 10.656672
+ gpu_walltime   747.64360603876412     
+ structure LiH
+ nat           2
+ nprim           6
+ maxl           1
+ max_nnl           1
+ mean_nnl           0
+ max_nsh           2
+       ... hamiltonian-h2 [PASSED]
+  Starting hamiltonian-lih ... (2/9)
+cpu_time    0.446001
+gpu_gb_in 0.000004
+gpu_gb_out 0.000002
+gpu_gb_total 0.000006
+gpu_between_atoms 0.893344
+gpu_in_atoms 0.655744
+gpu_time 1.549088
+ gpu_walltime   2.3687980137765408     
+       ... hamiltonian-lih [PASSED]
+  Starting hamiltonian-s2 ... (3/9)
+ structure S2
+ nat           2
+ nprim           6
+ maxl           2
+ max_nnl           1
+ mean_nnl           0
+ max_nsh           3
+cpu_time    1.485308
+gpu_gb_in 0.000030
+gpu_gb_out 0.000029
+gpu_gb_total 0.000059
+gpu_between_atoms 1.940576
+gpu_in_atoms 1.063200
+gpu_time 3.003776
+ gpu_walltime   4.0872360114008188     
+       ... hamiltonian-s2 [PASSED]
+  Starting hamiltonian-sih4 ... (4/9)
+ structure SiH4
+ nat           5
+ nprim           6
+ maxl           2
+ max_nnl           4
+ mean_nnl           2
+ max_nsh           3
+cpu_time    0.616028
+gpu_gb_in 0.000018
+gpu_gb_out 0.000015
+gpu_gb_total 0.000033
+gpu_between_atoms 0.313888
+gpu_in_atoms 1.157056
+gpu_time 1.470944
+ gpu_walltime   2.4042660370469093     
+ structure GLU
+       ... hamiltonian-sih4 [PASSED]
+  Starting hamiltonian-Glutamine ... (5/9)
+ nat          29
+ nprim           6
+ maxl           1
+ max_nnl          28
+ mean_nnl          14
+ max_nsh           2
+cpu_time    2.650670
+gpu_gb_in 0.000453
+gpu_gb_out 0.000444
+gpu_gb_total 0.000896
+gpu_between_atoms 0.423712
+gpu_in_atoms 0.259296
+gpu_time 0.683008
+ gpu_walltime   2.3172220680862665     
+       ... hamiltonian-Glutamine [PASSED]
+  Starting hamiltonian-dna ... (6/9)
+ structure dna
+ nat         387
+ nprim           6
+ maxl           2
+ max_nnl         164
+ mean_nnl          69
+ max_nsh           3
+cpu_time  125.384274
+gpu_gb_in 0.232068
+gpu_gb_out 0.231803
+gpu_gb_total 0.463871
+gpu_between_atoms 6.023872
+gpu_in_atoms 0.742912
+gpu_time 6.766784
+ gpu_walltime   206.57220412977040     
+       ... hamiltonian-dna [PASSED]
+  Starting hamiltonian-lysozyme ... (7/9)
+ structure 1lyz-lysozyme
+ nat        1102
+ nprim           6
+ maxl           2
+ max_nnl         309
+ mean_nnl          99
+ max_nsh           3
+cpu_time  429.239803
+gpu_gb_in 1.749900
+gpu_gb_out 1.748891
+gpu_gb_total 3.498791
+gpu_between_atoms 17.694143
+gpu_in_atoms 0.936448
+gpu_time 18.630590
+ gpu_walltime   1120.6582339946181     
+       ... hamiltonian-lysozyme [PASSED]
+  Starting hamiltonian-103l-t4-lysozyme ... (8/9)
+ structure 103l-hydrolase
+ nat        1404
+ nprim           6
+ maxl           2
+ max_nnl         312
+ mean_nnl          99
+ max_nsh           3
+cpu_time  604.709084
+gpu_gb_in 2.816439
+gpu_gb_out 2.815150
+gpu_gb_total 5.631589
+gpu_between_atoms 22.181631
+gpu_in_atoms 1.031424
+gpu_time 23.213055
+ gpu_walltime   1757.3548988439143     
+       ... hamiltonian-103l-t4-lysozyme [PASSED]
+  Starting hamiltonian-alkane ... (9/9)
+ structure alkane_10
+ nat          30
+ nprim           6
+ maxl           1
+ max_nnl          25
+ mean_nnl          13
+ max_nsh           2
+cpu_time    1.647515
+gpu_gb_in 0.000324
+gpu_gb_out 0.000317
+gpu_gb_total 0.000641
+gpu_between_atoms 0.635680
+gpu_in_atoms 0.260736
+gpu_time 0.896416
+ gpu_walltime   1.8485500477254391     
+ structure alkane_342
+ nat        1026
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time   77.044372
+gpu_gb_in 0.370811
+gpu_gb_out 0.370542
+gpu_gb_total 0.741353
+gpu_between_atoms 2.141696
+gpu_in_atoms 0.405728
+gpu_time 2.547424
+ gpu_walltime   247.61189520359039     
+ structure alkane_674
+ nat        2022
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  235.038390
+gpu_gb_in 1.439677
+gpu_gb_out 1.439146
+gpu_gb_total 2.878823
+gpu_between_atoms 3.918976
+gpu_in_atoms 0.458080
+gpu_time 4.377056
+ gpu_walltime   829.30703088641167     
+ structure alkane_1006
+ nat        3018
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  462.422909
+gpu_gb_in 3.206922
+gpu_gb_out 3.206130
+gpu_gb_total 6.413052
+gpu_between_atoms 5.778752
+gpu_in_atoms 0.637952
+gpu_time 6.416704
+ gpu_walltime   1843.9041560050100     
+ structure alkane_1338
+ nat        4014
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  856.104440
+gpu_gb_in 5.672547
+gpu_gb_out 5.671493
+gpu_gb_total 11.344040
+gpu_between_atoms 7.638880
+gpu_in_atoms 0.730304
+gpu_time 8.369184
+ gpu_walltime   3027.7384270448238     
+ structure alkane_1671
+ nat        5013
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time 1166.968280
+gpu_gb_in 8.847136
+gpu_gb_out 8.845819
+gpu_gb_total 17.692955
+gpu_between_atoms 9.444608
+gpu_in_atoms 0.946048
+gpu_time 10.390656
+ gpu_walltime   4640.3001490980387     
+       ... hamiltonian-alkane [PASSED]
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+1/1 tblite:unit / hamiltonian OK             40.61s
+
+
+Ok:                1   
+Fail:              0   
+
+Full log written to /root/tblite/build/meson-logs/testlog.txt

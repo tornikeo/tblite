@@ -1,5 +1,5 @@
-```sh
-pip install meson ninja ipykernel pandas numpy matplotlib
+```
+pip install meson ninja ipykernel pandas numpy matplotlib seaborn
 sudo apt-get install gfortran libblas-dev liblapack-dev -y
 ```
 
