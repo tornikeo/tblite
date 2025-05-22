@@ -805,5 +805,7 @@ subroutine test_batch_scaling(error)
   call test_hamiltonian_mol_no_ref_no_valid(error, mol, 4096)
   call test_hamiltonian_mol_no_ref_no_valid(error, mol, 8192)
   call test_hamiltonian_mol_no_ref_no_valid(error, mol, 16384)
+  call test_hamiltonian_mol_no_ref_no_valid(error, mol, 32768)
+  call test_hamiltonian_mol_no_ref_no_valid(error, mol, 65536)
 end subroutine test_batch_scaling
 end module test_hamiltonian_batch
