@@ -43,7 +43,7 @@ module tblite_xtb_h0
       !> Notice: Dimensions are passed in C order. 
       !> On Fortran side, dimensions are passed in reverse (arr, size(arr, 2), size(arr, 1)).
       !> On C side, dimension are correct, without change. No transpose is done.
-      subroutine cuda_get_hamiltonian_kernel( nao, nelem, &
+      subroutine cuda_get_hamiltonian_kernel( batch_size, nao, nelem, &
         mol_nat, mol_nid, mol_nbd, & !> structure_type
         mol_id, mol_id_dim1, &
         mol_num, mol_num_dim1, &
@@ -80,7 +80,7 @@ module tblite_xtb_h0
         use tblite_adjlist, only : adjacency_list
 
         implicit none
-        ! integer(c_int), value :: batch_size
+        integer(c_int), value :: batch_size
         integer(c_int), value :: nao, nelem
 
         !> structure_type
@@ -525,7 +525,7 @@ contains
   end subroutine print3d_arr
 
   subroutine cuda_get_hamiltonian(mol, trans, alist, bas, h0, selfenergy, overlap, dpint, qpint, &
-  & hamiltonian)
+  & hamiltonian, batch_size_in )
     use iso_c_binding
     implicit none
     !> Molecular structure data
@@ -548,13 +548,19 @@ contains
     real(wp), intent(out) :: qpint(:, :, :)
     !> Effective Hamiltonian
     real(wp), intent(out) :: hamiltonian(:, :)
-    ! real(c_double), intent(out) :: time(:)
+    integer, intent(in), optional :: batch_size_in
 
-    integer(kind=c_int) :: batch_size
     integer(kind=c_int) :: nao 
     integer(kind=c_int) :: nelem
     integer(c_int), allocatable :: periodic_as_integers(:)
     integer :: i, j, k
+    integer :: batch_size
+
+    if (present(batch_size_in)) then
+      batch_size = batch_size_in
+    else
+      batch_size = 1
+    end if
 
     nao = size(hamiltonian, 1)
     nelem = size(selfenergy, 1)
@@ -567,13 +573,13 @@ contains
       if (mol%periodic(i)) periodic_as_integers(i) = 1
     end do
 
-    batch_size = 1
     hamiltonian = 0.0_wp
     overlap = 0.0_wp
     dpint = 0.0_wp
     qpint = 0.0_wp
 
     call cuda_get_hamiltonian_kernel( &
+      batch_size, &
       nao, nelem, &
       mol%nat, &
       mol%nid, &

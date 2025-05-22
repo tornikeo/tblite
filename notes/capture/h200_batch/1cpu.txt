@@ -1,0 +1,186 @@
+ninja: Entering directory `/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build'
+ninja: no work to do.
+1/1 tblite:unit / hamiltonian-batch RUNNING       
+>>> ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 MALLOC_PERTURB_=205 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MESON_TEST_ITERATION=1 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian-batch
+――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
+# Testing: hamiltonian-batch
+  Starting hamiltonian-batch-scaling ... (1/1)
+ structure cocaine_batch
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   12.888506
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 13.295584
+gpu_in_atoms 1.463584
+gpu_time 14.759168
+ gpu_walltime   1551.5371889996459     
+ batch_size           1
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   10.023621
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 5.934944
+gpu_in_atoms 1.380512
+gpu_time 191.298721
+ gpu_walltime   193.43766199926904     
+ batch_size          32
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   10.296694
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.801248
+gpu_in_atoms 1.065920
+gpu_time 308.345764
+ gpu_walltime   310.78544800038799     
+ batch_size          64
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   10.116276
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.292825
+gpu_in_atoms 1.049600
+gpu_time 550.531250
+ gpu_walltime   552.83742699975846     
+ batch_size         128
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   10.364089
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.306448
+gpu_in_atoms 1.057056
+gpu_time 1103.507690
+ gpu_walltime   1105.5172079995828     
+ batch_size         256
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   10.128363
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.303428
+gpu_in_atoms 1.069056
+gpu_time 2204.424316
+ gpu_walltime   2206.3870229994791     
+ batch_size         512
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   10.435541
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.307534
+gpu_in_atoms 0.992256
+gpu_time 4411.907227
+ gpu_walltime   4414.2336260010779     
+ batch_size        1024
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   11.088426
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.309789
+gpu_in_atoms 0.974848
+gpu_time 8827.422852
+ gpu_walltime   8828.8344149987097     
+ batch_size        2048
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   10.360324
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.313686
+gpu_in_atoms 0.999296
+gpu_time 17669.857422
+ gpu_walltime   17671.681560001161     
+ batch_size        4096
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          41
+ mean_nnl          20
+ max_nsh           2
+cpu_time   11.300924
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.350989
+gpu_in_atoms 1.056768
+gpu_time 35644.359375
+ gpu_walltime   35646.936662000371     
+ batch_size        8192
+ nat          43
+ nprim           6
+ maxl           1
+ max_nnl          42
+ mean_nnl          21
+ max_nsh           2
+cpu_time   12.302874
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 4.375687
+gpu_in_atoms 1.108992
+gpu_time 71692.367188
+ gpu_walltime   71695.507947000806     
+ batch_size       16384
+       ... hamiltonian-batch-scaling [PASSED]
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+1/1 tblite:unit / hamiltonian-batch OK             144.32s
+
+
+Ok:                 1   
+Expected Fail:      0   
+Fail:               0   
+Unexpected Pass:    0   
+Skipped:            0   
+Timeout:            0   
+
+Full log written to /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/meson-logs/testlog.txt

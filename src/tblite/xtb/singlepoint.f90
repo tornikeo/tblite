@@ -257,11 +257,11 @@ subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigm
    & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian)
    call timer%pop
    
-   stime = timer%get("hamiltonian")
-   write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
+  !  stime = timer%get("hamiltonian")
+  !  write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
    
    call cuda_get_hamiltonian(mol, lattr, list, calc%bas, calc%h0, selfenergy, &
-    & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian)
+    & ints%overlap, ints%dipole, ints%quadrupole, ints%hamiltonian, batch_size_in=1)
 
    call timer%push("scc")
    allocate(eelec(mol%nat), source=0.0_wp)
@@ -387,7 +387,7 @@ subroutine xtb_singlepoint(ctx, mol, calc, wfn, accuracy, energy, gradient, sigm
             stime = timer%get(label(it))
             if (stime <= epsilon(0.0_wp)) cycle
             call ctx%message(" - "//label(it)//format_time(stime) &
-               & //" ("//format_string(int(stime/ttime*100), '(i3)')//"%)")
+               & //" ("//format_string(int(stime/ttime*100), '(i35)')//"%)")
          end do
          call ctx%message("")
       end if

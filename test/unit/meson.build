@@ -37,6 +37,7 @@ tests = [
   'gfn1-xtb',
   'gfn2-xtb',
   'hamiltonian',
+  'hamiltonian-batch',
   'halogen',
   'integral-overlap',
   'integral-multipole',
