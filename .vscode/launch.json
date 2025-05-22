@@ -14,7 +14,7 @@
         }
       ],
       "args": [
-        "hamiltonian"
+        "hamiltonian-batch"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceRoot}",

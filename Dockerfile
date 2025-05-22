@@ -1,5 +1,5 @@
 # Use an official NVIDIA CUDA base image with Python pre-installed
-FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
+FROM nvidia/cuda:12.4.0-devel-ubuntu22.04
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -32,8 +32,8 @@ RUN pip install --no-cache-dir meson ninja ipykernel pandas matplotlib scikit-le
 
 # Build the project using Meson
 RUN pip3 install meson && \
-    meson setup _build && \
-    meson compile -C _build
+    meson setup build && \
+    meson compile -C build
 
 # Default command
 CMD ["bash"]
