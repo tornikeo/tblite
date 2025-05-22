@@ -8,17 +8,15 @@ What do we say?
 
 # Slide 1
 
-Recall the situation. 
-Mass spectrometry is useful, but expensive.
+Recall the situation. Mass spectrometry is useful and expensive.
 
 # Slide 2
 
-Mass spectrometry data is scarce. 
-Physics is known - why not simulate?
+Mass spectrometry data is scarce. Physics is known - why not simulate?
 
 # Slide 3
 
-Simluation is tough. We make it better, with GPUs.
+Simluation is tough. We make it better, with GPUs. 
 
 But, we only manage to address one part of the full puzzle!
 

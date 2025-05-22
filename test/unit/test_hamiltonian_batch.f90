@@ -791,6 +791,10 @@ subroutine test_batch_scaling(error)
      stop 1
   end if
   call test_hamiltonian_mol_no_ref_no_valid(error, mol, 1)
+  call test_hamiltonian_mol_no_ref_no_valid(error, mol, 2)
+  call test_hamiltonian_mol_no_ref_no_valid(error, mol, 4)
+  call test_hamiltonian_mol_no_ref_no_valid(error, mol, 8)
+  call test_hamiltonian_mol_no_ref_no_valid(error, mol, 16)
   call test_hamiltonian_mol_no_ref_no_valid(error, mol, 32)
   call test_hamiltonian_mol_no_ref_no_valid(error, mol, 64)
   call test_hamiltonian_mol_no_ref_no_valid(error, mol, 128)
