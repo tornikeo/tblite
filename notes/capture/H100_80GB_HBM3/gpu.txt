@@ -1,0 +1,186 @@
+ninja: Entering directory `/root/tblite/build'
+ninja: no work to do.
+1/1 tblite:unit / hamiltonian RUNNING       
+>>> MESON_TEST_ITERATION=1 MALLOC_PERTURB_=122 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/root/tblite/build/:/usr/local/nvidia/lib:/usr/local/nvidia/lib64 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 /root/tblite/build/test/unit/tester hamiltonian
+――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
+# Testing: hamiltonian
+  Starting hamiltonian-Glutamine ... (1/5)
+ structure GLU
+ nat          29
+ nprim           6
+ maxl           1
+ max_nnl          28
+ mean_nnl          14
+ max_nsh           2
+cpu_time   25.599215
+gpu_gb_in 0.000453
+gpu_gb_out 0.000444
+gpu_gb_total 0.000896
+gpu_between_atoms 5.177216
+gpu_in_atoms 0.348288
+gpu_time 5.525504
+gpu_transfer_time 1.093344
+       ... hamiltonian-Glutamine [PASSED]
+  Starting hamiltonian-dna ... (2/5)
+ structure dna
+ nat         387
+ nprim           6
+ maxl           2
+ max_nnl         165
+ mean_nnl          69
+ max_nsh           3
+cpu_time   44.083036
+gpu_gb_in 0.232068
+gpu_gb_out 0.231803
+gpu_gb_total 0.463871
+gpu_between_atoms 3.571200
+gpu_in_atoms 0.805408
+gpu_time 4.376608
+gpu_transfer_time 84.105629
+       ... hamiltonian-dna [PASSED]
+  Starting hamiltonian-lysozyme ... (3/5)
+ structure 1lyz-lysozyme
+ nat        1102
+ nprim           6
+ maxl           2
+ max_nnl         309
+ mean_nnl          99
+ max_nsh           3
+cpu_time  239.119671
+gpu_gb_in 1.749900
+gpu_gb_out 1.748891
+gpu_gb_total 3.498791
+gpu_between_atoms 9.492480
+gpu_in_atoms 0.845568
+gpu_time 10.338048
+gpu_transfer_time 659.180969
+       ... hamiltonian-lysozyme [PASSED]
+  Starting hamiltonian-103l-t4-lysozyme ... (4/5)
+ structure 103l-hydrolase
+ nat        1404
+ nprim           6
+ maxl           2
+ max_nnl         312
+ mean_nnl          99
+ max_nsh           3
+cpu_time  338.086432
+gpu_gb_in 2.816439
+gpu_gb_out 2.815150
+gpu_gb_total 5.631588
+gpu_between_atoms 11.214592
+gpu_in_atoms 0.857408
+gpu_time 12.072000
+gpu_transfer_time 1044.699097
+       ... hamiltonian-103l-t4-lysozyme [PASSED]
+  Starting hamiltonian-alkane ... (5/5)
+ structure alkane_64
+ nat         192
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          20
+ max_nsh           2
+cpu_time   38.637041
+gpu_gb_in 0.013026
+gpu_gb_out 0.012976
+gpu_gb_total 0.026002
+gpu_between_atoms 0.495456
+gpu_in_atoms 0.298880
+gpu_time 0.794336
+gpu_transfer_time 7.392961
+ structure alkane_128
+ nat         384
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time   38.625414
+gpu_gb_in 0.052005
+gpu_gb_out 0.051905
+gpu_gb_total 0.103909
+gpu_between_atoms 0.603136
+gpu_in_atoms 0.274432
+gpu_time 0.877568
+gpu_transfer_time 21.010399
+ structure alkane_256
+ nat         768
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time   54.160045
+gpu_gb_in 0.207819
+gpu_gb_out 0.207618
+gpu_gb_total 0.415437
+gpu_between_atoms 0.977632
+gpu_in_atoms 0.271296
+gpu_time 1.248928
+gpu_transfer_time 97.602722
+ structure alkane_512
+ nat        1536
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  113.497335
+gpu_gb_in 0.830875
+gpu_gb_out 0.830472
+gpu_gb_total 1.661347
+gpu_between_atoms 1.503488
+gpu_in_atoms 0.508096
+gpu_time 2.011584
+gpu_transfer_time 369.374634
+ structure alkane_1024
+ nat        3072
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  329.079122
+gpu_gb_in 3.322695
+gpu_gb_out 3.321889
+gpu_gb_total 6.644584
+gpu_between_atoms 2.708224
+gpu_in_atoms 0.590464
+gpu_time 3.298688
+gpu_transfer_time 1438.097656
+ structure alkane_2048
+ nat        6144
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time 1725.059579
+gpu_gb_in 13.289168
+gpu_gb_out 13.287555
+gpu_gb_total 26.576724
+gpu_between_atoms 4.671840
+gpu_in_atoms 0.517344
+gpu_time 5.189184
+gpu_transfer_time 5091.389160
+ structure alkane_4096
+ nat       12288
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time 4807.190105
+CUDA error in ../subprojects/tblite-gpu/src/tensor.h:174: out of memory
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+1/1 tblite:unit / hamiltonian FAIL           101.30s   exit status 1
+
+
+Summary of Failures:
+
+1/1 tblite:unit / hamiltonian FAIL           101.30s   exit status 1
+
+Ok:                0   
+Fail:              1   
+
+Full log written to /root/tblite/build/meson-logs/testlog.txt

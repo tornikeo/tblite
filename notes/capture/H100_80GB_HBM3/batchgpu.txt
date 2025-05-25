@@ -1,0 +1,187 @@
+ninja: Entering directory `/root/tblite/build'
+ninja: no work to do.
+1/1 tblite:unit / hamiltonian-batch RUNNING       
+>>> LD_LIBRARY_PATH=/root/tblite/build/:/usr/local/nvidia/lib:/usr/local/nvidia/lib64 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=169 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MESON_TEST_ITERATION=1 /root/tblite/build/test/unit/tester hamiltonian-batch
+――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
+# Testing: hamiltonian-batch
+  Starting hamiltonian-batch-scaling ... (1/1)
+ structure cocaine_batch
+cpu_time   23.504586
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 5.476960
+gpu_in_atoms 0.385376
+gpu_time 5.862336
+gpu_transfer_time 1.426080
+ gpu_walltime   1072.3413107916713     
+ batch_size           1
+cpu_time   29.719504
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.317312
+gpu_in_atoms 0.689280
+gpu_time 1.323904
+gpu_transfer_time 2.037120
+ gpu_walltime   5.4114935919642448     
+ batch_size           2
+cpu_time   47.255725
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.129616
+gpu_in_atoms 0.248672
+gpu_time 0.767136
+gpu_transfer_time 1.502592
+ gpu_walltime   2.8033191338181496     
+ batch_size           4
+cpu_time   21.731307
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.085680
+gpu_in_atoms 0.254144
+gpu_time 0.939584
+gpu_transfer_time 1.485504
+ gpu_walltime   2.9148990288376808     
+ batch_size           8
+cpu_time   76.633493
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.069880
+gpu_in_atoms 0.259744
+gpu_time 1.377824
+gpu_transfer_time 1.561120
+ gpu_walltime   3.4534763544797897     
+ batch_size          16
+cpu_time   78.350078
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.063966
+gpu_in_atoms 0.320800
+gpu_time 2.367712
+gpu_transfer_time 1.943936
+ gpu_walltime   4.7418596222996712     
+ batch_size          32
+cpu_time   20.886853
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.059726
+gpu_in_atoms 0.251360
+gpu_time 4.073792
+gpu_transfer_time 1.744800
+ gpu_walltime   6.1980243772268295     
+ batch_size          64
+cpu_time   80.232245
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.061810
+gpu_in_atoms 0.262048
+gpu_time 8.173728
+gpu_transfer_time 1.622336
+ gpu_walltime   10.174023918807507     
+ batch_size         128
+cpu_time   24.536687
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.062930
+gpu_in_atoms 0.246944
+gpu_time 16.356960
+gpu_transfer_time 1.403744
+ gpu_walltime   18.109570257365704     
+ batch_size         256
+cpu_time   58.959151
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.065359
+gpu_in_atoms 0.258656
+gpu_time 33.722561
+gpu_transfer_time 1.604832
+ gpu_walltime   35.688198171555996     
+ batch_size         512
+cpu_time   52.157986
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.065495
+gpu_in_atoms 0.274144
+gpu_time 67.340736
+gpu_transfer_time 1.525600
+ gpu_walltime   69.247191771864891     
+ batch_size        1024
+cpu_time   22.990286
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.067269
+gpu_in_atoms 0.264160
+gpu_time 138.030212
+gpu_transfer_time 1.598624
+ gpu_walltime   140.00959787517786     
+ batch_size        2048
+cpu_time   18.995061
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.067658
+gpu_in_atoms 0.256736
+gpu_time 277.384521
+gpu_transfer_time 1.519232
+ gpu_walltime   279.24272231757641     
+ batch_size        4096
+cpu_time   22.684675
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.067859
+gpu_in_atoms 0.390592
+gpu_time 556.292542
+gpu_transfer_time 1.594368
+ gpu_walltime   558.33259504288435     
+ batch_size        8192
+cpu_time   28.698579
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.068069
+gpu_in_atoms 0.460928
+gpu_time 1115.710815
+gpu_transfer_time 1.974048
+ gpu_walltime   1118.2211814448237     
+ batch_size       16384
+cpu_time   34.378525
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.068891
+gpu_in_atoms 0.386912
+gpu_time 2257.811768
+gpu_transfer_time 1.979936
+ gpu_walltime   2260.3351343423128     
+ batch_size       32768
+cpu_time   29.717544
+gpu_gb_in 0.001060
+gpu_gb_out 0.001046
+gpu_gb_total 0.002105
+gpu_between_atoms 0.068902
+gpu_in_atoms 0.587424
+gpu_time 4516.165039
+gpu_transfer_time 1.874432
+ gpu_walltime   4518.6304813250899     
+ batch_size       65536
+       ... hamiltonian-batch-scaling [PASSED]
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+1/1 tblite:unit / hamiltonian-batch OK             10.95s
+
+
+Ok:                1   
+Fail:              0   
+
+Full log written to /root/tblite/build/meson-logs/testlog.txt
