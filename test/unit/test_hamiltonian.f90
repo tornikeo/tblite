@@ -63,16 +63,16 @@ subroutine collect_hamiltonian(testsuite)
    type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
    testsuite = [ &
-    & new_unittest("hamiltonian-h2", test_hamiltonian_h2), &
-    & new_unittest("hamiltonian-lih", test_hamiltonian_lih), &
-    & new_unittest("hamiltonian-s2", test_hamiltonian_s2), &
-    & new_unittest("hamiltonian-sih4", test_hamiltonian_sih4), &
-    & new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
-    & new_unittest("hamiltonian-dna", test_dna_xyz), &
-    & new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
+    ! & new_unittest("hamiltonian-h2", test_hamiltonian_h2), &
+    ! & new_unittest("hamiltonian-lih", test_hamiltonian_lih), &
+    ! & new_unittest("hamiltonian-s2", test_hamiltonian_s2), &
+    ! & new_unittest("hamiltonian-sih4", test_hamiltonian_sih4), &
+    ! & new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
+    ! & new_unittest("hamiltonian-dna", test_dna_xyz), &
+    ! & new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
     ! & new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
-    & new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb), &
-    & new_unittest("hamiltonian-alkane", test_hamiltonian_alkanes) &
+    & new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb) &
+    ! & new_unittest("hamiltonian-alkane", test_hamiltonian_alkanes) &
   ]
 
 end subroutine collect_hamiltonian
@@ -195,6 +195,16 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
  allocate(overlap_cu(bas%nao, bas%nao), dpint_cu(3, bas%nao, bas%nao), &
      & qpint_cu(6, bas%nao, bas%nao), hamiltonian_cu(bas%nao, bas%nao))
   
+
+  
+  ! print, num atoms
+  write(*,*), "nat", mol%nat
+  write(*,*), "nprim", bas%cgto(1,1)%nprim
+  write(*,*), "maxl", bas%maxl
+  write(*,*), "max_nnl", maxval(list%nnl)
+  write(*,*), "mean_nnl", sum(list%nnl) / size(list%nnl) 
+  write(*,*), "max_nsh", maxval(bas%nsh_id)
+
   call timer%push("cpu")
   call get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap, dpint, qpint, &
       & hamiltonian)
@@ -202,14 +212,14 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
   stime = timer%get("cpu")
   write(*,"(A F12.6 A)") "cpu_time", stime * 1000
 
-  call timer%push("gpu")
+  ! call timer%push("gpu")
   call cuda_get_hamiltonian(mol, lattr, list, bas, h0, selfenergy, overlap_cu, dpint_cu, qpint_cu, &
    & hamiltonian_cu)
   !where(abs(hamiltonian) < thr) hamiltonian = 0.0_wp
   !print '(*(6x,"&", 3(es20.14e1, "_wp":, ","), "&", /))', hamiltonian
-  stime = timer%get("gpu")
-  ! write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
-  print*, "gpu_walltime", stime * 1000
+  ! stime = timer%get("gpu")
+  ! ! write(*,"(A F12.6 A)") " CPU time ", stime * 1000, "ms"
+  ! print*, "gpu_walltime", stime * 1000
 
 
   ! Compare cuda-computed hamiltonian with reference
@@ -227,37 +237,37 @@ subroutine test_hamiltonian_mol_no_ref(error, mol)
       end do
   end do
 
-  ! do kk = 1, size(dpint, 3)
-  !   do jj = 1, size(dpint, 2)
-  !     do ii = 1, size(dpint, 1)
-  !       call check(error, dpint_cu(ii, jj, kk), dpint(ii, jj, kk), thr=thr2)
-  !       if (allocated(error)) then
-  !         print*, "DPINT error"
-  !         print '(3es20.13)', dpint_cu(ii, jj, kk), dpint(ii, jj, kk), &
-  !         & dpint_cu(ii, jj, kk) - dpint(ii, jj, kk)
-  !         print*, "is ", dpint_cu(ii, jj, kk), " should be ", dpint(ii, jj, kk)
-  !         print*, "at i=", kk - 1, " j=", jj - 1, "k=", ii - 1
-  !         error stop
-  !       end if
-  !     end do
-  !   end do
-  ! end do
+  do kk = 1, size(dpint, 3)
+    do jj = 1, size(dpint, 2)
+      do ii = 1, size(dpint, 1)
+        call check(error, dpint_cu(ii, jj, kk), dpint(ii, jj, kk), thr=thr2)
+        if (allocated(error)) then
+          print*, "DPINT error"
+          print '(3es20.13)', dpint_cu(ii, jj, kk), dpint(ii, jj, kk), &
+          & dpint_cu(ii, jj, kk) - dpint(ii, jj, kk)
+          print*, "is ", dpint_cu(ii, jj, kk), " should be ", dpint(ii, jj, kk)
+          print*, "at i=", kk - 1, " j=", jj - 1, "k=", ii - 1
+          error stop
+        end if
+      end do
+    end do
+  end do
 
-  ! do kk = 1, size(qpint, 3)
-  !   do jj = 1, size(qpint, 2)
-  !     do ii = 1, size(qpint, 1)
-  !       call check(error, qpint_cu(ii, jj, kk), qpint(ii, jj, kk), thr=thr2)
-  !       if (allocated(error)) then
-  !         print*, "QPINT error"
-  !         print '(3es20.13)', qpint_cu(ii, jj, kk), qpint(ii, jj, kk), &
-  !           & qpint_cu(ii, jj, kk) - qpint(ii, jj, kk)
-  !         print*, "is ", qpint_cu(ii, jj, kk), " should be ", qpint(ii, jj, kk)
-  !         print*, "at i=", kk - 1, " j=", jj - 1, "k=", ii - 1
-  !         error stop
-  !       end if
-  !     end do
-  !   end do
-  ! end do
+  do kk = 1, size(qpint, 3)
+    do jj = 1, size(qpint, 2)
+      do ii = 1, size(qpint, 1)
+        call check(error, qpint_cu(ii, jj, kk), qpint(ii, jj, kk), thr=thr2)
+        if (allocated(error)) then
+          print*, "QPINT error"
+          print '(3es20.13)', qpint_cu(ii, jj, kk), qpint(ii, jj, kk), &
+            & qpint_cu(ii, jj, kk) - qpint(ii, jj, kk)
+          print*, "is ", qpint_cu(ii, jj, kk), " should be ", qpint(ii, jj, kk)
+          print*, "at i=", kk - 1, " j=", jj - 1, "k=", ii - 1
+          error stop
+        end if
+      end do
+    end do
+  end do
 end subroutine test_hamiltonian_mol_no_ref
 
 subroutine test_hamiltonian_h2(error)

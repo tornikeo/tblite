@@ -44,3 +44,4 @@ __pycache__
 subprojects/json-fortran-8.2.5.wrap
 !notes/capture/**/*
 test/perf/4ins.pdb
+*.ncu-rep

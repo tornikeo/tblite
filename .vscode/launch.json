@@ -6,6 +6,7 @@
       // "type": "cuda-gdb",
       "type": "cppdbg",
       "request": "launch",
+      "cwd": "${workspaceRoot}/build",
       "program": "${workspaceRoot}/build/test/unit/tester",
       "environment": [
         {
@@ -14,10 +15,9 @@
         }
       ],
       "args": [
-        "hamiltonian-batch"
+        "hamiltonian"
       ],
       "stopAtEntry": false,
-      "cwd": "${workspaceRoot}",
       "preLaunchTask": "setup",
       "externalConsole": false,
       "MIMode": "gdb",

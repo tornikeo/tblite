@@ -660,14 +660,6 @@ contains
       qpint(:, :, :) = 0.0_wp
       hamiltonian(:, :) = 0.0_wp
       list = 3
-      
-      ! print, num atoms
-      print*, "nat", mol%nat
-      print*, "nprim", bas%cgto(1,1)%nprim
-      print*, "maxl", bas%maxl
-      print*, "max_nnl", maxval(alist%nnl)
-      print*, "mean_nnl", sum(alist%nnl) / size(alist%nnl) 
-      print*, "max_nsh", maxval(bas%nsh_id)
 
       ! print*, "bas.maxl = ", bas%maxl, "msao(bas%maxl) = ", msao(bas%maxl)
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
