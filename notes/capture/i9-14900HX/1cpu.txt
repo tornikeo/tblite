@@ -1,21 +1,71 @@
 ninja: Entering directory `/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build'
 ninja: no work to do.
 1/1 tblite:unit / hamiltonian RUNNING       
->>> UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=95 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ MESON_TEST_ITERATION=1 /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian
+>>> UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ MESON_TEST_ITERATION=1 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 MALLOC_PERTURB_=42 /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian
 ――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
 # Testing: hamiltonian
-  Starting hamiltonian-103l-t4-lysozyme ... (1/1)
+  Starting hamiltonian-103l-t4-lysozyme ... (1/2)
  structure 103l-hydrolase
  nat        1404
  nprim           6
  maxl           2
- max_nnl         311
+ max_nnl         310
  mean_nnl          99
  max_nsh           3
-cpu_time 1549.858465
+cpu_time 1575.728317
        ... hamiltonian-103l-t4-lysozyme [PASSED]
+  Starting hamiltonian-alkane ... (2/2)
+ structure alkane_64
+ nat         192
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          20
+ max_nsh           2
+cpu_time   27.576135
+ structure alkane_128
+ nat         384
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time   58.374596
+ structure alkane_256
+ nat         768
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  127.952297
+ structure alkane_512
+ nat        1536
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  279.308855
+ structure alkane_1024
+ nat        3072
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  704.700987
+ structure alkane_2048
+ nat        6144
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time 1870.311269
+       ... hamiltonian-alkane [PASSED]
 ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
-1/1 tblite:unit / hamiltonian OK              2.96s
+1/1 tblite:unit / hamiltonian OK             15.22s
 
 
 Ok:                 1   
