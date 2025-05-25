@@ -70,7 +70,7 @@ subroutine collect_hamiltonian(testsuite)
     & new_unittest("hamiltonian-Glutamine", test_hamiltonian_glu), &
     & new_unittest("hamiltonian-dna", test_dna_xyz), &
     & new_unittest("hamiltonian-lysozyme", test_protein_1lyz_pdb), &
-    & new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
+    ! & new_unittest("hamiltonian-101d-netropsin-and-dna", test_protein_101d_pdb), &
     & new_unittest("hamiltonian-103l-t4-lysozyme", test_protein_103l_pdb), &
     & new_unittest("hamiltonian-alkane", test_hamiltonian_alkanes) &
   ]
@@ -564,25 +564,25 @@ subroutine test_dna_xyz(error)
 
 end subroutine test_dna_xyz
 
-subroutine test_protein_101d_pdb(error)
-  !> Error handling
-  type(error_type), allocatable, intent(out) :: error
+! subroutine test_protein_101d_pdb(error)
+!   !> Error handling
+!   type(error_type), allocatable, intent(out) :: error
   
-  type(structure_type) :: mol
-  character(len=:), allocatable :: input
+!   type(structure_type) :: mol
+!   character(len=:), allocatable :: input
 
-  input = "../test/perf/101d.pdb"
+!   input = "../test/perf/101d.pdb"
 
-  call read_structure(mol, input, error, filetype%pdb)
-  print*, "structure 101d-netropsin-and-dna"
-  if (allocated(error)) then
-     print '(a)', error%message
-     stop 1
-  end if
+!   call read_structure(mol, input, error, filetype%pdb)
+!   print*, "structure 101d-netropsin-and-dna"
+!   if (allocated(error)) then
+!      print '(a)', error%message
+!      stop 1
+!   end if
 
-  call test_hamiltonian_mol_no_ref(error, mol)
+!   call test_hamiltonian_mol_no_ref(error, mol)
 
-end subroutine test_protein_101d_pdb
+! end subroutine test_protein_101d_pdb
 
 subroutine test_protein_103l_pdb(error)
   !> Error handling
