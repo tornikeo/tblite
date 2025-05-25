@@ -1,0 +1,244 @@
+ninja: Entering directory `/root/tblite/build'
+[1/4] Scanning target tester for modules
+[2/4] Generating dynamic dependency information for target tester
+[3/5] Compiling Fortran object test/unit/tester.p/test_hamiltonian.f90.o
+[01m[K../test/unit/test_hamiltonian.f90:160:27:[m[K
+
+  160 |   character(len=1) :: dummy
+      |                           [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable ‘[01m[Kdummy[m[K’ declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:162:32:[m[K
+
+  162 |   real(wp) :: random_translation
+      |                                [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable ‘[01m[Krandom_translation[m[K’ declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:47:22:[m[K
+
+   47 |     integer :: i, j, k
+      |                      [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable ‘[01m[Kk[m[K’ declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:45:22:[m[K
+
+   45 | subroutine print2d_mat(mat)
+      |                      [01;35m[K^[m[K
+[01;35m[KWarning:[m[K ‘[01m[Kprint2d_mat[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:130:0:[m[K
+
+  130 | pure function mean_abs(a) result(m)
+      | 
+[01;35m[KWarning:[m[K ‘[01m[Kmean_abs[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:279:30:[m[K
+
+  279 | subroutine test_hamiltonian_h2(error)
+      |                              [01;35m[K^[m[K
+[01;35m[KWarning:[m[K ‘[01m[Ktest_hamiltonian_h2[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:297:31:[m[K
+
+  297 | subroutine test_hamiltonian_lih(error)
+      |                               [01;35m[K^[m[K
+[01;35m[KWarning:[m[K ‘[01m[Ktest_hamiltonian_lih[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:323:30:[m[K
+
+  323 | subroutine test_hamiltonian_s2(error)
+      |                              [01;35m[K^[m[K
+[01;35m[KWarning:[m[K ‘[01m[Ktest_hamiltonian_s2[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:451:32:[m[K
+
+  451 | subroutine test_hamiltonian_sih4(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K ‘[01m[Ktest_hamiltonian_sih4[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:535:21:[m[K
+
+  535 | subroutine test_ice10(error)
+      |                     [01;35m[K^[m[K
+[01;35m[KWarning:[m[K ‘[01m[Ktest_ice10[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:708:32:[m[K
+
+  708 | subroutine test_hamiltonian_4ins(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K ‘[01m[Ktest_hamiltonian_4ins[m[K’ defined but not used [[01;35m[K-Wunused-function[m[K]
+[4/4] Linking target test/unit/tester
+1/1 tblite:unit / hamiltonian RUNNING       
+>>> LD_LIBRARY_PATH=/root/tblite/build/:/usr/local/nvidia/lib:/usr/local/nvidia/lib64 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=54 MESON_TEST_ITERATION=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 /root/tblite/build/test/unit/tester hamiltonian
+――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
+# Testing: hamiltonian
+  Starting hamiltonian-Glutamine ... (1/5)
+ structure GLU
+ nat          29
+ nprim           6
+ maxl           1
+ max_nnl          28
+ mean_nnl          14
+ max_nsh           2
+cpu_time   84.487865
+gpu_gb_in 0.000453
+gpu_gb_out 0.000444
+gpu_gb_total 0.000896
+gpu_between_atoms 11.482048
+gpu_in_atoms 0.442272
+gpu_time 11.924320
+gpu_transfer_time 1.218752
+       ... hamiltonian-Glutamine [PASSED]
+  Starting hamiltonian-dna ... (2/5)
+ structure dna
+ nat         387
+ nprim           6
+ maxl           2
+ max_nnl         165
+ mean_nnl          69
+ max_nsh           3
+cpu_time  118.418229
+gpu_gb_in 0.232068
+gpu_gb_out 0.231803
+gpu_gb_total 0.463871
+gpu_between_atoms 10.613664
+gpu_in_atoms 1.211232
+gpu_time 11.824896
+gpu_transfer_time 186.631943
+       ... hamiltonian-dna [PASSED]
+  Starting hamiltonian-lysozyme ... (3/5)
+ structure 1lyz-lysozyme
+ nat        1102
+ nprim           6
+ maxl           2
+ max_nnl         311
+ mean_nnl          99
+ max_nsh           3
+cpu_time  239.951641
+gpu_gb_in 1.749900
+gpu_gb_out 1.748891
+gpu_gb_total 3.498791
+gpu_between_atoms 26.539007
+gpu_in_atoms 1.552448
+gpu_time 28.091455
+gpu_transfer_time 1244.322021
+       ... hamiltonian-lysozyme [PASSED]
+  Starting hamiltonian-103l-t4-lysozyme ... (4/5)
+ structure 103l-hydrolase
+ nat        1404
+ nprim           6
+ maxl           2
+ max_nnl         311
+ mean_nnl          99
+ max_nsh           3
+cpu_time  339.549190
+gpu_gb_in 2.816439
+gpu_gb_out 2.815150
+gpu_gb_total 5.631589
+gpu_between_atoms 32.780991
+gpu_in_atoms 1.694720
+gpu_time 34.475712
+gpu_transfer_time 2008.862305
+       ... hamiltonian-103l-t4-lysozyme [PASSED]
+  Starting hamiltonian-alkane ... (5/5)
+ structure alkane_64
+ nat         192
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          20
+ max_nsh           2
+cpu_time   26.773375
+gpu_gb_in 0.013026
+gpu_gb_out 0.012976
+gpu_gb_total 0.026002
+gpu_between_atoms 1.124256
+gpu_in_atoms 0.438400
+gpu_time 1.562656
+gpu_transfer_time 9.479776
+ structure alkane_128
+ nat         384
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time   30.221420
+gpu_gb_in 0.052005
+gpu_gb_out 0.051905
+gpu_gb_total 0.103909
+gpu_between_atoms 1.960640
+gpu_in_atoms 0.467968
+gpu_time 2.428608
+gpu_transfer_time 38.033791
+ structure alkane_256
+ nat         768
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time   50.012103
+gpu_gb_in 0.207819
+gpu_gb_out 0.207618
+gpu_gb_total 0.415437
+gpu_between_atoms 3.168256
+gpu_in_atoms 0.631808
+gpu_time 3.800064
+gpu_transfer_time 155.214844
+ structure alkane_512
+ nat        1536
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time   94.167576
+gpu_gb_in 0.830875
+gpu_gb_out 0.830472
+gpu_gb_total 1.661347
+gpu_between_atoms 5.540864
+gpu_in_atoms 1.251168
+gpu_time 6.792032
+gpu_transfer_time 588.715027
+ structure alkane_1024
+ nat        3072
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time  293.517738
+gpu_gb_in 3.322695
+gpu_gb_out 3.321889
+gpu_gb_total 6.644584
+gpu_between_atoms 10.413344
+gpu_in_atoms 1.519296
+gpu_time 11.932640
+gpu_transfer_time 2391.341064
+ structure alkane_2048
+ nat        6144
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time 1122.811957
+gpu_gb_in 13.289168
+gpu_gb_out 13.287555
+gpu_gb_total 26.576724
+gpu_between_atoms 19.293184
+gpu_in_atoms 1.683456
+gpu_time 20.976641
+gpu_transfer_time 9391.109375
+ structure alkane_4096
+ nat       12288
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+cpu_time 4365.696249
+CUDA error in ../subprojects/tblite-gpu/src/tensor.h:174: out of memory
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+1/1 tblite:unit / hamiltonian FAIL           145.80s   exit status 1
+
+
+Summary of Failures:
+
+1/1 tblite:unit / hamiltonian FAIL           145.80s   exit status 1
+
+Ok:                0   
+Fail:              1   
+
+Full log written to /root/tblite/build/meson-logs/testlog.txt

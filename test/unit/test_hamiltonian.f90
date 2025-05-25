@@ -674,7 +674,6 @@ subroutine test_hamiltonian_alkanes(error)
      stop 1
   end if
   call test_hamiltonian_mol_no_ref(error, mol)
-  return;
 
   input = "../test/perf/alkanes/alkane_2048.xyz"
   call read_structure(mol, input, error, filetype%xyz)
@@ -693,16 +692,6 @@ subroutine test_hamiltonian_alkanes(error)
      stop 1
   end if
   call test_hamiltonian_mol_no_ref(error, mol)
-
-  input = "../test/perf/alkanes/alkane_8192.xyz"
-  call read_structure(mol, input, error, filetype%xyz)
-  print*, "structure alkane_8192"
-  if (allocated(error)) then
-     print '(a)', error%message
-     stop 1
-  end if
-  call test_hamiltonian_mol_no_ref(error, mol)
-
 end subroutine test_hamiltonian_alkanes
 
 subroutine test_hamiltonian_4ins(error)
