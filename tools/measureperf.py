@@ -48,7 +48,7 @@ def get_gpu_name():
             print("Available GPUs:")
             for idx, name in enumerate(gpu_names):
                 print(f"{idx}: {name}")
-            idx = int(input("Select GPU index (default 0): ") or "0")
+            idx = 0
             return gpu_names[idx].replace(' ', '_')
         else:
             raise RuntimeError("No GPUs found.")
