@@ -1,0 +1,164 @@
+ninja: Entering directory `/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build'
+[1/3] Compiling Fortran object test/unit/tester.p/test_hamiltonian_batch.f90.o
+[01m[K../test/unit/test_hamiltonian_batch.f90:276:15:[m[K
+
+  276 |   integer :: ii, jj, kk, i
+      |               [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kii[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:276:19:[m[K
+
+  276 |   integer :: ii, jj, kk, i
+      |                   [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kjj[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:276:23:[m[K
+
+  276 |   integer :: ii, jj, kk, i
+      |                       [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kkk[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:278:32:[m[K
+
+  278 |   real(wp) :: random_translation
+      |                                [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Krandom_translation[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:150:23:[m[K
+
+  150 |   integer :: ii, jj, kk
+      |                       [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kkk[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:152:32:[m[K
+
+  152 |   real(wp) :: random_translation
+      |                                [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Krandom_translation[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:47:22:[m[K
+
+   47 |     integer :: i, j, k
+      |                      [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kk[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:45:22:[m[K
+
+   45 | subroutine print2d_mat(mat)
+      |                      [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Kprint2d_mat[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:121:0:[m[K
+
+  121 | pure function mean_abs(a) result(m)
+      | 
+[01;35m[KWarning:[m[K '[01m[Kmean_abs[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:338:30:[m[K
+
+  338 | subroutine test_hamiltonian_h2(error)
+      |                              [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_h2[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:356:31:[m[K
+
+  356 | subroutine test_hamiltonian_lih(error)
+      |                               [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_lih[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:382:30:[m[K
+
+  382 | subroutine test_hamiltonian_s2(error)
+      |                              [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_s2[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:510:32:[m[K
+
+  510 | subroutine test_hamiltonian_sih4(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_sih4[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:585:31:[m[K
+
+  585 | subroutine test_hamiltonian_glu(error)
+      |                               [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_glu[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:594:21:[m[K
+
+  594 | subroutine test_ice10(error)
+      |                     [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_ice10[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:606:23:[m[K
+
+  606 | subroutine test_dna_xyz(error)
+      |                       [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_dna_xyz[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:626:32:[m[K
+
+  626 | subroutine test_protein_101d_pdb(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_protein_101d_pdb[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:646:32:[m[K
+
+  646 | subroutine test_protein_103l_pdb(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_protein_103l_pdb[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:666:32:[m[K
+
+  666 | subroutine test_protein_1lyz_pdb(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_protein_1lyz_pdb[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:685:35:[m[K
+
+  685 | subroutine test_hamiltonian_alkanes(error)
+      |                                   [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_alkanes[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian_batch.f90:760:32:[m[K
+
+  760 | subroutine test_hamiltonian_4ins(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_4ins[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[2/2] Linking target test/unit/tester
+/usr/bin/ld: warning: src_json_value_module.F90.o: requires executable stack (because the .note.GNU-stack section is executable)
+1/1 tblite:unit / hamiltonian-batch RUNNING       
+>>> MESON_TEST_ITERATION=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=34 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian-batch
+――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
+# Testing: hamiltonian-batch
+  Starting hamiltonian-batch-scaling ... (1/1)
+ structure cocaine_batch
+cpu_time   23.146714
+ batch_size           1
+cpu_time   48.724369
+ batch_size           2
+cpu_time   41.541485
+ batch_size           4
+cpu_time   23.569777
+ batch_size           8
+cpu_time   25.911044
+ batch_size          16
+cpu_time   28.626847
+ batch_size          32
+cpu_time   54.858065
+ batch_size          64
+cpu_time  111.203269
+ batch_size         128
+cpu_time  226.617542
+ batch_size         256
+cpu_time  475.436884
+ batch_size         512
+cpu_time  928.558061
+ batch_size        1024
+cpu_time 1760.596034
+ batch_size        2048
+cpu_time 3380.195741
+ batch_size        4096
+cpu_time 6819.520435
+ batch_size        8192
+cpu_time 13606.760627
+ batch_size       16384
+cpu_time 27727.789991
+ batch_size       32768
+WARNING: Received SIGTERM, exiting
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+1/1 tblite:unit / hamiltonian-batch INTERRUPT      85.32s   killed by signal 2 SIGINT
+
+
+Summary of Failures:
+
+1/1 tblite:unit / hamiltonian-batch INTERRUPT      85.32s   killed by signal 2 SIGINT
+
+Ok:                 0   
+Expected Fail:      0   
+Fail:               1   
+Unexpected Pass:    0   
+Skipped:            0   
+Timeout:            0   
+
+Full log written to /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/meson-logs/testlog.txt
