@@ -1,6 +1,5 @@
 
 ```sh
-git clone github.com/tornikeo/tblite
 git clone http://github.com/tornikeo/tblite
 code tblite/
 ```

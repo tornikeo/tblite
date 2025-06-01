@@ -1,0 +1,151 @@
+ninja: Entering directory `/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build'
+[1/3] Compiling Fortran object test/unit/tester.p/test_hamiltonian.f90.o
+[01m[K../test/unit/test_hamiltonian.f90:160:27:[m[K
+
+  160 |   character(len=1) :: dummy
+      |                           [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kdummy[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:162:32:[m[K
+
+  162 |   real(wp) :: random_translation
+      |                                [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Krandom_translation[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:47:22:[m[K
+
+   47 |     integer :: i, j, k
+      |                      [01;35m[K1[m[K
+[01;35m[KWarning:[m[K Unused variable '[01m[Kk[m[K' declared at [01;35m[K(1)[m[K [[01;35m[K-Wunused-variable[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:45:22:[m[K
+
+   45 | subroutine print2d_mat(mat)
+      |                      [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Kprint2d_mat[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:130:0:[m[K
+
+  130 | pure function mean_abs(a) result(m)
+      | 
+[01;35m[KWarning:[m[K '[01m[Kmean_abs[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:281:30:[m[K
+
+  281 | subroutine test_hamiltonian_h2(error)
+      |                              [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_h2[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:299:31:[m[K
+
+  299 | subroutine test_hamiltonian_lih(error)
+      |                               [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_lih[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:325:30:[m[K
+
+  325 | subroutine test_hamiltonian_s2(error)
+      |                              [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_s2[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:453:32:[m[K
+
+  453 | subroutine test_hamiltonian_sih4(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_sih4[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:528:31:[m[K
+
+  528 | subroutine test_hamiltonian_glu(error)
+      |                               [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_glu[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:537:21:[m[K
+
+  537 | subroutine test_ice10(error)
+      |                     [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_ice10[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:549:23:[m[K
+
+  549 | subroutine test_dna_xyz(error)
+      |                       [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_dna_xyz[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:589:32:[m[K
+
+  589 | subroutine test_protein_103l_pdb(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_protein_103l_pdb[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:609:32:[m[K
+
+  609 | subroutine test_protein_1lyz_pdb(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_protein_1lyz_pdb[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[01m[K../test/unit/test_hamiltonian.f90:699:32:[m[K
+
+  699 | subroutine test_hamiltonian_4ins(error)
+      |                                [01;35m[K^[m[K
+[01;35m[KWarning:[m[K '[01m[Ktest_hamiltonian_4ins[m[K' defined but not used [[01;35m[K-Wunused-function[m[K]
+[2/2] Linking target test/unit/tester
+/usr/bin/ld: warning: src_json_value_module.F90.o: requires executable stack (because the .note.GNU-stack section is executable)
+1/1 tblite:unit / hamiltonian RUNNING       
+>>> ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 MALLOC_PERTURB_=191 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MESON_TEST_ITERATION=1 LD_LIBRARY_PATH=/home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/ /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/test/unit/tester hamiltonian
+――――――――――――――――――――――――――――――――――――― ✀  ―――――――――――――――――――――――――――――――――――――
+# Testing: hamiltonian
+  Starting hamiltonian-alkane ... (1/1)
+ structure alkane_64
+ nat         192
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          20
+ max_nsh           2
+ total_nao         384
+cpu_time   24.065895
+ structure alkane_128
+ nat         384
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+ total_nao         768
+cpu_time   20.493670
+ structure alkane_256
+ nat         768
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+ total_nao        1536
+cpu_time   29.943760
+ structure alkane_512
+ nat        1536
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+ total_nao        3072
+cpu_time   81.304116
+ structure alkane_1024
+ nat        3072
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+ total_nao        6144
+cpu_time  272.587032
+ structure alkane_2048
+ nat        6144
+ nprim           6
+ maxl           1
+ max_nnl          30
+ mean_nnl          21
+ max_nsh           2
+ total_nao       12288
+cpu_time10664.973608
+       ... hamiltonian-alkane [PASSED]
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+1/1 tblite:unit / hamiltonian OK             21.23s
+
+
+Ok:                 1   
+Expected Fail:      0   
+Fail:               0   
+Unexpected Pass:    0   
+Skipped:            0   
+Timeout:            0   
+
+Full log written to /home/tornikeo/Documents/personal/thesis/qcxms/subprojects/tblite/build/meson-logs/testlog.txt

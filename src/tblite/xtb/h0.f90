@@ -662,6 +662,7 @@ contains
       list = 3
 
       ! print*, "bas.maxl = ", bas%maxl, "msao(bas%maxl) = ", msao(bas%maxl)
+      print*, "nao = ", size(hamiltonian, 1), size(hamiltonian, 2)
       allocate(stmp(msao(bas%maxl)**2), dtmpi(3, msao(bas%maxl)**2), qtmpi(6, msao(bas%maxl)**2))
       !$omp parallel do schedule(runtime) default(none) &
       !$omp shared(mol, bas, trans, alist, overlap, dpint, qpint, hamiltonian, h0, selfenergy) &
@@ -696,41 +697,41 @@ contains
 
                         call shift_operator(vec, stmp(ij), dtmpi(:, ij), qtmpi(:, ij), &
                         & dtmpj, qtmpj)
-                        ! $omp atomic
+                        !$omp atomic
                         overlap(jj+jao, ii+iao) = overlap(jj+jao, ii+iao) &
                            + stmp(ij)
 
                         do k = 1, 3
-                           ! $omp atomic
+                          !$omp atomic
                            dpint(k, jj+jao, ii+iao) = dpint(k, jj+jao, ii+iao) &
                               + dtmpi(k, ij)
                         end do
 
                         do k = 1, 6
-                           ! $omp atomic
+                          !$omp atomic
                            qpint(k, jj+jao, ii+iao) = qpint(k, jj+jao, ii+iao) &
                               + qtmpi(k, ij)
                         end do
 
-                        ! $omp atomic
+                        !$omp atomic
                         hamiltonian(jj+jao, ii+iao) = hamiltonian(jj+jao, ii+iao) &
                            + stmp(ij) * hij
                         if (iat /= jat) then
-                           ! $omp atomic
+                           !$omp atomic
                            overlap(ii+iao, jj+jao) = overlap(ii+iao, jj+jao) &
                               + stmp(ij)
                            do k = 1, 3
-                              ! $omp atomic
+                              !$omp atomic
                               dpint(k, ii+iao, jj+jao) = dpint(k, ii+iao, jj+jao) &
                                  + dtmpj(k)
                            end do
 
                            do k = 1, 6
-                              ! $omp atomic
+                              !$omp atomic
                               qpint(k, ii+iao, jj+jao) = qpint(k, ii+iao, jj+jao) &
                                  + qtmpj(k)
                            end do
-                           ! $omp atomic
+                          !$omp atomic
                            hamiltonian(ii+iao, jj+jao) = hamiltonian(ii+iao, jj+jao) &
                               + stmp(ij) * hij
                         end if

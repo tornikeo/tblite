@@ -15,7 +15,7 @@
         }
       ],
       "args": [
-        "hamiltonian"
+        "integral-overlap"
       ],
       "stopAtEntry": false,
       "preLaunchTask": "setup",
